@@ -3,7 +3,7 @@
 @section('title', 'Edit Post')
 
 @section('content')
-<div class="container mx-auto">
+<div class="container mt-4 mx-auto">
     <div class="max-w-md mx-auto bg-white shadow-md rounded-md overflow-hidden">
         <div class="p-4">
             <h1 class="text-xl font-semibold mb-2">Edit Post</h1>

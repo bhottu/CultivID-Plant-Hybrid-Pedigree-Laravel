@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateFollowsTable extends Migration
 {
-    public function up() {
+    public function up()
+    {
         Schema::create('follows', function (Blueprint $table) {
             $table->id();
             $table->foreignId('follower_id')->constrained('users')->onDelete('cascade');
@@ -15,7 +16,9 @@ class CreateFollowsTable extends Migration
         });
     }
 
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('follows');
     }
+    
 }

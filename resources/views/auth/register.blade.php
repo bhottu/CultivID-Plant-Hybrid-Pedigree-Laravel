@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Register')
 @section('content')
 <div class="container mx-auto">
     <div class="max-w-md mx-auto my-8">

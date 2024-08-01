@@ -1,11 +1,21 @@
 <?php
 
+// routes/web.php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SearchController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
 Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
@@ -14,30 +24,117 @@ Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
+// Forgot Password
+Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-//Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
+// Reset Password
+Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+Route::get('/', [ProductController::class, 'index'])->name('home');
+//Route::get('/discuss', 'App\Http\Controllers\HomeController@index')->name('index.sosmed');
+Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
+Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
+Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile'); // laod post profile
+Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
+    
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('products', [ProductController::class, 'store'])->name('products.store');
+
+
 });
 
+Route::get('products', [ProductController::class, 'index'])->name('products.index');
+Route::get('allproducts', [ProductController::class, 'allproducts'])->name('all.products');
+Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])->name('load-more-products');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/discounted-products', [ProductController::class, 'discountedProducts'])->name('discounted.products');
+Route::get('/discounted-products/load-more', [ProductController::class, 'loadMoreDiscountedProducts']);
+// Route::get('categories-listx', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/categories/{slug}/load-more-products', [CategoryController::class, 'loadMoreProducts'])->name('categories.loadMoreProducts');
 
+Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
+
+Route::get('profile/{userId}/products', [ProductController::class, 'loadProducts'])->name('profile.products');
+Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('auth');
+Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('auth');
+Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('auth');
 
 Route::get('post/create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
 Route::post('post', [PostController::class, 'store'])->name('post.store');
-Route::post('follow/{user}', [FollowController::class, 'store'])->name('follow');
-Route::delete('unfollow/{user}', [FollowController::class, 'destroy'])->name('unfollow');
 
-Route::post('post/{postId}/like', [LikeController::class, 'addLike'])->name('post.like');
-Route::post('post/{post}/share', [PostController::class, 'addShare'])->name('post.share');
-Route::post('post/{post}/comment', [PostController::class, 'addComment'])->name('post.comment');
+Route::post('profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
+Route::post('profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
+
+Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+Route::get('posts/{post}', 'PostController@show')->name('posts.show');
+Route::post('post/{postId}/like', [LikeController::class, 'addLike'])->name('post.like')->middleware('auth');
+Route::post('post/{post}/share', [PostController::class, 'addShare'])->name('post.share')->middleware('auth');
+Route::post('post/{post}/comment', [PostController::class, 'addComment'])->name('post.comment')->middleware('auth');
 
 Route::get('post/{post}/edit', [PostController::class, 'edit'])->name('post.edit')->middleware('auth');
 Route::put('post/{post}', [PostController::class, 'update'])->name('post.update')->middleware('auth');
 Route::delete('post/{post}', [PostController::class, 'destroy'])->name('post.destroy')->middleware('auth');
 Route::delete('/profile/posts/{share}', [PostController::class, 'sharedestroy'])->name('profile.posts.destroy')->middleware('auth');
-
 Route::get('comments/{postId}', [PostController::class, 'fetchComments'])->name('comments.fetch');
+Route::get('search', [SearchController::class, 'search'])->name('search');
+
+
+
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+
+   // Route::get('/admin', function () {
+   //     return view('admin.home');
+   // })->name('admin.home');
+
+    Route::get('/admin', [ProfileController::class, 'adminDashboardStatistic'])->name('admin.home');
+   
+
+    Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.items.categories');
+    Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/admin/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/admin/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/admin/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/admin/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+   
+    Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings.index');
+    Route::post('/admin/settings', [SettingController::class, 'store'])->name('admin.settings.store');
+    
+    Route::get('/admin/items', [ProductController::class, 'adminIndex'])->name('admin.items.index');
+    Route::get('/admin/items/{product}', [ProductController::class, 'adminShow'])->name('admin.items.show');
+    Route::delete('/admin/items/{product}', [ProductController::class, 'adminDestroy'])->name('admin.items.destroy');
+
+    Route::get('/admin/list-currencies', [CurrencyController::class, 'index'])->name('currencies.index');
+    Route::post('/admin/store-currency', [CurrencyController::class, 'store'])->name('currencies.store');
+    Route::get('/admin/edit-currency/{currency}', [CurrencyController::class, 'edit'])->name('currencies.edit');
+    Route::put('/admin/update-currency/{currency}', [CurrencyController::class, 'update'])->name('currencies.update');
+    Route::delete('/admin/delete-currency/{currency}', [CurrencyController::class, 'destroy'])->name('currencies.destroy');
+    
+    Route::get('/admin/discuss', [PostController::class, 'discuss'])->name('admin.discuss');
+    Route::delete('/admin/posts/{id}', [PostController::class, 'admindestroy'])->name('admin.posts.destroy');
+    
+    Route::get('/admin/users', [ProfileController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{id}', [ProfileController::class, 'adminShowUsers'])->name('admin.users.show');
+    Route::delete('/admin/users/{id}', [ProfileController::class, 'adminDestroy'])->name('admin.users.destroy');
+    
+
+    Route::get('/admin/misc/faq', function () {
+        return view('admin.misc.faq');
+    })->name('admin.misc.faq');
+
+});
+
+Route::get('/about-us', [SettingController::class, 'showAbout'])->name('admin.settings.about');
+Route::get('/contact-us', [SettingController::class, 'showContact'])->name('admin.settings.contact');
+Route::get('/terms-conditions', [SettingController::class, 'showTerms'])->name('admin.settings.terms');
+Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->name('admin.settings.privacy');

@@ -11,6 +11,13 @@ use App\Models\User;
 
 class PostController extends Controller
 {
+
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
+        // $posts = $user->posts()->orderBy('created_at', 'desc');
+        return view('post.show', compact('post'));
+    }
     public function create()
     {
         return view('post.create');
@@ -127,4 +134,26 @@ class PostController extends Controller
         $comments = $post->comments()->with('user')->get();
         return response()->json($comments);
     }
+
+    // Admin posts
+    public function discuss()
+    {
+        // Mengambil semua posts dari database
+    
+        $posts = Post::with('user')->paginate(10);
+
+        // Mengirim data posts ke view
+        return view('admin.discuss', ['posts' => $posts]);
+    }
+
+    // Admin posts delete
+    public function admindestroy($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->delete();
+    
+        return redirect()->route('admin.discuss')->with('success', 'Post deleted successfully');
+    }
+ 
+
 }

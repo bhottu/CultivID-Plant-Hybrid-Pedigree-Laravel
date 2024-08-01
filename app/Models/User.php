@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+
+
+// class User extends Model
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,23 +25,52 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
+        'is_admin',
+        'phone_number',
+        'latitude',
+        'longitude',
     ];
 
-    public function posts() {
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            foreach ($user->products as $product) {
+                $product->delete();
+            }
+        });
+    }
+
+    public function isBanned()
+    {
+        return $this->deleted_at !== null;
+    }
+
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
 
-    public function following() {
+    public function following()
+    {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id');
     }
 
-    public function followers() {
+    public function followers()
+    {
         return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
     }
 
     public function shares()
     {
         return $this->hasMany(Share::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 
     /**
@@ -51,15 +84,13 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_admin' => 'boolean',
+    ];
 }

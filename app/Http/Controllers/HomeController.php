@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Post; // Import model Post jika belum diimport
+use App\Models\Post; 
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Share;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $posts = Post::orderBy('created_at', 'desc')->get(); 
+        $posts = Post::orderBy('created_at', 'desc')->paginate(5); // showing at home root/discuss
+        
         return view('home', ['posts' => $posts]); 
     }
     
+    public function anyOtherMethod()
+    {
+        $user = Auth::user(); // Mendapatkan user yang sedang login
+        return view('any-view', compact('user'));
+    }
 
     public function addComment(Request $request, Post $post) // Tambah komentar
     {
@@ -49,6 +57,24 @@ class HomeController extends Controller
 
         return redirect()->back();
     }
+
+// Load more profil
+public function loadMore(Request $request)
+{
+    try {
+        $posts = Post::orderBy('created_at', 'desc')
+                     ->paginate(5, ['*'], 'page', $request->page);
+
+        if ($request->ajax()) {
+            $view = view('partials.posts', compact('posts'))->render();
+            return response()->json(['html' => $view, 'nextPageUrl' => $posts->nextPageUrl()]);
+        }
+
+        return back();
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 
 
 

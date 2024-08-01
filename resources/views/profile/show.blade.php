@@ -1,205 +1,274 @@
 @extends('layouts.app')
 
-@section('title', 'Profile')
+@section('title', $user->name . "'s Profile")
 
 @section('content')
 
-<!-- start form upload -->
-<div class="max-w-md mx-auto bg-white shadow-md rounded-md overflow-hidden">
-    <div class="p-4">
-        <div class="flex items-center">
-            <img src="https://via.placeholder.com/40" alt="User" class="rounded-full h-8 w-8">
-            <span class="ml-2 font-semibold">{{ Auth::user()->name }}</span>
-        </div>
-        <form action="{{ route('post.store') }}" method="post" enctype="multipart/form-data" class="mt-4">
-            @csrf
-            <div class="mb-2">
-                <label for="caption" class="sr-only">Caption</label>
-                <input type="text" name="caption" id="caption" placeholder="What's on your mind, {{ Auth::user()->name }}?" class="w-full border-b border-gray-300 focus:outline-none focus:border-blue-500 pb-1">
+<div class="container mx-auto">
+    <div class="m-4 mx-auto rounded-md overflow-hidden">
+        <h2 class="text-xl font-semibold">{{ $user->name }}'s Profile</h2>
+    </div>
+    <div class="bg-blue-100 shadow-md border-dashed border-2 border-sky-500 rounded p-4 mt-4 flex ">
+        @if($user->profile_photo_path)
+            <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}'s Profile Photo" class="h-52 w-52 border-double border-2 border-sky-500 rounded-full">
+        @else
+            <img src="/storage/images/default.png" alt="{{ $user->name }}'s Profile Photo" class="h-auto w-32 rounded">
+        @endif
+
+        <div class="flex ml-4 flex-grow">
+                <!-- Kontainer untuk detail profil -->
+            <div class="flex-1 pr-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-900 font-semibold text-3xl">{{ $user->name }}</span>
+                        
+                    </div>
+
+                    <div class="text-gray-500 text-sm mb-2">{{ $user->email }}</div>
+                    <div class="text-gray-500 text-sm mb-2">{{ $user->phone_number }}</div>
+                    <div class="text-sm flex items-center space-x-2 mb-2">
+                        @if($user->phone_number)
+                            <a href="https://wa.me/{{ $user->phone_number }}" class="hover:text-gray-500">
+                                <button class="fab fa-whatsapp hover:text-green-500 text-blue-900 text-2xl"></button>
+                            </a>
+                            <a href="tel:{{ $user->phone_number }}" class="hover:text-gray-500">
+                                <button class="fas fa-phone-alt hover:text-green-500 text-blue-900 text-2xl"></button>
+                            </a>
+                        @else
+                            <a href="#" class="hover:text-gray-500">
+                                <button onclick='alert("The seller has not entered a phone number.")' class="fab fa-whatsapp hover:text-green-500 text-blue-900 text-2xl"></button>
+                            </a>
+                            <a href="#" class="hover:text-gray-500">
+                                <button onclick='alert("The seller has not entered a phone number.")' class="fas fa-phone-alt hover:text-green-500 text-blue-900 text-2xl"></button>
+                            </a>
+                        @endif
+                        <a href="mailto:{{ $user->email }}" class="hover:text-gray-500">
+                            <button class="fas fa-envelope hover:text-green-500 text-blue-900 text-2xl"></button>
+                        </a>
+                    </div>
+                    <div class="text-gray-500 text-sm mb-2" id="followers-count">{{ $user->followers()->count() }} Followers</div>
+                    <div class="text-gray-500 text-sm">
+                        @auth
+                            @if(Auth::id() !== $user->id)
+                                @if(Auth::user()->following->contains($user->id))
+                                    <form action="{{ route('profile.unfollow', $user->id) }}" method="POST">
+                                        @csrf
+                                        <button id="follow-button" type="submit" class="bg-red-500 hover:bg-red-200 hover:text-red-900 text-white px-2 py-1 rounded">Unfollow</button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('profile.follow', $user->id) }}" method="POST">
+                                        @csrf
+                                        <button id="follow-button" type="submit" class="bg-blue-500 hover:bg-blue-200 hover:text-blue-900 text-white px-2 py-1 rounded">Follow</button>
+                                    </form>
+                                @endif
+                            @endif
+                        @else
+                            <p class="text-gray-700">
+                                <a class="hover:text-blue-500 text-blue-900" href="{{ route('login') }}">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-200 hover:text-blue-900 text-white px-2 py-1 rounded">Follow</button>
+                                </a> 
+                                Login to follow this user
+                            </p>
+                        @endauth
+                    </div>
             </div>
-            <div class="flex justify-between items-center">
-                <div class="flex items-center">
-                    <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewImage(event)">
-                    <label for="image" class="block bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md cursor-pointer"><i class="far fa-image"></i> Photo/Video</label>
+
+                <!-- Kontainer untuk peta -->
+                <div class="w-48 h-48 ">
+                    <div id="map" class="rounded" style="height: 100%; width: 100%;"></div>
+                    <div class="text-gray-500 text-sm text-center">Member since {{ $user->created_at->format('F Y') }}</div>
                 </div>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Post</button>
-                <div id="image-preview"></div>
-            </div>
-        </form>
+            
+
+
+        </div>
     </div>
 </div>
-<!-- end form upload -->
+
+
+<div class="container mx-auto flex flex-wrap">
+    
+    <div class="w-full md:w-2/3 border mt-4 p-4">
+        <div class="m-4 mx-auto rounded-md overflow-hidden">
+            <h2 class="text-xl font-semibold">{{ $user->name }}'s Products</h2>
+        </div>
+        
+        @if ($products->isEmpty())
+            <p>No product yet, <a href="{{ route('products.create') }}" class="text-red-500 rounded bg-blue-200 hover:bg-gray-200">Send now</a></p>
+        @else
+            <div id="product-list-profile" class=" grid grid-cols-1 md:grid-cols-2 gap-4">
+                @include('partials.products', ['products' => $products])
+            </div>
+            @if ($products->hasMorePages())
+                <div class="text-center mt-4">
+                    <button id="load-more-products" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Load More
+                    </button>
+                </div>
+            @endif
+        @endif
+    </div>
+    
+    <!-- Profil pengguna lainnya dan pos -->
+    <div class="w-full md:w-1/3 mt-4 border p-4">
+        
+        <div class="max-w-md m-4 mt-4 mx-auto rounded-md overflow-hidden">
+            <h2 class="text-xl font-semibold">{{ $user->name }}'s Posts</h2>
+        </div>
+        @if ($user->posts->isEmpty())
+            <p>No discussion yet.</p>
+        @else
+        <div id="post-list-on-profile" class="mb-4">
+            @include('partials.posts', ['posts' => $posts])
+        </div>
+            @if ($posts->hasMorePages())
+            <div class="flex justify-center mt-4">
+                <button id="load-more-post-profile" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Load More</button>
+            </div>
+            @endif
+            
+        @endif
+    </div>
+       
+    
+</div>
+</div>
+
 
 <script>
-    function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function() {
-            var output = document.getElementById('image-preview');
-            output.innerHTML = '<img src="' + reader.result + '" class="w-12 h-auto rounded-md" alt="Preview">';
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    let currentPage = 1;
+    const userId = {{ $user->id }};
+
+    document.querySelector('#load-more-products').addEventListener('click', function() {
+        currentPage++;
+        const nextPageUrl = `/profile/${userId}/products?page=${currentPage}`;
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(nextPageUrl, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const productList = document.getElementById('product-list-profile');
+            
+            productList.insertAdjacentHTML('beforeend', data.html);
+
+            if (!data.nextPageUrl) {
+                document.querySelector('#load-more-products').style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error loading more products:', error));
+    });
+});
+
 </script>
 
-<div class="container mx-auto">
+<!-- Load more post on profile -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentPage = 1;
+    const userId = {{ $user->id }}; // Pastikan ini ada di blade template yang tepat
 
-    <div class="max-w-md m-4 mx-auto rounded-md overflow-hidden">
-        <h2 class="text-xl font-semibold">Posts</h2>
-    </div>
+    const loadMoreButton = document.getElementById('load-more-post-profile');
 
-    @foreach ($user->posts as $post)
-    <div class="max-w-md m-4 mx-auto bg-white shadow-md rounded-md overflow-hidden">
-        <div class="p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <a href="{{ url('profile/' . $post->user->id) }}">
-                        <img src="https://via.placeholder.com/40" alt="User" class="rounded-full h-8 w-8">
-                    </a>
-                    <div class="ml-2">
-                        <span class="font-semibold"><a href="{{ url('profile/' . $post->user->id) }}">{{ $post->user->name }}</a></span>
-                        <div class="text-gray-500 text-xs">{{ $post->updated_at }}</div>
-                    </div>
-                </div>
-                @if(Auth::id() === $post->user_id)
-                <div class="relative" x-data="{ isOpen: false }">
-                    <button @click="isOpen = !isOpen" class="focus:outline-none">
-                        <i class="fas fa-ellipsis-h text-gray-400 text-sm"></i>
-                    </button>
-                    <div x-show="isOpen" @click.away="isOpen = false" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-md py-1">
-                        <a href="{{ route('post.edit', $post) }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Edit</a>
-                        <form action="{{ route('post.destroy', $post) }}" method="POST" class="block px-4 py-2 text-red-600 hover:bg-gray-200" onclick="isOpen = false;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                @endif
-            </div>
-            <h3 class="text-sm m-4 mb-2">{{ $post->caption }}</h3>
-            @if($post->image)
-                <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="w-full h-auto mb-2 cursor-pointer" onclick="openImagePopup('{{ asset('storage/' . $post->image) }}', '{{ $post->id }}')">
-            @endif
-            @include('components.ImagePopup', ['post' => $post])
+    if (loadMoreButton) {
+        loadMoreButton.addEventListener('click', function() {
+            currentPage++;
+            const nextPageUrl = `/discuss/${userId}/load?page=${currentPage}`;
 
-            <div class="flex justify-between items-center mt-4">
-                <div>
-                    <p><i class="fas fa-heart"></i> {{ $post->likes->count() }}</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <form action="{{ route('post.like', ['postId' => $post->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="flex items-center space-x-1">
-                            <i class="fas fa-heart"></i>
-                            <span class="ml-1">Like</span>
-                        </button>
-                    </form>
-                    <form action="{{ route('post.share', ['post' => $post->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="flex items-center space-x-1">
-                            <i class="fas fa-share-alt"></i>
-                            <span class="ml-1">Share</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <form action="{{ route('post.comment', ['post' => $post->id]) }}" method="POST" class="mt-4">
-                @csrf
-                <div class="flex items-center border border-gray-300 rounded-md p-2">
-                    <textarea name="content" cols="30" rows="1" class="w-full resize-none focus:outline-none dark:text-black"></textarea>
-                    <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline">Comment</button>
-                </div>
-            </form>
-            @if($post->comments->count() > 0)
-            <div class="mt-4">
-                <h4 class="font-semibold">Comments:</h4>
-                @foreach($post->comments as $comment)
-                <div class="border-t border-gray-200 mt-2 pt-2">
-                    <p>{{ $comment->content }}</p>
-                    <p class="text-sm text-gray-600">By {{ $comment->user->name }} on {{ $comment->created_at }}</p>
-                </div>
-                @endforeach
-            </div>
-            @endif
-        </div>
-    </div>
-    @endforeach
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    <div class="max-w-md m-4 mx-auto rounded-md overflow-hidden">
-        <h2 class="text-xl font-semibold">Shared Posts</h2>
-    </div>
+            fetch(nextPageUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const postList = document.getElementById('post-list-on-profile');
 
-    @foreach ($shares as $share)
-    <div class="max-w-md m-4 mt-4 mx-auto bg-white shadow-md rounded-md overflow-hidden">
-        <div class="p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <a href="{{ url('profile/' . $share->post->user->id) }}">
-                        <img src="https://via.placeholder.com/40" alt="User" class="rounded-full h-8 w-8">
-                    </a>
-                    <div class="ml-2">
-                        <span class="font-semibold"><a href="{{ url('profile/' . $share->post->user->id) }}">{{ $share->post->user->name }}</a></span>
-                        <div class="text-gray-500 text-xs">{{ $share->post->updated_at }}</div>
-                    </div>
-                </div>
-                @if(Auth::id() === $share->user_id)
-                <div class="relative" x-data="{ isOpen: false }">
-                    <button @click="isOpen = !isOpen" class="focus:outline-none">
-                        <i class="fas fa-ellipsis-h text-gray-400 text-sm"></i>
-                    </button>
-                    <div x-show="isOpen" @click.away="isOpen = false" class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-md py-1">
-                        <a href="{{ route('post.edit', $share) }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Edit</a>
-                        <form action="{{ route('post.destroy', $share) }}" method="POST" class="block px-4 py-2 text-red-600 hover:bg-gray-200" onclick="isOpen = false;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                @endif
-            </div>
-            <h3 class="text-sm m-4 mb-2">{{ $share->post->caption }}</h3>
-            @if($share->post->image)
-                <img src="{{ asset('storage/' . $share->post->image) }}" alt="Post Image" class="w-full h-auto mb-2 cursor-pointer" onclick="openImagePopup('{{ asset('storage/' . $share->post->image) }}', '{{ $share->post->id }}')">
-            @endif
-            @include('components.ImagePopup', ['post' => $share->post])
-            <div class="flex justify-between items-center mt-4">
-                <div>
-                    <p><i class="fas fa-heart"></i> {{ $share->post->likes->count() }}</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <form action="{{ route('post.like', ['postId' => $share->post->id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="flex items-center space-x-1">
-                            <i class="fas fa-heart"></i>
-                            <span class="ml-1">Like</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <form action="{{ route('post.comment', ['post' => $share->post->id]) }}" method="POST" class="mt-4">
-                @csrf
-                <div class="flex items-center border border-gray-300 rounded-md p-2">
-                    <textarea name="content" cols="30" rows="1" class="w-full resize-none focus:outline-none dark:text-black"></textarea>
-                    <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline">Comment</button>
-                </div>
-            </form>
-            @if($share->post->comments->count() > 0)
-            <div class="mt-4">
-                <h4 class="font-semibold">Comments:</h4>
-                @foreach($share->post->comments as $comment)
-                <div class="border-t border-gray-200 mt-2 pt-2">
-                    <p>{{ $comment->content }}</p>
-                    <p class="text-sm text-gray-600">By {{ $comment->user->name }} on {{ $comment->created_at }}</p>
-                </div>
-                @endforeach
-            </div>
-            @endif
-        </div>
-    </div>
-    @endforeach
-</div>
+                // Append new posts to the post list
+                postList.insertAdjacentHTML('beforeend', data.html);
 
+                // Hide load more button if no more pages
+                if (!data.nextPageUrl) {
+                    loadMoreButton.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error loading more posts:', error));
+        });
+    } else {
+        console.error('Element with ID "load-more-post-profile" not found.');
+    }
+});
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const followButton = document.getElementById('follow-button');
+    followButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah form dikirim secara default
+
+        const action = followButton.getAttribute('data-action');
+        const userId = {{ $user->id }};
+        const url = action === 'follow' ? `/profile/${userId}/follow` : `/profile/${userId}/unfollow`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const followersCount = document.getElementById('followers-count');
+            followersCount.textContent = `${data.followers_count} Followers`;
+
+            if (data.status === 'followed') {
+                followButton.textContent = 'Unfollow';
+                followButton.classList.remove('bg-blue-500');
+                followButton.classList.add('bg-red-500');
+                followButton.setAttribute('data-action', 'unfollow');
+            } else {
+                followButton.textContent = 'Follow';
+                followButton.classList.remove('bg-red-500');
+                followButton.classList.add('bg-blue-500');
+                followButton.setAttribute('data-action', 'follow');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([{{ $user->latitude }}, {{ $user->longitude }}], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: ''
+        }).addTo(map);
+
+        var marker = L.marker([{{ $user->latitude }}, {{ $user->longitude }}]).addTo(map);
+        marker.bindPopup('<b>{{ $user->name }}</b>').openPopup();
+    </script>
+    
 @endsection
-
-
