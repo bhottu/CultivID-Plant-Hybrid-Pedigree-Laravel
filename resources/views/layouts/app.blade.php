@@ -10,6 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    @if (isset($settings) && $settings->fav_icon)
+    <link rel="icon" type="image/png" href="{{ Storage::url($settings->fav_icon) }}">
+    @endif
+    
     @if($adsense)
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}" 
     crossorigin="anonymous"></script>
