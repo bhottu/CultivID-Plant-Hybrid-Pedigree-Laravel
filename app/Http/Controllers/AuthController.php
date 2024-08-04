@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
