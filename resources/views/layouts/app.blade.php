@@ -7,13 +7,13 @@
     <title>@yield('title', 'Mingle')</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    
+    @if($adsense)
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}" 
+    crossorigin="anonymous"></script>
+    @endif
 
     
     <style>
@@ -67,30 +67,27 @@
                 <ul class="flex space-x-4">
                     @guest
                         <li><button id="dark-mode-toggle" class="text-white dark:text-gray-300"><i class="fas fa-toggle-on"></i></button></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('index.sosmed') }}">Discuss</a></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('products.index') }}">Products</a></li>
                         <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('login') }}">Login</a></li>
                         <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('register') }}">Register</a></li>
                     @else
                         <li><button id="dark-mode-toggle" class="text-white dark:text-gray-300"><i class="fas fa-toggle-on"></i></button></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('profile', ['user' => Auth::user()->id]) }}">{{ Auth::user()->name }}</a></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('index.sosmed') }}">Discuss</a></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('products.index') }}">Products</a></li>
-                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('profile.edit') }}">Setting</a></li>
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit" class="hover:text-blue-500 text-white dark:text-gray-300">Logout</button></form>
-                        </li>
-                        <li class="relative" x-data="{ open: false }">
+                        <li x-data="{ open: false }">
                             <button class="text-white text-2xl focus:outline-none" @click="open = !open">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3h-2v-3H8v-2h3V8h2v3h3v2z"/>
                                 </svg>
                             </button>
                             <ul x-show="open" @click.away="open = false" class="absolute bg-black shadow-md rounded-md overflow-hidden mt-2">
-                                <li><a href="{{ route('products.create') }}" class="block px-4 py-2 text-white hover:bg-gray-700">Product</a></li>
-                                <li><button @click="document.getElementById('uploadModal').classList.toggle('hidden')" class="block px-4 py-2 text-white hover:bg-gray-700">Discuss</button></li>
+                                <li><a href="{{ route('products.create') }}" class="block px-4 py-2 text-white hover:bg-gray-700">Add Product</a></li>
+                                <li><button @click="document.getElementById('uploadModal').classList.toggle('hidden')" class="block px-4 py-2 text-white hover:bg-gray-700">Add Discuss</button></li>
                             </ul>
                         </li>
+                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('profile', ['user' => Auth::user()->id]) }}">{{ Auth::user()->name }}</a></li>
+                        <li><a class="hover:text-blue-500 text-white dark:text-gray-300" href="{{ route('profile.edit') }}">Setting</a></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit" class="hover:text-blue-500 text-white dark:text-gray-300">Logout</button></form>
+                        </li>
+                       
                     @endguest
                 </ul>
             </div>
@@ -98,13 +95,10 @@
     </nav>
 </header>
 
-
-
 @yield('content')
 
 @include('partials.footer')
 
-<!-- Modal Add -->
 <div id="uploadModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity" aria-hidden="true">
@@ -123,7 +117,7 @@
                 </button>
             </div>
             <div class="mt-4">
-                <!-- Start form upload -->
+                
                 <form action="{{ route('post.store') }}" method="post" enctype="multipart/form-data" class="w-full">
                     @csrf
                     <div class="mb-4 w-full">
@@ -139,7 +133,7 @@
                     </div>
                     <div id="image-preview"></div>
                 </form>
-                <!-- End form upload -->
+                
             </div>
         </div>
     </div>
@@ -155,7 +149,6 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
-
 
 <script src="{{ asset('js/app.js') }}"></script>
 

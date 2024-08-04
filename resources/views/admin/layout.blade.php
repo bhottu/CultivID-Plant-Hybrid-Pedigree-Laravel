@@ -10,16 +10,15 @@
     <script src="//cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <style>
         .sidebar-text {
-            display: none; /* Hidden by default */
+            display: none; 
         }
         .sidebar-open .sidebar-text {
-            display: inline; /* Show when sidebar is open */
+            display: inline; 
         }
         .cke_notification {
         display: none !important;
-    }
+        }
 
-   
         .dark {
             background-color: #1e2125;
             color: #fff;
@@ -68,15 +67,15 @@
             <div :class="{'w-64': open, 'w-16': !open}" class="bg-gray-800 text-white flex flex-col transition-width duration-300">
                 <!-- Toggle Button -->
                 <button @click="open = !open" class="absolute top-4 left-4 text-gray-600 dark:text-gray-300 z-10 flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18" />
-    </svg>
-    <span class="hidden md:inline">
-                @if (isset($settings) && $settings->logo)
-                    {{ $settings->website_name }}
-                @endif
-    </span> <!-- Teks yang akan ditampilkan di samping tombol -->
-</button>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18" />
+                    </svg>
+                    <span class="hidden md:inline">
+                                @if (isset($settings) && isset($settings['logo']))
+                                    {{ $settings->website_name }}
+                                @endif
+                    </span> <!-- Teks yang akan ditampilkan di samping tombol -->
+                </button>
 
 
                 <nav class="flex-1 px-2 py-4 bg-gray-800">
@@ -169,6 +168,20 @@
                                         </a>
                                     </li>
                                 </ul>
+                                <ul x-show="openMisc" class="pl-4 space-y-1">
+                                    <li>
+                                        <a href="{{ route('google.settings') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
+                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Login Setting</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul x-show="openMisc" class="pl-4 space-y-1">
+                                    <li>
+                                        <a href="{{ route('google.adsense.edit') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
+                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Adsense</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </div>
                     </ul>
@@ -176,7 +189,6 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="flex-1 bg-white p-6">
             @yield('content')
         </div>

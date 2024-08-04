@@ -3,7 +3,7 @@
 @section('content')
 
 <!-- Categories Section -->
-<div class="mb-6 mt-4">
+<div class="mb-6 mt-4 px-4">
     <h2 class="text-2xl flex justify-center text-sky-800 font-bold rounded-sm p-2">Categories</h2>
     <div class="flex justify-center flex-wrap mt-4 gap-6">
         @if($categories->isEmpty())

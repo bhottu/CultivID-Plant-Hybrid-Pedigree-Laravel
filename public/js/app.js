@@ -5758,7 +5758,7 @@ document.addEventListener('DOMContentLoaded', function () {
               event.preventDefault();
               console.log('Form submitted');
               content = document.getElementById('comment-content').value;
-              postId = "{{ $post->id }}"; // Pastikan $post tersedia dalam view
+              postId = "{{ $post->id }}";
               tokenElement = document.querySelector('meta[name="csrf-token"]');
               if (!tokenElement) {
                 _context.next = 28;
@@ -5861,7 +5861,7 @@ function _fetchComments() {
 function openImagePopup(imageUrl, postId) {
   document.getElementById('image-popup').classList.remove('hidden');
   document.getElementById('image-popup-img').src = imageUrl;
-  fetchComments(postId); // Pastikan fetchComments berfungsi dengan baik dan postId benar
+  fetchComments(postId);
 }
 function closeImagePopup() {
   document.getElementById('image-popup').classList.add('hidden');
@@ -5890,17 +5890,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var currentPage = 1;
   document.getElementById('load-more').addEventListener('click', function () {
     currentPage++;
-    var nextPageUrl = "/load-more-products?page=".concat(currentPage); // Pastikan URL sesuai dengan struktur URL Anda
-
+    var nextPageUrl = "/load-more-products?page=".concat(currentPage);
     fetch(nextPageUrl).then(function (response) {
       return response.json();
     }).then(function (data) {
       var productList = document.getElementById('product-list');
-
-      // Append produk baru ke dalam daftar produk
       productList.insertAdjacentHTML('beforeend', data.html);
-
-      // Hide the "Load More" button if there are no more pages
       if (!data.nextPageUrl) {
         document.getElementById('load-more').style.display = 'none';
       }
@@ -5923,11 +5918,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         var productList = document.getElementById('product-list');
-
-        // Append produk baru ke dalam daftar produk
         productList.insertAdjacentHTML('beforeend', data.html);
-
-        // Hide the "Load More" button if there are no more pages
         if (!data.nextPageUrl) {
           loadMoreButton.style.display = 'none';
         }
@@ -5950,16 +5941,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       }).then(function (data) {
         var discountedProductList = document.getElementById('discounted-product-list');
-
-        // Cek apakah ada produk baru
         if (data.html) {
           discountedProductList.insertAdjacentHTML('beforeend', data.html);
         } else {
-          // Jika tidak ada produk baru, sembunyikan tombol
           loadMoreButtonDiscounted.style.display = 'none';
         }
-
-        // Hide the "Load More" button if there are no more pages
         if (!data.nextPageUrl) {
           loadMoreButtonDiscounted.style.display = 'none';
         }
@@ -5969,8 +5955,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-
-// Js Load more products for discounted page on show.blade.php
 
 // Preview img
 function previewImage(event) {

@@ -3,7 +3,7 @@
 @section('title', 'Category: ' . $category->name)
 
 @section('content')
-<div class="container mx-auto my-8">
+<div class="container mx-auto px-4 my-8">
     <h1 class="text-2xl font-bold mb-6">Category: {{ $category->name }}</h1>
     <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         @foreach ($products as $product)

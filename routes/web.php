@@ -1,7 +1,5 @@
 <?php
 
-// routes/web.php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -16,7 +14,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Admin\GoogleSettingController;
+use App\Http\Controllers\GoogleAdsenseClientController;
+use App\Http\Controllers\Admin\MembaraSettingController;
 
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [AuthController::class, 'register']);
@@ -24,19 +28,16 @@ Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-// Forgot Password
 Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-// Reset Password
 Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
-//Route::get('/discuss', 'App\Http\Controllers\HomeController@index')->name('index.sosmed');
 Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
 Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
-Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile'); // laod post profile
+Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile'); 
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
 Route::middleware(['auth'])->group(function () {
@@ -47,7 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('products', [ProductController::class, 'store'])->name('products.store');
 
-
 });
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
@@ -56,7 +56,6 @@ Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/discounted-products', [ProductController::class, 'discountedProducts'])->name('discounted.products');
 Route::get('/discounted-products/load-more', [ProductController::class, 'loadMoreDiscountedProducts']);
-// Route::get('categories-listx', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/categories/{slug}/load-more-products', [CategoryController::class, 'loadMoreProducts'])->name('categories.loadMoreProducts');
 
@@ -86,16 +85,9 @@ Route::delete('/profile/posts/{share}', [PostController::class, 'sharedestroy'])
 Route::get('comments/{postId}', [PostController::class, 'fetchComments'])->name('comments.fetch');
 Route::get('search', [SearchController::class, 'search'])->name('search');
 
-
-
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
-   // Route::get('/admin', function () {
-   //     return view('admin.home');
-   // })->name('admin.home');
-
     Route::get('/admin', [ProfileController::class, 'adminDashboardStatistic'])->name('admin.home');
-   
 
     Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
@@ -127,6 +119,15 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/users/{id}', [ProfileController::class, 'adminShowUsers'])->name('admin.users.show');
     Route::delete('/admin/users/{id}', [ProfileController::class, 'adminDestroy'])->name('admin.users.destroy');
     
+    Route::get('admin/google-settings', [SettingController::class, 'googleSettings'])->name('google.settings');
+    Route::post('admin/google-settings', [SettingController::class, 'updateGoogleSettings'])->name('google.settings.update');
+    
+    Route::get('admin/google-adsense', [GoogleAdsenseClientController::class, 'edit'])->name('google.adsense.edit');
+    Route::post('admin/google-adsense/update', [GoogleAdsenseClientController::class, 'update'])->name('google.adsense.update');
+
+    Route::get('admin/api-settings', [MembaraSettingController::class, 'edit'])->name('admin.membara-settings.edit');
+    Route::post('admin/api-settings', [MembaraSettingController::class, 'update'])->name('admin.membara-settings.update');
+    Route::post('admin/verify-license', [MembaraSettingController::class, 'verifyLicense'])->name('admin.verify-license');
 
     Route::get('/admin/misc/faq', function () {
         return view('admin.misc.faq');

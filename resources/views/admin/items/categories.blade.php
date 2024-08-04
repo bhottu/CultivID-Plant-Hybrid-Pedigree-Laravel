@@ -19,8 +19,6 @@
         </div>
         <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Category</button>
     </form>
-
-    <!-- Daftar Kategori -->
    
     <div class="overflow-x-auto mt-6">
         @if($categories->isEmpty())

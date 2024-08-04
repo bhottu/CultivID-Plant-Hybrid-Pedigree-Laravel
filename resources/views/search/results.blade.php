@@ -1,9 +1,7 @@
-<!-- resources/views/search/results.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto my-8">
+<div class="container mx-auto my-8 px-4">
     <h1 class="text-2xl font-bold mb-6">Search Results for: "{{ $query }}"</h1>
 
     <div class="mb-8">

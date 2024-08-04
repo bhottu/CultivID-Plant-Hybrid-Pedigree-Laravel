@@ -15,7 +15,6 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
-        // $posts = $user->posts()->orderBy('created_at', 'desc');
         return view('post.show', compact('post'));
     }
     public function create()
@@ -30,27 +29,22 @@ class PostController extends Controller
             'caption' => 'nullable|string|max:255',
         ]);
 
-        // Simpan gambar dengan nama yang unik
         $imagePath = $request->file('image')->store('uploads', 'public');
 
-        // Buat post baru dengan menggunakan metode create dari hubungan posts() milik user yang sedang login
         $post = Auth::user()->posts()->create([
             'image' => $imagePath,
             'caption' => $request->caption,
         ]);
 
-        // Kembalikan response redirect ke halaman profil user yang sedang login
         return redirect()->route('profile', Auth::user());
     }
 
     public function addComment(Request $request, $postId)
     {
-        // Cari post berdasarkan ID
         $post = Post::find($postId);
 
-        // Pastikan post ditemukan
         if (!$post) {
-            abort(404); // Tampilkan error 404 jika post tidak ditemukan
+            abort(404); 
         }
 
         $request->validate([
@@ -70,12 +64,12 @@ class PostController extends Controller
 
     public function addShare(Request $request, $id)
         {
-    Share::create([
-        'user_id' => auth()->id(),
-        'post_id' => $id
-    ]);
+            Share::create([
+                'user_id' => auth()->id(),
+                'post_id' => $id
+            ]);
 
-    return redirect()->back()->with('success', 'Post shared successfully');
+            return redirect()->back()->with('success', 'Post shared successfully');
         }
 
 
@@ -103,7 +97,7 @@ class PostController extends Controller
     }
     // End edit update
 
-    // Hapus post
+    // Delete post
     public function destroy(Post $post)
     {
     
@@ -111,14 +105,13 @@ class PostController extends Controller
 
         return redirect()->route('profile', auth()->user());
     }
-    // End Hapus post
+    // End Delete post
 
-    // Hapus shared
+    // Delete shared
     public function sharedestroy($id)
         {
             $share = Share::find($id);
 
-            // Lakukan pengecekan apakah pengguna yang sedang masuk adalah pemilik postingan
             if ($share && $share->user_id === auth()->user()->id) {
                 $share->delete();
                 return redirect()->back()->with('success', 'Postingan berhasil dihapus dari profil.');
@@ -126,25 +119,22 @@ class PostController extends Controller
                 return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus postingan ini.');
             }
         }
-     // End Hapus shared
+     // End Delete shared
 
      public function fetchComments($postId)
-    {
-        $post = Post::findOrFail($postId);
-        $comments = $post->comments()->with('user')->get();
-        return response()->json($comments);
-    }
+        {
+            $post = Post::findOrFail($postId);
+            $comments = $post->comments()->with('user')->get();
+            return response()->json($comments);
+        }
 
     // Admin posts
     public function discuss()
-    {
-        // Mengambil semua posts dari database
-    
-        $posts = Post::with('user')->paginate(10);
+        {
+            $posts = Post::with('user')->paginate(10);
 
-        // Mengirim data posts ke view
-        return view('admin.discuss', ['posts' => $posts]);
-    }
+            return view('admin.discuss', ['posts' => $posts]);
+        }
 
     // Admin posts delete
     public function admindestroy($id)

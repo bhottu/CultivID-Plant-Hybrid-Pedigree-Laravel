@@ -1,6 +1,5 @@
-<!-- partials/posts.blade.php -->
 @foreach($posts as $post)
-    <div class="max-w-md mt-4 mx-auto bg-gray shadow-md rounded-md overflow-hidden">
+    <div class="max-w-md sm:max-w-none mt-4 px-4 mx-auto bg-gray shadow-md rounded-md overflow-hidden">
         <div class="bg-white p-4 shadow-md mb-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">

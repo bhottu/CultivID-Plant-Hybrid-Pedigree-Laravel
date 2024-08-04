@@ -22,11 +22,11 @@ class HomeController extends Controller
     
     public function anyOtherMethod()
     {
-        $user = Auth::user(); // Mendapatkan user yang sedang login
+        $user = Auth::user(); 
         return view('any-view', compact('user'));
     }
 
-    public function addComment(Request $request, Post $post) // Tambah komentar
+    public function addComment(Request $request, Post $post) 
     {
         $request->validate([
         'content' => 'required',
@@ -75,7 +75,6 @@ public function loadMore(Request $request)
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
-
 
 
 }

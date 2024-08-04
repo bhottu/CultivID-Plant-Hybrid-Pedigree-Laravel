@@ -9,7 +9,6 @@ class Setting extends Model
 {
     use HasFactory;
 
-    // Daftar atribut yang dapat diisi secara massal
     protected $fillable = [
         'name',
         'value',
@@ -24,5 +23,21 @@ class Setting extends Model
         'web_description',
         'fav_icon',
         'website_name',
+        'key',
     ];
+
+    public static function getValue($key)
+    {
+        $setting = self::where('key', $key)->first();
+        return $setting ? $setting->value : null;
+    }
+
+    public static function setValue($key, $value)
+    {
+        return self::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value]
+        );
+    }
+    
 }

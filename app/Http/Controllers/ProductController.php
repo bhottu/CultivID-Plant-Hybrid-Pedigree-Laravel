@@ -13,14 +13,11 @@ use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-
-    
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(8);
+        $products = Product::with('category')->latest()->paginate(3);
         $categories = Category::all();
-        //$discountedProducts = Product::where('discount', '>', 0)->latest()->get();
-        $discountedProducts = Product::where('discount', '>', 0)->latest()->take(8)->get();
+        $discountedProducts = Product::where('discount', '>', 0)->latest()->take(4)->get();
         $posts = Post::orderBy('created_at', 'desc')->paginate(5);
 
         return view('products.index', compact('products', 'categories', 'posts', 'discountedProducts'));
@@ -37,7 +34,6 @@ class ProductController extends Controller
         $products = Product::orderBy('created_at', 'desc')->paginate(9);
         return view('products.allproducts', compact('products'));
     }
-    
 
     public function store(Request $request)
     {
@@ -120,7 +116,7 @@ class ProductController extends Controller
     
     public function loadProducts(Request $request, $userId)
     {
-        \Log::info('Request AJAX: ' . $request->ajax()); // Tambahkan ini
+        \Log::info('Request AJAX: ' . $request->ajax()); 
     
         if ($request->ajax()) {
             $user = User::findOrFail($userId);
@@ -135,8 +131,6 @@ class ProductController extends Controller
         return response()->json(['error' => 'Non-AJAX request'], 400);
     }
     
-
-
     public function destroy(Product $id)
     {
     
@@ -147,13 +141,12 @@ class ProductController extends Controller
     
     public function edit(Product $product)
     {
-        $categories = Category::all(); // Ambil semua kategori untuk dropdown
+        $categories = Category::all(); 
         return view('products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
 {
-    // Validasi input
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'required|string',
@@ -164,20 +157,16 @@ class ProductController extends Controller
         'video_path' => 'nullable|mimes:mp4,avi,mov|max:20000',
     ]);
 
-    // Format harga dan diskon
     $price = str_replace('.', '', $request->input('price'));
     $discount = str_replace('.', '', $request->input('discount'));
 
-    // Update produk dengan data yang baru
     $product->name = $request->input('name');
     $product->description = $request->input('description');
     $product->price = $price;
     $product->discount = $discount ?: null;
     $product->category_id = $request->input('category_id');
 
-    // Handle image upload
     if ($request->hasFile('image_path')) {
-        // Delete old image if exists
         if ($product->image_path && Storage::exists($product->image_path)) {
             Storage::delete($product->image_path);
         }
@@ -185,9 +174,7 @@ class ProductController extends Controller
         $product->image_path = $request->file('image_path')->store('images', 'public');
     }
 
-    // Handle video upload
     if ($request->hasFile('video_path')) {
-        // Delete old video if exists
         if ($product->video_path && Storage::exists($product->video_path)) {
             Storage::delete($product->video_path);
         }
@@ -197,7 +184,6 @@ class ProductController extends Controller
 
     $product->save();
 
-    // Redirect kembali ke halaman edit dengan pesan sukses
     return redirect()->route('products.edit', $product)->with(
         'success', 'Product updated successfully.');
     

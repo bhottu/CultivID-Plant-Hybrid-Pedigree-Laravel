@@ -37,13 +37,12 @@ class ProfileController extends Controller
         $totalPosts = $user->posts()->count();
         $totalProducts = $user->products()->count();
 
-        //return view('admin.user_detail', ['user' => $user]);
         return view('admin.user_detail', compact('user', 'totalPosts', 'totalProducts'));
     }
 
     public function adminDashboardStatistic()
     {
-        $totalUsers = User::count(); // Menghitung semua pengguna
+        $totalUsers = User::count(); 
         $totalPosts = Post::count();
         $totalProducts = Product::count();
         $latestUsers = User::latest()->take(5)->get();
@@ -59,18 +58,14 @@ class ProfileController extends Controller
        
     }
 
-  
-
     public function show(User $user)
     {
-      
         $posts = $user->posts()->orderBy('created_at', 'desc')->paginate(3);
         $shares = $user->shares()->orderBy('created_at', 'desc')->get();
         $products = $user->products()->paginate(6);
         
 
         return view('profile.show', compact('user', 'shares', 'posts', 'products'));
-        
     }
 
     public function edit()
@@ -99,21 +94,18 @@ class ProfileController extends Controller
         $user->phone_number = $request->input('phone_number');
         $user->latitude = $request->input('latitude');
         $user->longitude = $request->input('longitude');
-        $user->currency = $request->input('currency'); // Mengupdate currency
+        $user->currency = $request->input('currency'); 
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
 
-        // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
             $currentPhoto = $user->profile_photo_path;
 
-            // Store new photo
             $profilePhotoPath = $request->file('profile_photo')->store('profile-photos', 'public');
             $user->profile_photo_path = $profilePhotoPath;
 
-            // Delete old photo if exists
             if ($currentPhoto) {
                 Storage::disk('public')->delete($currentPhoto);
             }
@@ -145,7 +137,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    // Load more posts on profil
     public function loadMore(Request $request, User $user)
     {
         try {

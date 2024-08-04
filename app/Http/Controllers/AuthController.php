@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Password;
-//use Illuminate\Support\Facades\Hash;
-//use Illuminate\Support\Str;
-// use Illuminate\Auth\Events\PasswordReset;
-
 
 class AuthController extends Controller
 {
@@ -35,7 +31,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Redirect ke halaman profil pengguna setelah registrasi
         return redirect()->route('profile', $user);
     }
 
@@ -49,21 +44,17 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $credentials['email'])->first();
 
-        // Periksa apakah pengguna ditemukan
         if (!$user) {
             return back()->withErrors([
                 'email' => 'Email tidak ditemukan.',
             ]);
         }
 
-        // Periksa apakah pengguna diblokir
         if ($user->isBanned()) {
             return redirect()->route('login')->with('error', 'Akun Anda telah dinonaktifkan, hubungi administrator.');
         }
 
-        // Coba untuk login
         if (Auth::attempt($credentials)) {
-            // Redirect berdasarkan peran pengguna (misalnya admin atau pengguna biasa)
             if (Auth::user()->is_admin) {
                 return redirect()->route('admin.home');
             } else {
@@ -71,7 +62,6 @@ class AuthController extends Controller
             }
         }
 
-        // Jika login gagal
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ]);
@@ -83,7 +73,6 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    // RESET PASS
     public function showForgotPasswordForm()
     {
         return view('auth.forgot-password');
@@ -132,5 +121,31 @@ class AuthController extends Controller
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
     }
+
+    public function redirectToGoogle()
+        {
+            return Socialite::driver('google')->redirect();
+        }
+
+    public function handleGoogleCallback()
+        {
+            $user = Socialite::driver('google')->user();
+
+            $existingUser = User::where('email', $user->getEmail())->first();
+
+            if ($existingUser) {
+                Auth::login($existingUser, true);
+            } else {
+                $newUser = User::create([
+                    'name' => $user->getName(),
+                    'email' => $user->getEmail(),
+                    'password' => bcrypt('password'), 
+                ]);
+
+                Auth::login($newUser, true);
+            }
+
+            return redirect()->route('home'); 
+        }
 
 }

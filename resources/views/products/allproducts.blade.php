@@ -58,14 +58,12 @@
     </div>
 </div>
 
-<!-- Tombol "Lihat Lebih Banyak" -->
 @if ($products->hasMorePages())
     <div class="mt-4 flex justify-center">
         <button id="load-more" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">Load More</button>
     </div>
 @endif
 
-<!-- Template produk untuk di-append -->
 <div id="product-template" class="hidden">
     <div class="bg-white rounded-lg overflow-hidden shadow-lg product-item">
         <a href="#" class="product-link text-blue-500 hover:underline">

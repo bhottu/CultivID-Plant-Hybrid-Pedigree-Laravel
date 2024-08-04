@@ -33,13 +33,12 @@
               <h2 class="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-300">Shop</h2>
             </div>
             <ul class="leading-8">
-            <li><a href="{{ route('categories.all') }}" class="hover:text-blue-400">Categories</a></li>
-            <li><a href="{{ route('all.products') }}" class="hover:text-blue-400">Recently Products</a></li>
-            <li><a href="{{ route('discounted.products') }}" class="hover:text-blue-400">Discounted Products</a></li>
-            <li><a href="{{ route('index.sosmed') }}" class="hover:text-blue-400">Posts</a></li>
+              <li><a href="{{ route('categories.all') }}" class="hover:text-blue-400">Categories</a></li>
+              <li><a href="{{ route('all.products') }}" class="hover:text-blue-400">Recently Products</a></li>
+              <li><a href="{{ route('discounted.products') }}" class="hover:text-blue-400">Discounted Products</a></li>
+              <li><a href="{{ route('index.sosmed') }}" class="hover:text-blue-400">Posts</a></li>
             </ul>
           
-
           </div>
           <div class="px-4 my-4 w-full sm:w-auto xl:w-1/5">
             <div>
@@ -77,7 +76,6 @@
             <script>new Date().getFullYear() > 2024 && document.write("- " + new Date().getFullYear())</script>
             All Rights Reserved.
           </div>
-         
         </div>
       </div>
     </div>

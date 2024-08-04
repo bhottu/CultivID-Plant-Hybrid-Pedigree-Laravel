@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Models\GoogleSetting;
 
 class SettingController extends Controller
 {
@@ -12,7 +13,6 @@ class SettingController extends Controller
     {
         $settings = Setting::first();
         return view('admin.settings.index', compact('settings'));
-        
     }
     
     public function showTerms()
@@ -44,8 +44,6 @@ class SettingController extends Controller
         $settings = Setting::first();
         return view('admin.misc.listcurrencies', compact('settings'));
     }
-
-    
 
     public function store(Request $request)
     {
@@ -90,5 +88,34 @@ class SettingController extends Controller
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
 
-    
+    public function googleSettings()
+    {
+        $settings = GoogleSetting::first();
+        return view('admin.misc.google-settings', compact('settings'));
+    }
+
+    public function updateGoogleSettings(Request $request)
+    {
+    $request->validate([
+        'google_client_id' => 'required|string',
+        'google_client_secret' => 'required|string',
+        'google_redirect_uri' => 'required|string|url',
+    ]);
+
+    try {
+        GoogleSetting::updateOrCreate(
+            ['id' => 1], 
+            [
+                'google_client_id' => $request->google_client_id,
+                'google_client_secret' => $request->google_client_secret,
+                'google_redirect_uri' => $request->google_redirect_uri,
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Google settings updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update Google settings: ' . $e->getMessage());
+        }
+        
+    }
 }

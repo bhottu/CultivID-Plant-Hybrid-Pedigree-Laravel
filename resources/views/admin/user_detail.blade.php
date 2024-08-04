@@ -5,8 +5,6 @@
     <div class="bg-white shadow-md rounded-lg p-6">
         <h1 class="text-3xl font-bold mb-6">User Detail</h1>
 
-
-        <!-- Tabel Detail Pengguna -->
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
              

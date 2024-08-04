@@ -15,17 +15,14 @@ class SearchController extends Controller
     {
         $query = $request->input('query');
 
-        // Cari Produk
         $products = Product::where('name', 'LIKE', "%{$query}%")
             ->orWhere('description', 'LIKE', "%{$query}%")
             ->get();
 
-        // Cari Pengguna
         $users = User::where('name', 'LIKE', "%{$query}%")
             ->orWhere('email', 'LIKE', "%{$query}%")
             ->get();
 
-        // Cari Postingan berdasarkan caption
         $posts = Post::where('caption', 'LIKE', "%{$query}%")
             ->get();
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto">
+<div class="container px-4 mx-auto">
     <h1 class="text-2xl font-bold mb-4">Categories</h1>
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -13,14 +13,14 @@
         </div>
     @endif
     <div class="mb-6">
-    <div class="grid grid-cols-1 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-4">
-        @foreach($categories as $category)
-            <a href="{{ route('category.show', $category->slug) }}" class="block border p-2 rounded text-center hover:bg-blue-100">
-                <h2 class="text-md font-bold">{{ $category->name }}</h2>
-            </a>
-        @endforeach
+        <div class="grid grid-cols-1 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-4">
+            @foreach($categories as $category)
+                <a href="{{ route('category.show', $category->slug) }}" class="block border p-2 rounded text-center hover:bg-blue-100">
+                    <h2 class="text-md font-bold">{{ $category->name }}</h2>
+                </a>
+            @endforeach
+        </div>
     </div>
-</div>
 </div>
 
 

@@ -1,9 +1,8 @@
-<!-- resources/views/post/show.blade.php -->
 
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto my-8">
+    <div class="container mx-auto ">
             @if ($post->image)
                 <img onclick="openImagePopup('{{ asset('storage/' . $post->image) }}', '{{ $post->id }}')" src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->caption }}" class="w-full h-64 object-cover">
             @endif
@@ -25,28 +24,26 @@
                     </div>
                 </div>
         </div>
-    
 
-    <div class="flex justify-between items-center mt-4">
-            <div>
-                <p><i class="fas fa-heart"></i> {{ $post->likes->count() }}</p>
+        <div class="flex justify-between items-center mt-4">
+                <div>
+                    <p><i class="fas fa-heart"></i> {{ $post->likes->count() }}</p>
+                </div>
+            <div class="flex items-center space-x-2">
+                <form action="{{ route('post.like', ['postId' => $post->id]) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center space-x-1">
+                        <i class="fas fa-heart"></i>
+                        <span class="ml-1">Like</span>
+                    </button>
+                </form>
+                    @csrf
+                <form action="{{ route('post.share', ['post' => $post->id]) }}" method="POST">    
+                    @csrf
+                    <button type="submit"><i class="fas fa-share-alt"></i> Share</button>
+                </form>
             </div>
-        <div class="flex items-center space-x-2">
-            <form action="{{ route('post.like', ['postId' => $post->id]) }}" method="POST">
-                @csrf
-                <button type="submit" class="flex items-center space-x-1">
-                    <i class="fas fa-heart"></i>
-                    <span class="ml-1">Like</span>
-                </button>
-            </form>
-                @csrf
-            <form action="{{ route('post.share', ['post' => $post->id]) }}" method="POST">    
-                @csrf
-                <button type="submit"><i class="fas fa-share-alt"></i> Share</button>
-            </form>
-            </form>
         </div>
-    </div>
 
              <form action="{{ route('post.comment', ['post' => $post->id]) }}" method="POST" class="mt-4">
                 @csrf

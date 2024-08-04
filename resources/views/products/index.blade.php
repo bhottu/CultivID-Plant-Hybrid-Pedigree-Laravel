@@ -8,7 +8,7 @@
     @endif
 
         <div>
-            <h1 class="text-white text-center xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl xs:text-xl font-semibold bg-gray-800 p-2 bg-opacity-40 rounded-sm">Open a Store, Find Buyers, Create Opportunities!</h1>
+            <h1 class="text-white text-center xl:text-5xl lg:text-4xl mb-2 md:text-3xl sm:text-2xl xs:text-xl font-semibold bg-gray-800 p-2 bg-opacity-40 rounded-sm">Open a Store, Find Buyers, Create Opportunities!</h1>
         </div>
         <div class="w-full mx-auto">
             <form action="{{ route('search') }}" method="GET" class="flex items-center">
@@ -46,117 +46,118 @@
 
 <div class="container mx-auto my-8">
 
-<!-- Thanks to Mereani Waqa for this section -->
-<section id="works" class="mt-4 relative border-l-4 border-double border-sky-500 bg-sky-100 py-10 sm:py-16 lg:py-5">
-    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="text-4xl text-gray-600 font-semibold mx-auto md:text-4xl lg:text-4xl">How does it work?</h2>
-        </div>
-        <div class="relative mt-12 lg:mt-5">
-            <div class="absolute inset-x-0 hidden xl:px-44 top-2 md:block md:px-20 lg:px-28">     
-            <svg width="875" height="48" viewBox="0 0 875 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 29C20.2154 33.6961 38.9915 35.1324 57.6111 37.5555C80.2065 40.496 102.791 43.3231 125.556 44.5555C163.184 46.5927 201.26 45 238.944 45C312.75 45 385.368 30.7371 458.278 20.6666C495.231 15.5627 532.399 11.6429 569.278 6.11109C589.515 3.07551 609.767 2.09927 630.222 1.99998C655.606 1.87676 681.208 1.11809 706.556 2.44442C739.552 4.17096 772.539 6.75565 805.222 11.5C828 14.8064 850.34 20.2233 873 24" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 12"/>
-</svg>
+    <section id="works" class="relative border-double border-sky-500 mb-4 bg-sky-100 py-10 sm:py-16 lg:py-5">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-4xl text-gray-600 font-semibold mx-auto md:text-4xl lg:text-4xl">How does it work?</h2>
+            </div>
+            <div class="relative mt-12 lg:mt-5">
+                <div class="absolute inset-x-0 hidden xl:px-44 top-2 md:block md:px-20 lg:px-28">     
+                <svg width="875" height="48" viewBox="0 0 875 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 29C20.2154 33.6961 38.9915 35.1324 57.6111 37.5555C80.2065 40.496 102.791 43.3231 125.556 44.5555C163.184 46.5927 201.26 45 238.944 45C312.75 45 385.368 30.7371 458.278 20.6666C495.231 15.5627 532.399 11.6429 569.278 6.11109C589.515 3.07551 609.767 2.09927 630.222 1.99998C655.606 1.87676 681.208 1.11809 706.556 2.44442C739.552 4.17096 772.539 6.75565 805.222 11.5C828 14.8064 850.34 20.2233 873 24" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 12"/>
+                </svg>
 
-            </div>
-            <div class="relative grid grid-cols-1 text-center gap-y-12 md:grid-cols-3 gap-x-12">
-                <div>
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100  border-2 border-gray-400 rounded-full shadow">
-                        <span class="text-xl font-semibold text-gray-400">1</span>
-                    </div>
-                    <h3 class="mt-2 text-xl  text-gray-600  font-semibold leading-tight md:mt-2">Search for Products</h3>
-                    <p class="mt-4 text-base text-gray-400 md:text-lg">
-                    Browse and find desired products
-                    </p>
                 </div>
-                <div>
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 border-2 border-gray-400 rounded-full shadow">
-                        <span class="text-xl font-semibold text-gray-400">2</span>
+
+                <div class="relative grid grid-cols-1 text-center gap-y-12 md:grid-cols-3 gap-x-12">
+                    <div>
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100  border-2 border-gray-400 rounded-full shadow">
+                            <span class="text-xl font-semibold text-gray-400">1</span>
+                        </div>
+                        <h3 class="mt-2 text-xl  text-gray-600  font-semibold leading-tight md:mt-2">Search for Products</h3>
+                        <p class="mt-4 text-base text-gray-400 md:text-lg">
+                        Browse and find desired products
+                        </p>
                     </div>
-                    <h3 class="mt-2 text-xl text-gray-600 font-semibold leading-tight md:mt-2">Contact the Seller</h3>
-                    <p class="mt-4 text-base text-gray-400 md:text-lg">
-                    Reach out, negotiate, discuss details.
-                    </p>
-                </div>
-                <div>
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 border-2 border-gray-400 rounded-full shadow">
-                        <span class="text-xl font-semibold text-gray-400">3</span>
+                    <div>
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 border-2 border-gray-400 rounded-full shadow">
+                            <span class="text-xl font-semibold text-gray-400">2</span>
+                        </div>
+                        <h3 class="mt-2 text-xl text-gray-600 font-semibold leading-tight md:mt-2">Contact the Seller</h3>
+                        <p class="mt-4 text-base text-gray-400 md:text-lg">
+                        Reach out, negotiate, discuss details.
+                        </p>
                     </div>
-                    <h3 class="mt-2 text-xl text-gray-600 font-semibold leading-tight md:mt-2">Complete the Transaction</h3>
-                    <p class="mt-4 text-base text-gray-400 md:text-lg">
-                    Finalize purchase using secure payment.
-                    </p>
+                    <div>
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 border-2 border-gray-400 rounded-full shadow">
+                            <span class="text-xl font-semibold text-gray-400">3</span>
+                        </div>
+                        <h3 class="mt-2 text-xl text-gray-600 font-semibold leading-tight md:mt-2">Complete the Transaction</h3>
+                        <p class="mt-4 text-base text-gray-400 md:text-lg">
+                        Finalize purchase using secure payment.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="absolute inset-0 m-auto max-w-xs h-[357px] blur-[118px] sm:max-w-md md:max-w-lg"
-        style="background:radial-gradient(1.89deg, rgba(34, 78, 95, 0.4) -1000%, rgba(191, 227, 205, 0.26) 1500.74%, rgba(34, 140, 165, 0.41) 56.49%, rgba(28, 47, 99, 0.11) 1150.91%)">
-    </div>
-</section>
+        <div class="absolute inset-0 m-auto max-w-xs h-[357px] blur-[118px] sm:max-w-md md:max-w-lg"
+            style="background:radial-gradient(1.89deg, rgba(34, 78, 95, 0.4) -1000%, rgba(191, 227, 205, 0.26) 1500.74%, rgba(34, 140, 165, 0.41) 56.49%, rgba(28, 47, 99, 0.11) 1150.91%)">
+        </div>
+    </section>
 
     <!-- Recently Products Section -->
-<div class="flex justify-between items-center mt-4 mb-6">
-    <h1 class="text-2xl font-bold border-l-4 border-double border-sky-500 pl-4">Recently Products</h1>
-    <a href="{{ route('all.products') }}" id="view-more" class="bg-white hover:bg-blue-100 text-gray-500 font-bold py-2 px-4 rounded border border-gray-500 focus:outline-none focus:shadow-outline">View All</a>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-    @if ($products->isEmpty())
-        <p>No products yet. <a href="{{ route('products.create') }}" class="text-red-500 rounded bg-blue-200 hover:bg-gray-200 py-1 px-2">Add a Product</a></p>
-    @else
-        @foreach ($products as $product)
-            <div class="bg-white rounded-lg overflow-hidden shadow-lg">
-                @if ($product->image_path)
-                    <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
-                        <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
-                    </a>
-                @endif
-                <div class="p-4">
-                    <a href="{{ route('products.show', $product) }}" class="text-blue-900 hover:text-gray-500">
-                        <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
-                    </a>
-                    <div class="flex items-center mt-2">
-                        @if ($product->discount)
-                            <span class="text-red-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                        @else
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                        @endif
-                    </div>
-                    <div class="flex items-center mt-2">
-                        <a href="{{ url('profile/' . $product->user->id) }}">
-                            @if ($product->user && $product->user->profile_photo_path)
-                                <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-10 w-10 rounded-full">
-                            @else
-                                <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-10 w-10 rounded-full">
-                            @endif
-                        </a>
-                        <div class="ml-2">
-                            <span class="font-semibold">
-                                <a href="{{ url('profile/' . $product->user->id) }}" class="hover:text-gray-500">{{ $product->user->name ?? 'Unknown' }}</a>
-                            </span>
-                            <div class="text-gray-500 text-xs">{{ $product->created_at->format('d M Y') }}</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-800 mt-2">{{ Str::limit($product->description, 50) }}</p>
-                    @if ($product->category)
-                        <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 py-1 rounded-full text-xs hover:bg-gray-300">
-                            #{{ $product->category->name }}
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mt-4 mb-6">
+        <h1 class="text-2xl font-bold border-l-4 border-double border-sky-500 pl-4">Recently Products</h1>
+        <a href="{{ route('all.products') }}" id="view-more" class="bg-white hover:bg-blue-100 text-gray-500 font-bold py-2 px-4 rounded border border-gray-500 focus:outline-none focus:shadow-outline">View All</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4">
+        @if ($products->isEmpty())
+            <p>No products yet. <a href="{{ route('products.create') }}" class="text-red-500 rounded bg-blue-200 hover:bg-gray-200 py-1 px-2">Add a Product</a></p>
+        @else
+            @foreach ($products as $product)
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg">
+                    @if ($product->image_path)
+                        <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
+                            <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
                         </a>
                     @endif
+                    <div class="p-4">
+                        <a href="{{ route('products.show', $product) }}" class="text-blue-900 hover:text-gray-500">
+                            <h2 class="text-xl font-semibold text-gray-800">{{ $product->name }}</h2>
+                        </a>
+                        <div class="flex items-center mt-2">
+                            @if ($product->discount)
+                                <span class="text-red-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                                <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
+                            @else
+                                <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            @endif
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <a href="{{ url('profile/' . $product->user->id) }}">
+                                @if ($product->user && $product->user->profile_photo_path)
+                                    <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-10 w-10 rounded-full">
+                                @else
+                                    <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-10 w-10 rounded-full">
+                                @endif
+                            </a>
+                            <div class="ml-2">
+                                <span class="font-semibold">
+                                    <a href="{{ url('profile/' . $product->user->id) }}" class="hover:text-gray-500">{{ $product->user->name ?? 'Unknown' }}</a>
+                                </span>
+                                <div class="text-gray-500 text-xs">{{ $product->created_at->format('d M Y') }}</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-800 mt-2">{{ Str::limit($product->description, 50) }}</p>
+                        @if ($product->category)
+                            <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 py-1 rounded-full text-xs hover:bg-gray-300">
+                                #{{ $product->category->name }}
+                            </a>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        @endforeach
-    @endif
+            @endforeach
+        @endif
+    </div>
 </div>
-
 
     
     <!-- Discounted Section -->
-<div class="mb-6 mt-4">
+<div class="container mx-auto px-4 mt-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold border-l-4 border-double border-sky-500 pl-4">Discounted Products</h1>
         <a href="{{ route('discounted.products') }}" id="view-more" class="bg-white hover:bg-blue-100 text-gray-500 font-bold py-2 px-4 rounded border border-gray-500 focus:outline-none focus:shadow-outline">View All</a>
@@ -210,7 +211,7 @@
 
 
  <!-- Posts Section -->
-<div class="mb-6 w-auto mt-4">
+<div class="container mx-auto px-4 sm:px-6 mt-4 lg:px-8">
     <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold border-l-4 border-double border-sky-500 pl-4">Discuss</h1>
         <a href="{{ route('index.sosmed') }}" id="view-more" class="bg-white hover:bg-blue-100 text-gray-500 font-bold py-2 px-4 rounded border border-gray-500 focus:outline-none focus:shadow-outline">View All</a>

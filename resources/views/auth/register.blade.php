@@ -3,13 +3,10 @@
 @section('content')
 <div class="container mx-auto">
     <div class="max-w-md mx-auto my-8">
-        <!-- Logo -->
         <div class="flex justify-center mb-4">
             <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="h-16 w-auto"> 
         </div>
-        <!-- Login Form -->
-
-        <form action="{{ route('register') }}" method="post" class="max-w-md mx-auto my-8">
+        <form action="{{ route('register') }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
         @csrf
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>

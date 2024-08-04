@@ -13,7 +13,6 @@
                     <img src="{{ asset('storage/' . $share->post->image) }}" alt="Post Image" class="w-full h-auto mb-2">
                 @endif
 
-                <!-- Tampilkan detail postingan -->
                 <p>{{ $share->post->content }}</p>
             </div>
         @endforeach

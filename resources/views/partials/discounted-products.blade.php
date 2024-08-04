@@ -10,10 +10,8 @@
                 <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
             </a>
             <div class="flex items-center mb-2">
-          
                 <span class="text-gray-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                 <span class="text-red-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-            
             </div>
             <div class="flex items-center">
                 <a href="{{ url('profile/' . $product->user->id) }}">

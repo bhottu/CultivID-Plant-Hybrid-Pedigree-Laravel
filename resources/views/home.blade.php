@@ -3,7 +3,6 @@
 @section('title', 'Discuss')
 
 @section('content')
-
      
         <div id="post-list-profile">
             @include('partials.posts', ['posts' => $posts])
@@ -14,13 +13,7 @@
                 <button id="load-more-postx" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Load More</button>
             </div>
         @endif
-
-        
-       
-        
-@endsection
-
-</div>
+   
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
@@ -65,3 +58,6 @@
 });
 
 </script>
+
+@endsection
+

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="container mx-auto">
+<div class="container px-4 mx-auto">
     <div class="m-4 mx-auto rounded-md overflow-hidden">
         <h2 class="text-xl font-semibold">{{ $user->name }}'s Profile</h2>
     </div>
@@ -16,7 +16,6 @@
         @endif
 
         <div class="flex ml-4 flex-grow">
-                <!-- Kontainer untuk detail profil -->
             <div class="flex-1 pr-4">
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-gray-900 font-semibold text-3xl">{{ $user->name }}</span>
@@ -72,21 +71,17 @@
                     </div>
             </div>
 
-                <!-- Kontainer untuk peta -->
-                <div class="w-48 h-48 ">
-                    <div id="map" class="rounded" style="height: 100%; width: 100%;"></div>
-                    <div class="text-gray-500 text-sm text-center">Member since {{ $user->created_at->format('F Y') }}</div>
-                </div>
-            
-
+            <div class="hidden md:block w-full h-48 mt-4">
+                <div id="map" class="rounded h-full" style="width: 100%;"></div>
+                <div class="text-gray-500 text-sm text-center mt-2">Member since {{ $user->created_at->format('F Y') }}</div>
+            </div>
 
         </div>
     </div>
 </div>
 
 
-<div class="container mx-auto flex flex-wrap">
-    
+<div class="container px-4 mx-auto flex flex-wrap">
     <div class="w-full md:w-2/3 border mt-4 p-4">
         <div class="m-4 mx-auto rounded-md overflow-hidden">
             <h2 class="text-xl font-semibold">{{ $user->name }}'s Products</h2>
@@ -108,7 +103,6 @@
         @endif
     </div>
     
-    <!-- Profil pengguna lainnya dan pos -->
     <div class="w-full md:w-1/3 mt-4 border p-4">
         
         <div class="max-w-md m-4 mt-4 mx-auto rounded-md overflow-hidden">
@@ -176,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
-    const userId = {{ $user->id }}; // Pastikan ini ada di blade template yang tepat
+    const userId = {{ $user->id }}; 
 
     const loadMoreButton = document.getElementById('load-more-post-profile');
 
@@ -202,10 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const postList = document.getElementById('post-list-on-profile');
 
-                // Append new posts to the post list
                 postList.insertAdjacentHTML('beforeend', data.html);
 
-                // Hide load more button if no more pages
                 if (!data.nextPageUrl) {
                     loadMoreButton.style.display = 'none';
                 }
@@ -224,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const followButton = document.getElementById('follow-button');
     followButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Mencegah form dikirim secara default
+        event.preventDefault(); 
 
         const action = followButton.getAttribute('data-action');
         const userId = {{ $user->id }};
