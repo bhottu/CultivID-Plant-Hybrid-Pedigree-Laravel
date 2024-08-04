@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <h1 class="text-2xl font-bold mb-6">Tambah Produk</h1>
+        <h1 class="text-2xl font-bold mb-6">Add Product</h1>
         @csrf
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Nama Produk</label>
