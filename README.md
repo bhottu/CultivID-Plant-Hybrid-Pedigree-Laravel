@@ -104,3 +104,50 @@ Ensure that your server meets the following requirements:
 These steps should help you set up and run your Laravel project smoothly. Let me know if you need any more help!
 Support :
 mingleteam777@gmail.com
+
+---
+### OTHER SETTINGS FOR WEBSITE
+---
+### Google Login Setup
+
+- **Open Google Cloud Console.**
+- In the left menu, navigate to **APIs & Services > Credentials**.
+- Select an existing **OAuth 2.0 Client ID** or create a new one.
+- In the **Authorized redirect URIs** section, add:
+  ```
+  http://your-website.com/auth/google/callback
+  ```
+- Copy the **Client ID** and **Client Secret**.
+- Go to the admin page, select the **Google Settings** menu, and paste the **Client ID** and **Client Secret** you just copied.
+
+---
+### Email Configuration 
+
+- **Open the `.env` file.**
+- Locate the section:
+
+  ```dotenv
+  MAIL_MAILER=log
+  MAIL_HOST=127.0.0.1
+  MAIL_PORT=2525
+  MAIL_USERNAME=null
+  MAIL_PASSWORD=null
+  MAIL_ENCRYPTION=null
+  MAIL_FROM_ADDRESS="hello@example.com"
+  MAIL_FROM_NAME="${APP_NAME}"
+  ```
+
+- **Update it with your email configuration:**
+
+  ```dotenv
+  MAIL_MAILER=smtp
+  MAIL_HOST=your-mail-host
+  MAIL_PORT=your-mail-port
+  MAIL_USERNAME=your-mail-username
+  MAIL_PASSWORD=your-mail-password
+  MAIL_ENCRYPTION=tls  # or 'ssl' if required
+  MAIL_FROM_ADDRESS="your-email@example.com"
+  MAIL_FROM_NAME="Your Name or Company"
+  ```
+
+Replace `your-mail-host`, `your-mail-port`, `your-mail-username`, `your-mail-password`, and other placeholders with your actual email configuration details.
