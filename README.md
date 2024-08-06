@@ -74,6 +74,9 @@ Ensure that your server meets the following requirements:
    - Open `app/Providers/AppServiceProvider.php` in your code editor.
    - Locate the lines of code with `//` and remove these comments.
 
+     Screenshot
+     <img src="https://github.com/user-attachments/assets/f2d39036-800e-448c-aa5c-3b89912e9709">
+
 10. **Compile Assets:**
     Compile your assets for development or production:
 
