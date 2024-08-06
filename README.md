@@ -17,7 +17,7 @@ Ensure that your server meets the following requirements:
 ### Installation Steps for Your Project
 
 1. **Download and Extract the Project:**
-   Download the zip file of the project from Codecanyon and extract it to your chosen directory.
+   Download the zip file of the project and extract it to your chosen directory.
 
 2. **Navigate to the Project Directory:**
    Change to the project directory:
