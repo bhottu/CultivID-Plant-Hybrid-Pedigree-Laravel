@@ -19,6 +19,7 @@
             </div>
         @endif
 
+        
         <h1 class="text-2xl font-bold mb-6">Add Product</h1>
         @csrf
         <div class="mb-4">
