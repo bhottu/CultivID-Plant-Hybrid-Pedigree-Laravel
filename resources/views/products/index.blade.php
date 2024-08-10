@@ -3,8 +3,11 @@
 @section('content')
 
 <section class="w-full">
+    
     @if (isset($settings) && $settings->banner)
-        <div class="w-full h-[520px] bg-cover bg-no-repeat bg-center flex flex-col justify-center items-center" style="background-image: url('{{ Storage::url($settings->banner) }}')">
+    <div class="w-full h-[520px] bg-cover bg-no-repeat bg-center flex flex-col justify-center items-center" style="background-image: url('{{ Storage::url($settings->banner) }}')">
+    @else
+    <div class="w-full h-[520px] bg-cover bg-no-repeat bg-center flex flex-col justify-center items-center" style="background-image: url('{{ asset('/storage/banners/banner.jpg') }}')">
     @endif
 
         <div>

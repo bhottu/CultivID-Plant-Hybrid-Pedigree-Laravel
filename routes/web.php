@@ -18,7 +18,9 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Admin\GoogleSettingController;
 use App\Http\Controllers\GoogleAdsenseClientController;
 use App\Http\Controllers\Admin\MembaraSettingController;
+use App\Http\Controllers\API\ListProductController;
 
+Route::get('/list/products', [ListProductController::class, 'index']);
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 

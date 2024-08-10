@@ -32,6 +32,12 @@
             
             <button type="submit" class="w-full bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
             
+            <div class="flex mt-4 items-center">
+                <hr class="flex-grow border-t border-gray-300">
+                <span class="mx-4 text-gray-500">login / register</span>
+                <hr class="flex-grow border-t border-gray-300">
+            </div>
+
             <div class="flex mt-4 justify-center">
                 <a href="{{ url('auth/google') }}" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 text-center rounded focus:outline-none focus:shadow-outline">
                     Login with Google
