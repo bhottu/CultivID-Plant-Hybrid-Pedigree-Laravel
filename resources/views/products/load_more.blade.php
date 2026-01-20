@@ -1,9 +1,22 @@
 @foreach ($products as $product)
     <div class="bg-white rounded-lg overflow-hidden mb-4 shadow-lg product-item">
         <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
-            @if($product->image_path)
-                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
-            @endif
+        @if ($product->image_path)
+                    <div class="relative">
+                            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
+                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
+                                @if ($product->is_sold_out)
+                                    <span class="absolute bottom-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
+                                        Sold Out
+                                    </span>
+                                @else
+                                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
+                                        Available
+                                    </span>
+                                @endif
+                            </a>
+                        </div>
+                    @endif
         </a>
         <div class="p-4">
             <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">

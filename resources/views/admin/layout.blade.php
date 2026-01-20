@@ -63,40 +63,31 @@
 
     <div class="flex min-h-screen bg-white-800">
         <!-- Sidebar -->
-        <div x-data="{ open: true }" x-bind:class="{'sidebar-open': open}" class="relative flex">
+        <div x-data="{ open: false }" x-bind:class="{'sidebar-open': open}" class="relative flex">
             <div :class="{'w-64': open, 'w-16': !open}" class="bg-gray-800 text-white flex flex-col transition-width duration-300">
                 <!-- Toggle Button -->
-                <button @click="open = !open" class="absolute top-4 left-4 text-gray-600 dark:text-gray-300 z-10 flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
+                <button @click="open = !open" class="absolute top-4 left-4 text-white-600 dark:text-gray-300 z-10 flex items-center space-x-2 p-2  dark:bg-gray-700 rounded-lg" title="Open Menu">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18" />
                     </svg>
-                    <span class="hidden md:inline">
-                                @if (isset($settings) && isset($settings['logo']))
-                                    {{ $settings->website_name }}
-                                @endif
-                    </span> <!-- Teks yang akan ditampilkan di samping tombol -->
+                   
                 </button>
 
 
                 <nav class="flex-1 px-2 py-4 bg-gray-800">
                     <ul class="space-y-2 pt-10">
                         <li>
-                            <a href="{{ route('admin.home') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75V21h18V9.75L12 3 3 9.75zM13.5 21v-7.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21H6v-6.75a2.25 2.25 0 0 1 2.25-2.25h4.5A2.25 2.25 0 0 1 15 14.25V21h-1.5z"/>
-                            </svg>
+                            <a href="{{ route('admin.home') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Home">
+                            <i class="fas fa-home" ></i>
                                 <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Home</span>
                             </a>
                         </li>
 
-                        <div x-data="{ openItems: true }">
+                        <div x-data="{ openItems: false }">
                             <li>
-                                <a href="#" @click.prevent="openItems = !openItems" class="flex items-center justify-between px-4 py-2 text-gray-100 hover:bg-gray-700">
+                                <a href="#" @click.prevent="openItems = !openItems" class="flex items-center justify-between px-4 py-2 text-gray-100 hover:bg-gray-700" title="Items">
                                     <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/>
-                                    </svg>
-
+                                    <i class="fas fa-box"></i>
                                         <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Items</span>
                                     </span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 ml-2">
@@ -105,13 +96,13 @@
                                 </a>
                                 <ul x-show="openItems" class="pl-4 space-y-1">
                                     <li>
-                                        <a href="{{ route('admin.items.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">All items</span>
+                                        <a href="{{ route('admin.items.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="All Items">
+                                       - <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">All items</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('admin.items.categories') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Categories</span>
+                                        <a href="{{ route('admin.items.categories') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Categories">
+                                           - <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Categories</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -119,42 +110,40 @@
                         </div>
 
                         <li>
-                            <a href="{{ route('admin.discuss') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-6.24-.402c-2.05.266-4.002.728-5.873 1.377a2.127 2.127 0 0 0-2.76 2.735v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194v4.622l4.155-4.155"/>
-                            </svg>
-                                <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Discuss</span>
+                            <a href="{{ route('admin.discuss') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Community">
+                            <i class="fas fa-comments"></i>
+                                <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Community</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 21v-1.125c0-1.657-1.343-3-3-3h-3c-1.657 0-3 1.343-3 3V21m3-11.25h-.008v.008H12v-.008m-4.5 0H7.492v.008H7.5v-.008M18 10.5c0 3-1.5 5.25-6 5.25s-6-2.25-6-5.25 1.5-5.25 6-5.25 6 2.25 6 5.25z"/>
-                            </svg>
+                            <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Users">
+                            <i class="fas fa-user"></i>
                                 <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Users</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('admin.settings.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.743 3.607a1.125 1.125 0 0 1 2.514 0l.075.177a6.375 6.375 0 0 1 3.25 1.045l.133.113a1.125 1.125 0 0 1 .208 1.333l-.066.132a6.375 6.375 0 0 1 1.305 1.435l.097.15a1.125 1.125 0 0 1-.083 1.35l-.123.093a6.375 6.375 0 0 1 .455 1.486l.013.072a1.125 1.125 0 0 1-1.226 1.226l-.072-.013a6.375 6.375 0 0 1-1.486.455l-.093.123a1.125 1.125 0 0 1-1.35-.083l-.15-.097a6.375 6.375 0 0 1-1.435 1.305l-.132-.066a1.125 1.125 0 0 1-1.333.208l-.113-.133a6.375 6.375 0 0 1-1.045 3.25l-.177.075a1.125 1.125 0 0 1-1.35-.083l-.097-.15a6.375 6.375 0 0 1-1.305-1.435l-.066-.132a1.125 1.125 0 0 1-.208-1.333l.113-.133a6.375 6.375 0 0 1-1.045-3.25l-.075-.177a1.125 1.125 0 0 1 .083-1.35l.15-.097a6.375 6.375 0 0 1 1.435-1.305l.132-.066a1.125 1.125 0 0 1 1.333-.208l.113.133a6.375 6.375 0 0 1 3.25-1.045l.177-.075zM12 9.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z"/>
-                            </svg>
+                            <a href="{{ route('admin.plant-submissions.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="PlantDB">
+                            <i class="fas fa-seedling"></i>
+                                <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Plant Database</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.settings.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Settings">
+                            <i class="fas fa-cog"></i>
                                 <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Settings</span>
                             </a>
                         </li>
                     </ul>
 
                     <ul>
-                        <div x-data="{ openMisc: true }">
+                        <div x-data="{ openMisc: false }">
                             <li>
-                                <a href="#" @click.prevent="openMisc = !openMisc" class="flex items-center justify-between px-4 py-2 text-gray-100 hover:bg-gray-700">
+                                <a href="#" @click.prevent="openMisc = !openMisc" class="flex items-center justify-between px-4 py-2 text-gray-100 hover:bg-gray-700" title="Miscellaneous">
                                     <span class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/>
-                                    </svg>
-
+                                    <i class="fas fa-th-large"></i>
                                         <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Misc</span>
                                     </span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 ml-2">
@@ -163,22 +152,22 @@
                                 </a>
                                 <ul x-show="openMisc" class="pl-4 space-y-1">
                                     <li>
-                                        <a href="{{ route('currencies.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Currencies</span>
+                                        <a href="{{ route('currencies.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Currencies">
+                                            - <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Currencies</span>
                                         </a>
                                     </li>
                                 </ul>
                                 <ul x-show="openMisc" class="pl-4 space-y-1">
                                     <li>
-                                        <a href="{{ route('google.settings') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Login Setting</span>
+                                        <a href="{{ route('google.settings') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Google Login Setting">
+                                           - <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Login Setting</span>
                                         </a>
                                     </li>
                                 </ul>
                                 <ul x-show="openMisc" class="pl-4 space-y-1">
                                     <li>
-                                        <a href="{{ route('google.adsense.edit') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">
-                                            <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Adsense</span>
+                                        <a href="{{ route('google.adsense.edit') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Google Adsense">
+                                           - <span :class="{'sidebar-text': true}" class="ml-4"  x-show="open">Google Adsense</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -195,6 +184,8 @@
     </div>
 
 <script>
+
+    @stack('scripts')
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     const body = document.body;
     const isDarkMode = localStorage.getItem('darkMode') === 'true';

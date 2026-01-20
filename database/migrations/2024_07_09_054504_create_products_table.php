@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Tambahkan ini
             $table->string('image_path')->nullable();
             $table->string('video_path')->nullable();
+            $table->boolean('is_sold_out')->default(false); // Kolom baru
             $table->timestamps();
         });
     }

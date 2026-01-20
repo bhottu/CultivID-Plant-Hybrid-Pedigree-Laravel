@@ -1,16 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container px-4 mx-auto my-8">
-    <h1 class="text-2xl font-bold mb-6">Recently Products</h1>
-    <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+<div class="container mx-auto max-w-lg px-4 my-4">
+        <h1 class="text-2xl font-bold text-gray-800">Market</h1>
+        <p class="text-sm text-gray-500">No fee & free to submit.</p>
+</div>
+
+<div class="container mx-auto max-w-lg px-4 my-4">
+    
+    <div id="product-list" class="grid grid-cols-1 gap-4 mt-4">
         @foreach ($products as $product)
             <div class="bg-white rounded-lg overflow-hidden shadow-lg">
-                @if($product->image_path)
-                <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
-                    <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
-                </a>
-                @endif
+                    @if ($product->image_path)
+                    <div class="relative">
+                            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
+                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
+                                @if ($product->is_sold_out)
+                                    <span class="absolute bottom-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
+                                        Sold Out
+                                    </span>
+                                @else
+                                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
+                                        Available
+                                    </span>
+                                @endif
+                            </a>
+                        </div>
+                    @endif
 
                 <div class="p-4">
                     <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">
@@ -37,9 +54,9 @@
 
                         </a>
                         <div class="ml-2">
-                            <span class="font-semibold"><a href="{{ url('profile/' . $product->user->id) }}" class="hover:text-gray-500">
+                            <span class="font-semibold"><a href="{{ url('profile/' . $product->user->username) }}" class="hover:text-gray-500">
                             {{ $product->user->name ?? 'Unknown' }}</a></span>
-                            <div class="text-gray-500 text-xs">{{ $product->created_at->format('d M Y') }}</div>
+                            <div class="text-gray-500 text-xs">{{ $product->created_at->diffForHumans() }}</div>
                         </div>
                     </div>
 
@@ -59,8 +76,12 @@
 </div>
 
 @if ($products->hasMorePages())
-    <div class="mt-4 flex justify-center">
-        <button id="load-more" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">Load More</button>
+    <!-- Load More Sentinel -->
+    <div id="load-more" class="mt-4 text-center">
+        <div id="loading-spinner" class="hidden">
+            <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading more products...
+        </div>
+        <div id="no-more" class="hidden text-gray-500">No more products</div>
     </div>
 @endif
 
@@ -93,4 +114,70 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMorePages = {{ $products->hasMorePages() ? 'true' : 'false' }};
+
+    const loadMoreElement = document.getElementById('load-more');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const noMoreElement = document.getElementById('no-more');
+
+    if (loadMoreElement) {
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && hasMorePages && !isLoading) {
+                    loadNextPage();
+                }
+            });
+        }, {
+            rootMargin: '100px'
+        });
+
+        observer.observe(loadMoreElement);
+    }
+
+    function loadNextPage() {
+        if (isLoading || !hasMorePages) return;
+
+        isLoading = true;
+        loadingSpinner.classList.remove('hidden');
+        noMoreElement.classList.add('hidden');
+
+        const nextPage = currentPage + 1;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(`{{ route('load-more-products') }}?page=${nextPage}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.html) {
+                // Append new products
+                const productList = document.getElementById('product-list');
+                productList.insertAdjacentHTML('beforeend', data.html);
+                currentPage = nextPage;
+                hasMorePages = data.hasMorePages;
+            } else {
+                hasMorePages = false;
+                noMoreElement.classList.remove('hidden');
+            }
+
+            loadingSpinner.classList.add('hidden');
+            isLoading = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingSpinner.classList.add('hidden');
+            isLoading = false;
+        });
+    }
+});
+</script>
 @endsection

@@ -5,6 +5,28 @@
     <h1 class="text-2xl font-bold mb-6">Search Results for: "{{ $query }}"</h1>
 
     <div class="mb-8">
+        <h2 class="text-xl font-semibold">Plants Found</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            @forelse ($plantSubmissions as $submission)
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg p-4">
+                    <a href="{{ route('plant-submissions.show', $submission) }}" class="text-blue-500 hover:underline">
+                        <h2 class="text-xl font-semibold">Plant ID: {{ $submission->plant_id }}</h2>
+                    </a>
+                    <p class="text-gray-600">Induk Jantan: {{ $submission->induk_jantan }}</p>
+                    <p class="text-gray-600">Induk Betina: {{ $submission->induk_betina }}</p>
+                    <p class="text-gray-600">Penyilang: {{ $submission->penyilang }}</p>
+                    <p class="text-gray-800">{{ Str::limit($submission->keterangan, 50, '...') }}</p>
+                    @if ($submission->image)
+                        <img src="{{ asset('storage/' . $submission->image) }}" alt="Plant Submission" class="w-full h-64 object-cover mt-2">
+                    @endif
+                </div>
+            @empty
+                <p>No plant / Hybrid found.</p>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- <div class="mb-8">
         <h2 class="text-xl font-semibold">Products</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             @forelse ($products as $product)
@@ -30,6 +52,26 @@
             @endforelse
         </div>
     </div>
+-->
+
+<div class="mb-8">
+        <h2 class="text-xl font-semibold">Community Posts</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            @forelse ($posts as $post)
+                <div class="bg-white rounded-lg overflow-hidden shadow-lg p-4">
+                    <a href="{{ route('post.show', $post->id) }}" class="text-blue-500 hover:underline">
+                        <h2 class="text-xl font-semibold">{{ $post->caption }}</h2>
+                    </a>
+                    @if ($post->image)
+                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->caption }}" class="w-full h-64 object-cover">
+                    @endif
+                </div>
+            @empty
+                <p>No discuss found.</p>
+            @endforelse
+        </div>
+    </div>
+
 
     <div class="mb-8">
         <h2 class="text-xl font-semibold">Users</h2>
@@ -52,22 +94,8 @@
         </div>
     </div>
 
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold">Discuss</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            @forelse ($posts as $post)
-                <div class="bg-white rounded-lg overflow-hidden shadow-lg p-4">
-                    <a href="{{ route('post.show', $post->id) }}" class="text-blue-500 hover:underline">
-                        <h2 class="text-xl font-semibold">{{ $post->caption }}</h2>
-                    </a>
-                    @if ($post->image)
-                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->caption }}" class="w-full h-64 object-cover">
-                    @endif
-                </div>
-            @empty
-                <p>No discuss found.</p>
-            @endforelse
-        </div>
-    </div>
+    
+
+    
 </div>
 @endsection

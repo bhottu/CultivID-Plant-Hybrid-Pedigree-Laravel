@@ -7,6 +7,19 @@
     <div class="bg-white rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-semibold mb-4 text-center">Forgot Password</h1>
         
+        <div class="mb-4">
+                @if($errors->any())
+                    <div class="alert text-red-800 justify-left alert-danger">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert text-red justify-left alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+            </div>
+
         @if (session('status'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
                 <p>{{ session('status') }}</p>

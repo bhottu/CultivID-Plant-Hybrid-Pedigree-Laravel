@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Post;
 use App\Models\Share;
 use App\Models\Currency;
+use App\Models\PlantSubmission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -60,12 +61,25 @@ class ProfileController extends Controller
 
     public function show(User $user)
     {
-        $posts = $user->posts()->orderBy('created_at', 'desc')->paginate(3);
+        $posts = $user->posts()->orderBy('created_at', 'desc')->paginate(10);
         $shares = $user->shares()->orderBy('created_at', 'desc')->get();
         $products = $user->products()->paginate(6);
         
+        // Show approved plant submissions to all users
+        $plantSubmissions = $user->plantSubmissions()
+            ->where('status_review', 'approved')
+            ->whereNotNull('induk_betina')
+            ->whereNotNull('induk_jantan')
+            ->where('induk_betina', '!=', '')
+            ->where('induk_jantan', '!=', '')
+            ->orderBy('created_at', 'desc')
+            ->paginate(3);
 
-        return view('profile.show', compact('user', 'shares', 'posts', 'products'));
+        if (request()->header('HX-Request')) {
+            return view('partials.profile-content', compact('user', 'shares', 'posts', 'products', 'plantSubmissions'));
+        }
+
+        return view('profile.show', compact('user', 'shares', 'posts', 'products', 'plantSubmissions'));
     }
 
     public function edit()
@@ -121,20 +135,20 @@ class ProfileController extends Controller
     {
         $request->user()->following()->attach($user->id);
 
-        return response()->json([
-            'status' => 'followed',
-            'followers_count' => $user->followers()->count()
-        ]);
+        $buttonHtml = '<button id="follow-button" hx-post="' . route('profile.unfollow', $user) . '" hx-target="#follow-button" hx-swap="outerHTML" hx-vals=\'{"_token": "' . csrf_token() . '"}\' class="w-full font-bold py-3 rounded-lg transition mb-6 text-white bg-red-500 hover:bg-red-600">Unfollow</button>';
+        $followersHtml = '<div id="followers-count" hx-swap-oob="innerHTML"><i class="fas fa-users text-blue-500"></i> ' . $user->followers()->count() . ' Followers</div>';
+
+        return $buttonHtml . $followersHtml;
     }
 
     public function unfollow(Request $request, User $user)
     {
         $request->user()->following()->detach($user->id);
 
-        return response()->json([
-            'status' => 'unfollowed',
-            'followers_count' => $user->followers()->count()
-        ]);
+        $buttonHtml = '<button id="follow-button" hx-post="' . route('profile.follow', $user) . '" hx-target="#follow-button" hx-swap="outerHTML" hx-vals=\'{"_token": "' . csrf_token() . '"}\' class="w-full font-bold py-3 rounded-lg transition mb-6 text-white bg-green-500 hover:bg-green-600">Follow</button>';
+        $followersHtml = '<div id="followers-count" hx-swap-oob="innerHTML"><i class="fas fa-users text-blue-500"></i> ' . $user->followers()->count() . ' Followers</div>';
+
+        return $buttonHtml . $followersHtml;
     }
 
     public function loadMore(Request $request, User $user)
@@ -142,12 +156,35 @@ class ProfileController extends Controller
         try {
             $posts = $user->posts()->orderBy('created_at', 'desc')
                          ->paginate(5, ['*'], 'page', $request->page);
-    
+
             if ($request->ajax()) {
                 $view = view('partials.posts', compact('posts'))->render();
                 return response()->json(['html' => $view, 'nextPageUrl' => $posts->nextPageUrl()]);
             }
-    
+
+            return back();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function loadMorePlantSubmissions(Request $request, User $user)
+    {
+        try {
+            $plantSubmissions = $user->plantSubmissions()
+                             ->where('status_review', 'approved')
+                             ->whereNotNull('induk_betina')
+                             ->whereNotNull('induk_jantan')
+                             ->where('induk_betina', '!=', '')
+                             ->where('induk_jantan', '!=', '')
+                             ->orderBy('created_at', 'desc')
+                             ->paginate(5, ['*'], 'page', $request->page);
+
+            if ($request->ajax()) {
+                $view = view('partials.plant_submissions', compact('plantSubmissions'))->render();
+                return response()->json(['html' => $view, 'nextPageUrl' => $plantSubmissions->nextPageUrl()]);
+            }
+
             return back();
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

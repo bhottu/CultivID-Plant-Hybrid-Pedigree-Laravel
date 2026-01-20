@@ -10,16 +10,49 @@ class LikeController extends Controller
 {
     public function addLike($postId)
     {
-        $post = Post::findOrFail($postId);
+        try {
+            if (!Auth::check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized. Please login first.',
+                    'redirect' => route('login')
+                ], 401);
+            }
 
-        if ($post->likes()->where('user_id', Auth::id())->exists()) {
-            return redirect()->back()->with('error', 'You have already liked this post.');
+            $post = Post::findOrFail($postId);
+            $userId = Auth::id();
+
+            $existingLike = $post->likes()->where('user_id', $userId)->first();
+            
+            if ($existingLike) {
+                // Unlike
+                $existingLike->delete();
+                $likesCount = $post->likes()->count();
+                return response()->json([
+                    'success' => true,
+                    'liked' => false,
+                    'likes_count' => $likesCount,
+                    'message' => 'Post unliked successfully.'
+                ], 200);
+            }
+
+            // Like
+            $like = new Like();
+            $like->user_id = $userId;
+            $post->likes()->save($like);
+            
+            $likesCount = $post->likes()->count();
+            return response()->json([
+                'success' => true,
+                'liked' => true,
+                'likes_count' => $likesCount,
+                'message' => 'Post liked successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
-
-        $like = new Like();
-        $like->user_id = Auth::id();
-        $post->likes()->save($like);
-
-        return redirect()->back()->with('success', 'Post liked successfully.');
     }
 }

@@ -31,6 +31,7 @@
             <a class="mb-4 text-gray-600 text-sm hover:text-gray-800" href="{{ route('password.request') }}">Forgot Your Password?</a>
             
             <button type="submit" class="w-full bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
+            <a href="{{ route('register') }}" class="w-full bg-green-500 mt-4 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline block text-center">Register</a>
             
             <div class="flex mt-4 items-center">
                 <hr class="flex-grow border-t border-gray-300">
@@ -40,7 +41,7 @@
 
             <div class="flex mt-4 justify-center">
                 <a href="{{ url('auth/google') }}" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 text-center rounded focus:outline-none focus:shadow-outline">
-                    Login with Google
+                    Register/Login with Google
                 </a>
             </div>
         </form>

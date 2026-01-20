@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-4 px-4 py-8">
+<div class="container mx-auto mt-4 px-4 py-8 max-w-lg">
     <h1 class="text-2xl font-bold mb-4">Edit Profile</h1>
     <div class="border-doubled border-2 border-sky-200 bg-blue-100  shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="flex items-center">
@@ -39,6 +39,10 @@
 
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         @csrf
+        <div class="mb-4">
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+            <input type="text" class="bg-gray-200 border-dashed border-2 border-sky-500 shadow border-dashed border-2 border-sky-500 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="name" value="{{ old('username') ?? auth()->user()->username }}" disabled>
+        </div>
         <div class="mb-4">
             <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
             <input type="text" class="border-dashed border-2 border-sky-500 shadow border-dashed border-2 border-sky-500 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" value="{{ old('name') ?? auth()->user()->name }}">
@@ -82,8 +86,12 @@
         <div class="mb-4">
             <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Lokasi</label>
             <div id="map" style="height: 400px; width: 100%;"></div>
-            <div class="flex items-center space-x-4 mt-4">
+            <div class="mt-4">
+                <button type="button" id="getLocationBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs mb-2">Get Current Location</button>
+            </div>
+            <div class="flex items-center space-x-4">
         <div>
+            
             <label for="latitude" class="block text-gray-600 text-sm font-medium">Latitude</label>
             <input type="text" id="latitude" name="latitude" value="{{ old('latitude', $user->latitude) }}" class="border border-gray-300 rounded-md p-2 text-sm w-32">
         </div>
@@ -91,6 +99,7 @@
             <label for="longitude" class="block text-gray-600 text-sm font-medium">Longitude</label>
             <input type="text" id="longitude" name="longitude" value="{{ old('longitude', $user->longitude) }}" class="border border-gray-300 rounded-md p-2 text-sm w-32">
         </div>
+        
     </div>
         </div>
 
@@ -125,6 +134,9 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    // Set z-index to ensure map is below header
+    map.getContainer().style.zIndex = '1';
+
     @if($user->latitude && $user->longitude)
         var marker = L.marker([{{ $user->latitude }}, {{ $user->longitude }}]).addTo(map);
         marker.bindPopup('<b>Your Location</b>').openPopup();
@@ -155,6 +167,25 @@
         marker.bindPopup('<b>' + e.geocode.name + '</b>').openPopup();
         document.getElementById('latitude').value = center.lat;
         document.getElementById('longitude').value = center.lng;
+    });
+
+    // Get current location
+    document.getElementById('getLocationBtn').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+                map.setView([lat, lng], 13);
+                var marker = L.marker([lat, lng]).addTo(map);
+                marker.bindPopup('<b>Your Current Location</b>').openPopup();
+            }, function(error) {
+                alert('Error getting location: ' + error.message);
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
     });
 </script>
 

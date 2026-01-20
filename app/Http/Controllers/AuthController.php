@@ -21,12 +21,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users|regex:/^[a-zA-Z0-9_.-]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -68,6 +70,7 @@ class AuthController extends Controller
             'email' => 'Email atau password salah.',
         ]);
     }
+    
 
     public function logout()
     {

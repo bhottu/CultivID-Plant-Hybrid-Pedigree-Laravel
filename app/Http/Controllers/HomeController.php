@@ -15,9 +15,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $posts = Post::orderBy('created_at', 'desc')->paginate(5); // showing at home root/discuss
-        
-        return view('home', ['posts' => $posts]); 
+        $posts = Post::with(['user', 'likes'])->withCount(['likes', 'comments'])->orderBy('created_at', 'desc')->paginate(10);
+
+        if (request()->header('HX-Request')) {
+            return view('partials.posts-list', ['posts' => $posts]);
+        }
+
+        return view('home', ['posts' => $posts]);
     }
     
     public function anyOtherMethod()
@@ -62,12 +66,12 @@ class HomeController extends Controller
 public function loadMore(Request $request)
 {
     try {
-        $posts = Post::orderBy('created_at', 'desc')
+        $posts = Post::with(['user'])->orderBy('created_at', 'desc')
                      ->paginate(5, ['*'], 'page', $request->page);
 
         if ($request->ajax()) {
             $view = view('partials.posts', compact('posts'))->render();
-            return response()->json(['html' => $view, 'nextPageUrl' => $posts->nextPageUrl()]);
+            return response()->json(['html' => $view, 'hasMorePages' => $posts->hasMorePages()]);
         }
 
         return back();

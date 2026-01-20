@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Laravel\Sanctum\HasApiTokens;
 // class User extends Model
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
-
+    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +21,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'profile_photo_path',
@@ -39,6 +40,11 @@ class User extends Authenticatable
                 $product->delete();
             }
         });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'username';
     }
 
     public function isBanned()
@@ -66,9 +72,19 @@ class User extends Authenticatable
         return $this->hasMany(Share::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function plantSubmissions()
+    {
+        return $this->hasMany(\App\Models\PlantSubmission::class, 'uploader_id');
     }
 
     /**

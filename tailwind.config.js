@@ -5,20 +5,24 @@ export default {
     './resources/**/*.vue',
     './resources/**/*.js',
   ],
-  darkMode: 'class', // Mode gelap berdasarkan class
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         dark: {
-          DEFAULT: '#333333', // Contoh penambahan warna gelap kustom
+          DEFAULT: '#1e2125',
         },
+      },
+      height: {
+        'screen-safe': 'calc(100vh - 140px)',
+      },
+      spacing: {
+        'header': '56px',
+        'nav': '72px',
+        'safe-top': 'max(0.5rem, env(safe-area-inset-top))',
+        'safe-bottom': 'max(0.5rem, env(safe-area-inset-bottom))',
       },
     },
   },
   plugins: [],
-  purge: [
-    './resources/**/*.blade.php',
-    './resources/**/*.vue',
-    './resources/**/*.js',
-  ],
 };

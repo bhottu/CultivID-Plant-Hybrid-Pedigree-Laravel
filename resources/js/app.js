@@ -1,4 +1,8 @@
 require('./bootstrap');
+
+// Import SPA Navigator for smooth page transitions
+import('./spa-navigator.js');
+
 document.addEventListener('DOMContentLoaded', function() {
     const commentForm = document.getElementById('comment-form');
     if (commentForm) {

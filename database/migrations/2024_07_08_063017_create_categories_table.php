@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
+
     public function up()
-    {
+{
+    if (!Schema::hasTable('categories')) {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -15,6 +18,8 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+}
+
 
     public function down()
     {

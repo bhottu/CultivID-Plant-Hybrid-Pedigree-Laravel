@@ -1,0 +1,181 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use Illuminate\Http\Request;
+use App\Models\PlantSubmission;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+class PlantSubmissionController extends Controller
+{
+    // Daftar submission (member & admin)
+    public function index()
+    {
+        if (Auth::check() && Auth::user()->is_admin) {
+            $submissions = PlantSubmission::with(['uploader', 'reviewer'])->latest()->paginate(10);
+        } else {
+            // Data upload sendiri
+            $own = PlantSubmission::with(['uploader', 'reviewer'])
+                ->where('uploader_id', Auth::id());
+            // Data yang user banding (dari tabel appeal, user_id = Auth::id())
+            $appealIds = \App\Models\PlantSubmissionAppeal::where('user_id', Auth::id())
+                ->pluck('plant_submission_id')->toArray();
+            $appeal = PlantSubmission::with(['uploader', 'reviewer'])
+                ->whereIn('id', $appealIds);
+            // Gabungkan, hilangkan duplikat
+            $submissions = $own->union($appeal)->latest('created_at')->paginate(10);
+        }
+        return view('plant_submissions.index', compact('submissions'));
+    }
+
+    // Form create submission
+    public function create()
+    {
+    $parentSubmissions = \App\Models\PlantSubmission::select('plant_id', 'penyilang')->get();
+    $plants = \App\Models\Plant::select('id', 'common_name')->get();
+    $users = \App\Models\User::select('name')->get();
+    return view('plant_submissions.create', compact('parentSubmissions', 'plants', 'users'));
+    }
+
+    // Store submission
+    public function store(Request $request)
+    {
+        $request->validate([
+            'plant_id' => 'required|string|max:255',
+            'induk_jantan' => 'nullable|string|max:255',
+            'induk_betina' => 'nullable|string|max:255',
+            'penyilang' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string',
+            'images' => 'nullable|array|max:3',
+            'images.*' => 'image|max:4096',
+        ]);
+
+        $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
+        
+        // Convert empty strings to null for nullable fields
+        foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan'] as $field) {
+            if (isset($data[$field]) && $data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
+        
+        $data['uploader_id'] = Auth::id();
+
+        // Otomatis buat entri baru jika induk_jantan belum ada dan tidak kosong
+        if (!empty($data['induk_jantan']) && !PlantSubmission::where('plant_id', $data['induk_jantan'])->exists()) {
+            PlantSubmission::create([
+                'plant_id' => $data['induk_jantan'],
+                'induk_jantan' => '',
+                'induk_betina' => '',
+                'penyilang' => '',
+                'uploader_id' => Auth::id(),
+                'keterangan' => '',
+                'image' => null,
+                'status_review' => 'approved',
+            ]);
+        }
+        // Otomatis buat entri baru jika induk_betina belum ada dan tidak kosong
+        if (!empty($data['induk_betina']) && !PlantSubmission::where('plant_id', $data['induk_betina'])->exists()) {
+            PlantSubmission::create([
+                'plant_id' => $data['induk_betina'],
+                'induk_jantan' => '',
+                'induk_betina' => '',
+                'penyilang' => '',
+                'uploader_id' => Auth::id(),
+                'keterangan' => '',
+                'image' => null,
+                'status_review' => 'approved',
+            ]);
+        }
+
+        // Handle multiple uploaded images (client-side compressed expected)
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $imagePaths[] = $file->store('plant_images', 'public');
+            }
+        } elseif ($request->hasFile('image')) {
+            // fallback for single-file uploads
+            $imagePaths[] = $request->file('image')->store('plant_images', 'public');
+        }
+
+        if (!empty($imagePaths)) {
+            // store as JSON string so we can support multiple images without new column
+            $data['image'] = json_encode($imagePaths);
+        }
+
+        PlantSubmission::create($data);
+        return redirect()->route('plant-submissions.index')->with('success', 'Tanaman berhasil ditambahkan!');
+    }
+
+    // Edit submission (hanya uploader atau member lain dengan approval uploader)
+    public function edit(PlantSubmission $plantSubmission)
+    {
+    $this->authorize('update', $plantSubmission);
+    $parentSubmissions = \App\Models\PlantSubmission::select('plant_id', 'induk_jantan', 'induk_betina')->get();
+    $users = \App\Models\User::select('name')->get();
+    return view('plant_submissions.edit', compact('plantSubmission', 'parentSubmissions', 'users'));
+    }
+
+    public function update(Request $request, PlantSubmission $plantSubmission)
+    {
+        $this->authorize('update', $plantSubmission);
+        $request->validate([
+            'plant_id' => 'required|string|max:255',
+            'induk_jantan' => 'nullable|string|max:255',
+            'induk_betina' => 'nullable|string|max:255',
+            'penyilang' => 'nullable|string|max:255',
+            'keterangan' => 'nullable|string',
+            'images' => 'nullable|array|max:3',
+            'images.*' => 'image|max:4096',
+        ]);
+
+        $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
+        
+        // Convert empty strings to null for nullable fields
+        foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan'] as $field) {
+            if (isset($data[$field]) && $data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
+        
+        // Handle multiple images on update (replace existing)
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $imagePaths[] = $file->store('plant_images', 'public');
+            }
+        } elseif ($request->hasFile('image')) {
+            $imagePaths[] = $request->file('image')->store('plant_images', 'public');
+        }
+
+        if (!empty($imagePaths)) {
+            $data['image'] = json_encode($imagePaths);
+        }
+
+        // Jika yang update bukan uploader, set uploader_approval = false
+        if (Auth::id() !== $plantSubmission->uploader_id) {
+            $data['uploader_approval'] = false;
+        }
+
+        $plantSubmission->update($data);
+        return redirect()->route('plant-submissions.index')->with('success', 'Tanaman berhasil diupdate!');
+    }
+
+    // Review oleh admin
+    public function review(Request $request, PlantSubmission $plantSubmission)
+    {
+        $this->authorize('review', $plantSubmission);
+        $request->validate([
+            'status_review' => 'required|in:approved,rejected',
+        ]);
+        $plantSubmission->update([
+            'status_review' => $request->status_review,
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+        ]);
+        return redirect()->route('plant-submissions.index')->with('success', 'Status review diperbarui!');
+    }
+}

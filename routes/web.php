@@ -18,9 +18,10 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Admin\GoogleSettingController;
 use App\Http\Controllers\GoogleAdsenseClientController;
 use App\Http\Controllers\Admin\MembaraSettingController;
-use App\Http\Controllers\API\ListProductController;
+use App\Http\Controllers\PlantController;
+use App\Http\Controllers\PlantSubmissionAppealController;
+use App\Http\Controllers\PlantSubmissionPublicController;
 
-Route::get('/list/products', [ListProductController::class, 'index']);
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
@@ -38,19 +39,49 @@ Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('p
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
+Route::get('/debug-images', function() { return view('debug-images'); });
 Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
-Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile'); 
+Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile');
+Route::get('profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
+
+use App\Http\Controllers\PlantSubmissionController;
+
+
 Route::middleware(['auth'])->group(function () {
-    
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('products', [ProductController::class, 'store'])->name('products.store');
 
+    // Rute untuk menampilkan form input data tanaman, hanya bisa diakses oleh pengguna yang sudah login
+    Route::get('plants/create', [PlantController::class, 'create'])->name('plants.create');
+    Route::post('plants', [PlantController::class, 'store'])->name('plants.store');
+    Route::get('plants/{id}/edit', [PlantController::class, 'edit'])->name('plants.edit');
+    Route::put('plants/{id}', [PlantController::class, 'update'])->name('plants.update');
+    Route::delete('plants/{id}', [PlantController::class, 'destroy'])->name('plants.destroy');
+
+    // Plant Submission (member & admin)
+    Route::get('plant-submissions', [PlantSubmissionController::class, 'index'])->name('plant-submissions.index');
+    Route::get('plant-submissions/create', [PlantSubmissionController::class, 'create'])->name('plant-submissions.create');
+    Route::post('plant-submissions', [PlantSubmissionController::class, 'store'])->name('plant-submissions.store');
+    Route::get('plant-submissions/{plantSubmission}/edit', [PlantSubmissionController::class, 'edit'])->name('plant-submissions.edit');
+    Route::put('plant-submissions/{plantSubmission}', [PlantSubmissionController::class, 'update'])->name('plant-submissions.update');
+    Route::post('plant-submissions/{plantSubmission}/review', [PlantSubmissionController::class, 'review'])->name('plant-submissions.review');
+
+    // Banding Plant Submission (hanya untuk user login)
+    Route::get('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'create'])->name('plant-submissions.appeal.create');
+    Route::post('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'store'])->name('plant-submissions.appeal.store');
 });
+// Public detail plant submission (setelah semua route plant-submissions yang spesifik)
+Route::get('plant-submissions/{plantSubmission}', [PlantSubmissionPublicController::class, 'show'])->name('plant-submissions.show');
+
+// Rute untuk menampilkan semua tanaman, bisa diakses oleh siapa saja
+Route::get('plants', [PlantController::class, 'index'])->name('plants.index');
+
+
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
 Route::get('allproducts', [ProductController::class, 'allproducts'])->name('all.products');
@@ -60,6 +91,7 @@ Route::get('/discounted-products', [ProductController::class, 'discountedProduct
 Route::get('/discounted-products/load-more', [ProductController::class, 'loadMoreDiscountedProducts']);
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/categories/{slug}/load-more-products', [CategoryController::class, 'loadMoreProducts'])->name('categories.loadMoreProducts');
+Route::post('/products/{product}/soldout', [ProductController::class, 'toggleSoldOut'])->name('products.toggle-soldout');
 
 Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
 
@@ -71,8 +103,8 @@ Route::put('products/{product}', [ProductController::class, 'update'])->name('pr
 Route::get('post/create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
 Route::post('post', [PostController::class, 'store'])->name('post.store');
 
-Route::post('profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
-Route::post('profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
+Route::post('profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow')->middleware('auth');
+Route::post('profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow')->middleware('auth');
 
 Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
 Route::get('posts/{post}', 'PostController@show')->name('posts.show');
@@ -91,8 +123,17 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::get('/admin', [ProfileController::class, 'adminDashboardStatistic'])->name('admin.home');
 
-    Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+    // Admin Plant Submissions index (uses admin controller)
+    Route::get('/admin/plant-submissions', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'index'])->name('admin.plant-submissions.index');
+    Route::get('/admin/plant-submissions/create', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'create'])->name('admin.plant-submissions.create');
+    Route::post('/admin/plant-submissions', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'store'])->name('admin.plant-submissions.store');
+    Route::get('/admin/plant-submissions/{plantSubmission}', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'show'])->name('admin.plant-submissions.show');
+    Route::get('/admin/plant-submissions/{plantSubmission}/edit', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'edit'])->name('admin.plant-submissions.edit');
+    Route::put('/admin/plant-submissions/{plantSubmission}', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'update'])->name('admin.plant-submissions.update');
+    Route::post('/admin/plant-submissions/{plantSubmission}/review', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'review'])->name('admin.plant-submissions.review');
+
+   // Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    //Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
 
     Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.items.categories');
     Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('categories.create');
@@ -137,7 +178,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
 });
 
-Route::get('/about-us', [SettingController::class, 'showAbout'])->name('admin.settings.about');
+// Public About Us page (moved Company & Shop content here)
+Route::view('/about-us', 'about')->name('about');
 Route::get('/contact-us', [SettingController::class, 'showContact'])->name('admin.settings.contact');
 Route::get('/terms-conditions', [SettingController::class, 'showTerms'])->name('admin.settings.terms');
 Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->name('admin.settings.privacy');
+

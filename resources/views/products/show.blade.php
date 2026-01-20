@@ -4,49 +4,95 @@
 
 @section('content')
 
-<div class="container px-4 mx-auto my-4">
+<div class="container px-4 mx-auto  my-4">
     <div class="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-lg flex flex-wrap">
         <!-- Kolom Kiri -->
         <div class="w-full md:w-2/3 p-4">
-            @if($product->image_path)
-                <img 
-                id="post-image-{{ $product->id }}" 
-                src="{{ asset('storage/' . $product->image_path) }}" 
-                alt="{{ $product->name }}" 
-                class="w-full h-82 object-cover cursor-pointer mb-4 post-image" 
-                onclick="openImagePopup('{{ asset('storage/' . $product->image_path) }}')"
-                data-image-url="{{ asset('storage/' . $product->image_path) }}"
-                data-post-id="{{ $product->id }}">
-            @else
-                <div class="w-full h-64 bg-gray-200 flex items-center justify-center mb-4">
-                    <span>Photos</span>
+
+           <!-- Slider Container -->
+            <div class="swiper-container z-1">
+                
+                <div class="swiper-wrapper">
+                    <!-- Slide 1: Image -->
+                    @if($product->image_path)
+                    <div class="swiper-slide">
+                        <img 
+                            id="post-image-{{ $product->id }}" 
+                            src="{{ asset('storage/' . $product->image_path) }}" 
+                            alt="{{ $product->name }}" 
+                            class="w-full custom-height object-cover cursor-pointer mb-4 post-image" 
+                            onclick="openImagePopup('{{ asset('storage/' . $product->image_path) }}')"
+                            data-image-url="{{ asset('storage/' . $product->image_path) }}"
+                            data-post-id="{{ $product->id }}">
+                    </div>
+                    @else
+                    <div class="swiper-slide">
+                        <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                            <span>Photos</span>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Slide 2: Video -->
+                    @if($product->video_path)
+                    <div class="swiper-slide z-0">
+                        <video 
+                            class="w-full custom-height object-cover cursor-pointer mb-4"
+                            controls
+                            onclick="openVideoPopup('{{ asset('storage/' . $product->video_path) }}')"
+                            data-video-url="{{ asset('storage/' . $product->video_path) }}">
+                            <source src="{{ asset('storage/' . $product->video_path) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    @else
+                    <div class="swiper-slide">
+                        <div class="w-full custom-height bg-gray-200 flex items-center justify-center">
+                            <span>No video available</span>
+                        </div>
+                    </div>
+                    @endif
+                    
                 </div>
-            @endif
+
+                
+
+            </div>
+
+            <!-- Initialize Swiper -->
+            <script>
+                var swiper = new Swiper('.swiper-container', {
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+            </script>
 
             <div class="border-t border-gray-300 p-4 py-4 mb-4">
                 <h3 class="text-lg font-semibold mb-2">Description</h3>
                 <p>{{ $product->description }}</p>
 
-                @if ($product->category)
-                    <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 mt-4 py-1 rounded-full text-sm hover:bg-gray-300">
-                        #{{ $product->category->name }}
-                    </a>
-                @endif
+                <div class="border-t border-gray-300 py-4 mt-4">
+                    @if ($product->category)
+                        Category : <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300">
+                            #{{ $product->category->name }}
+                        </a>
+                    @endif
+                </div>
             </div>
 
-            @if($product->video_path)
-                <div class="border-t border-gray-300 p-4 py-4 mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Video</h3>
-                    <video class="w-full md:w-3/4 lg:w-1/2" controls>
-                        <source src="{{ asset('storage/' . $product->video_path) }}" type="video/mp4">
-                        Browser Anda tidak mendukung tag video.
-                    </video>
-                </div>
-            @endif
+       
         </div>
 
         <!-- Kolom Kanan -->
-        <div class="w-full md:w-1/3 p-4 border-t md:border-t-0 md:border-l border-gray-300">
+        <div class="w-full z-10 bg-white md:w-1/3 p-4 border-t md:border-t-0 md:border-l border-gray-300">
             <div class="mb-4 flex items-center">
                 <div class="w-full md:w-auto">
                     <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
@@ -58,8 +104,14 @@
                         <span class="text-gray-600 text-xl">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                     @endif
                     
-                    <p class="text-gray-600 mb-2">{{ \Carbon\Carbon::parse($product->created_at)->format('d F, Y') }}</p>
-                    <p class="text-gray-600 mb-2">Indonesia</p>
+                    <p class="text-gray-600 mb-2 ">{{ $product->created_at->diffForHumans() }}</p>
+                    <p class="mb-2 text-gray-500">
+                    @if($product->is_sold_out)
+                        <span class="text-red-600">Sold Out</span>
+                    @else
+                        <span class="text-sky-900">Available</span>
+                    @endif
+                    </p>
                 </div>
             </div>
 
@@ -97,7 +149,20 @@
                     @endif
                 </div>
             </div>
-
+            
+            @if (Auth::id() == $product->user_id)
+            <div class="border-t border-gray-300 py-4">
+                <form action="{{ route('products.toggle-soldout', $product) }}" method="POST">
+                    @csrf
+                    @if (!$product->is_sold_out)
+                        <button type="submit" class="px-4 w-full py-2 bg-red-500 text-white rounded hover:bg-red-600">Mark as Soldout</button>
+                    @else
+                        <button type="submit" class="px-4 w-full py-2 bg-green-500 text-white rounded hover:bg-green-600">Mark as Available</button>
+                    @endif
+                </form>
+                </div>
+            @endif
+            
             <div class="border-t border-gray-300 py-4 mb-4">
                 <h3 class="text-lg font-semibold mb-2">Seller</h3>
                 <div class="flex items-center">
@@ -124,7 +189,7 @@
             <div class="border-t border-gray-300 py-4">
                 <h3 class="text-lg font-semibold mb-2">Location</h3>
                 <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
-                    <div id="map" style="height: 100%; width: 100%;"></div>
+                    <div id="map" class="h-full w-full z-0"></div>
                 </div>
             </div>
         </div>

@@ -14,6 +14,8 @@
                     <label for="caption" class="sr-only">Caption</label>
                     <input type="text" name="caption" id="caption" value="{{ $post->caption }}" placeholder="Caption" class="w-full border-b border-gray-300 focus:outline-none focus:border-indigo-500 pb-1">
                 </div>
+
+
                 <div class="mb-2">
                     <label for="image" class="sr-only">Image</label>
                     <input type="file" name="image" id="image" class="hidden" accept="image/*">

@@ -17,6 +17,11 @@
                     @endif
                 </div>
                 <h2 class="text-sm font-italic text-gray-500">#{{ $product->category->name }}</h2>
+                @if($product->is_sold_out)
+                    <h2 class="text-sm font-italic text-red-500">Sold Out</h2>
+                @else
+                    <h2 class="text-sm font-italic text-green-500">Available</h2>
+                @endif
             </div>
         </div>
 

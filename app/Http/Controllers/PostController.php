@@ -14,12 +14,17 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::with('likes')->findOrFail($id);
+        // Load comments with newest first
+        $post->load(['comments' => function ($query) {
+            $query->with('user')->orderBy('created_at', 'desc');
+        }]);
         return view('post.show', compact('post'));
     }
     public function create()
     {
-        return view('post.create');
+        $users = User::all();
+        return view('post.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -39,31 +44,68 @@ class PostController extends Controller
         return redirect()->route('profile', Auth::user());
     }
 
-    public function addComment(Request $request, $postId)
+    public function addComment(Request $request, Post $post)
     {
-        $post = Post::find($postId);
+        try {
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized. Please login first.',
+                ], 401);
+            }
 
-        if (!$post) {
-            abort(404); 
+            $request->validate([
+                'content' => 'required|string|max:255',
+            ]);
+
+            $comment = new Comment();
+            $comment->content = $request->input('content');
+            $comment->user_id = auth()->user()->id;
+            $comment->post_id = $post->id;
+            $comment->save();
+
+            // Load user relationship
+            $comment->load('user');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment added successfully.',
+                'comment' => [
+                    'content' => $comment->content,
+                    'user_id' => $comment->user->id,
+                    'user_username' => $comment->user->username,
+                    'user_name' => $comment->user->name,
+                    'created_at' => $comment->created_at->diffForHumans()
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
-
-        $request->validate([
-            'content' => 'required|string|max:255',
-        ]);
-
-        $comment = new Comment();
-        $comment->content = $request->input('content');
-        $comment->user_id = auth()->user()->id;
-        $comment->post_id = $post->id;
-        $comment->save();
-
-        return redirect()->back();
     }
 
  
 
     public function addShare(Request $request, $id)
         {
+            if ($request->header('HX-Request')) {
+                Share::create([
+                    'user_id' => auth()->id(),
+                    'post_id' => $id
+                ]);
+
+                $post = Post::findOrFail($id);
+                $sharesCount = $post->shares()->count();
+
+                return response()->json([
+                    'success' => true,
+                    'shares_count' => $sharesCount,
+                    'message' => 'Post shared successfully.'
+                ]);
+            }
+
             Share::create([
                 'user_id' => auth()->id(),
                 'post_id' => $id
@@ -76,14 +118,15 @@ class PostController extends Controller
    // Edit - Update
    public function edit(Post $post)
     {
-        return view('post.edit', compact('post'));
+        $users = User::all();
+        return view('post.edit', compact('post', 'users'));
     }
 
     public function update(Request $request, Post $post)
     {
         $request->validate([
             'caption' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('image')) {

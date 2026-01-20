@@ -12,7 +12,7 @@
         </div>
     @endif
 
-        <h1 class="text-3xl font-semibold mb-4">List of Products</h1>
+        <h1 class="text-3xl font-semibold mb-4">Products</h1>
 
         @if ($products->count())
             <div class="overflow-x-auto">
@@ -20,19 +20,28 @@
                     <thead class="bg-gray-200 border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Product Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Category</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Price</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Discount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Created Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Nama Produk</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Kategpri</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Harga</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Diskon</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Tgl Dibuat</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($products as $product)
                             <tr class="border-b border-gray-200">
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $product->id }}</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">{{ $product->name }}</td>
+                                <td class="px-6 py-4 border-b border-gray-200">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-medium text-gray-900">{{ $product->name }}</span>
+                                        @if($product->is_sold_out)
+                                            <span class="text-red-500 text-xs">Sold Out</span>
+                                        @else
+                                            <span class="text-green-500 text-xs">Available</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $product->category->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $product->user->currency }} {{ number_format($product->price, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
