@@ -176,7 +176,7 @@
                     <div>
                         <h4 class="text-lg font-semibold"> {{ $product->user->name ?? 'Unknown' }} </h4>
                         <div class="flex items-center">
-                            <form action="{{ url('profile/' . $product->user->id) }}">
+                            <form action="{{ url('profile/' . $product->user->username) }}" hx-get="{{ url('profile/' . $product->user->username) }}" hx-target="#app-content" hx-push-url="true">
                                 <button class="bg-blue-200 text-gray-700 px-3 py-1 rounded-sm text-sm hover:bg-gray-300 rounded px-2 py-1 mt-2">
                                     <i class="fas fa-store"></i> Profil
                                 </button>

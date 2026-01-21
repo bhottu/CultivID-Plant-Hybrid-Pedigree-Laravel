@@ -11,9 +11,7 @@
     style="background-image: url('{{ asset('/storage/banners/banner.jpg') }}')">
 @endif
     <div>
-        <h1 class="text-white text-center xl:text-2xl lg:text-xl mb-4 md:text-lg sm:text-base xs:text-sm font-semibold bg-gray-800 p-2 bg-opacity-40 rounded-sm">
-            Plant Database
-        </h1>
+        
     </div>
 
 
@@ -30,80 +28,125 @@
         </form>
     </div>
 
-        <div class="bg-white rounded-lg shadow-lg p-4 mx-auto max-w-3xl">
-            <table class="w-full table-fixed">
-                <tr class="text-gray-600 text-center">
-                    <!-- Approved -->
-                    <td class="py-3 w-16 text-center align-middle">
-                        <a href="{{ route('plant-submissions.index') }}" 
-                        class="flex flex-col items-center hover:text-gray-800 transition">
-                            <svg class="w-6 h-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="9"/>
-                                <path d="M8 12l3 3 5-5"/>
-                            </svg>
-                            <span class="text-xs md:text-sm mt-1">Approved</span>
-                        </a>
-                    </td>
+    <div class="bg-white rounded-xl shadow-md p-3 max-w-3xl mx-auto relative">
+        <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
+       
+        <!-- Approved -->
+        <a href="{{ route('plant-submissions.index') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+                bg-green-50 text-green-600 hover:bg-green-100
+                transition text-xxxs font-medium shadow-sm">
 
-                    <!-- Reject -->
-                    <td class="py-3 w-16 text-center align-middle">
-                        <a href="{{ route('index.sosmed') }}" 
-                        class="flex flex-col items-center hover:text-gray-800 transition">
-                            <svg class="w-6 h-6 text-red-400"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M9 9l6 6M15 9l-6 6"/>
-                            </svg>
+            <!-- Badge -->
+            <span
+                class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
+                    flex items-center justify-center
+                    rounded-full bg-green-600 text-white
+                    text-[10px] font-semibold leading-none">
+                1
+            </span>
 
-                            <span class="text-xs md:text-sm mt-1">Reject</span>
-                        </a>
-                    </td>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M8 12l3 3 5-5"/>
+            </svg>
 
-                    <!-- Pending -->
-                    <td class="py-3 w-16 text-center align-middle">
-                        <a href="{{ route('plant-submissions.index') }}" 
-                        class="flex flex-col items-center hover:text-gray-800 transition">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="9"/>
-                                <path d="M12 7v5l3 2"/>
-                            </svg>
-                            <span class="text-xs md:text-sm mt-1">Pending</span>
-                        </a>
-                    </td>
+            Approved
+        </a>
 
-                    <!-- Revision -->
-                    <td class="py-3 w-16 text-center align-middle">
-                        <a href="{{ route('all.products') }}" 
-                        class="flex flex-col items-center hover:text-gray-800 transition">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 20h4l10-10-4-4L4 16v4z"/>
-                                <path d="M14 6l4 4"/>
-                            </svg>
-                            <span class="text-xs md:text-sm mt-1">Revision</span>
-                        </a>
-                    </td>
 
-                    <!-- Appeal -->
-                    <td class="py-3 w-16 text-center align-middle">
-                        <a href="{{ route('index.sosmed') }}" 
-                        class="flex flex-col items-center hover:text-gray-800 transition">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 3v18"/>
-                                <path d="M5 7h14"/>
-                                <path d="M7 7l-3 6h6l-3-6z"/>
-                                <path d="M17 7l-3 6h6l-3-6z"/>
-                            </svg>
-                            <span class="text-xs md:text-sm mt-1">Appeal</span>
-                        </a>
-                    </td>
+        <!-- Pending -->
+        <a href="{{ route('plant-submissions.index') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+                    bg-yellow-50 text-yellow-600 hover:bg-yellow-100
+                    transition text-xxxs font-medium shadow-sm">
+            
+                    <!-- Badge -->
+                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
+                            flex items-center justify-center
+                            rounded-full bg-yellow-500 text-white
+                            text-[10px] font-semibold leading-none">
+                    3
+                </span>
+                
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 7v5l3 2"/>
+                </svg>
+                Pending
+        </a>
 
-                    
-                </tr>
-            </table>
-        </div>
+
+        <!-- Revision -->
+        <a href="{{ route('all.products') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+                    bg-blue-50 text-blue-600 hover:bg-blue-100
+                    transition text-xxxs font-medium shadow-sm">
+
+                <!-- Badge -->
+                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
+                            flex items-center justify-center
+                            rounded-full bg-blue-600 text-white
+                            text-[10px] font-semibold leading-none">
+                   1
+                </span>
+
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 20h4l10-10-4-4L4 16v4z"/>
+                    <path d="M14 6l4 4"/>
+                </svg>
+                Revision
+        </a>
+
+
+        <!-- Reject -->
+        <a href="{{ route('index.sosmed') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+                    bg-red-50 text-red-500 hover:bg-red-100
+                    transition text-xxxs font-medium shadow-sm">
+
+                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
+                            flex items-center justify-center
+                            rounded-full bg-red-600 text-white
+                            text-[10px] font-semibold leading-none">
+                    7
+                </span>
+                
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M9 9l6 6M15 9l-6 6"/>
+                </svg>
+                Reject
+        </a>
+
+
+        <!-- Appeal -->
+        <a href="{{ route('index.sosmed') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+                    bg-gray-50 text-indigo-600 hover:bg-indigo-100
+                    transition text-xxxs font-medium shadow-sm">
+
+            <!-- Badge -->
+            <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
+                            flex items-center justify-center
+                            rounded-full bg-red-200 text-gray-800
+                            text-[10px] font-semibold leading-none">
+                1
+            </span>
+            
+
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 3v18"/>
+                <path d="M5 7h14"/>
+                <path d="M7 7l-3 6h6l-3-6z"/>
+                <path d="M17 7l-3 6h6l-3-6z"/>
+            </svg>
+            Appeal
+        </a>
+
+    </div>
+</div>
+
     </div>
 </div>
 
@@ -132,7 +175,7 @@
                 <tbody id="plants-tbody">
                     @foreach($approvedPlants as $item)
                         @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
-                    <tr class="border-b hover:bg-gray-100 text-xs">
+                    <tr class="border-b hover:bg-gray-100 text-xs" onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
                         <td class="p-2">
                               @php
                             $images = [];
@@ -147,22 +190,24 @@
                             $first = count($images) ? $images[0] : null;
                         @endphp
                         @if($first)
-                        <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-12 h-12 object-cover rounded cursor-pointer border border-gray-300 hover:shadow-lg transition" onclick="showImageModal('{{ asset('storage/'.$first) }}')">
+                        <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-12 h-12 object-cover rounded cursor-pointer border border-gray-300 hover:shadow-lg transition">
                         @else
                         <span class="text-gray-400">-</span>
                         @endif
                         </td>
-                        <td class="p-2 align-top text-xs">
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline font-semibold">{{ \Illuminate\Support\Str::limit($item->plant_id, 20) }}</a>
+                        <td class="p-2 align-top text-xs" >
+                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline font-semibold">{{ \Illuminate\Support\Str::words($item->plant_id, 2, '..') }}</a>
                             <!-- Mobile only: Penyilang & Pengirim di bawah ID -->
                             <div class="block md:hidden text-xs text-gray-500 mt-1">
-                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna text-green-600 mr-1"></i> {{ \Illuminate\Support\Str::limit($item->penyilang, 5) }}</span>
-                                <span class="inline-flex items-center"><i class="fa-solid fa-upload text-blue-600 mr-1"></i> {{ \Illuminate\Support\Str::limit($item->uploader->name, 5) }}</span>
+                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna mr-1"></i> {{ \Illuminate\Support\Str::words($item->penyilang, 2, '') }}</span><br>
+
+                                <span class="inline-flex items-center"><i class="fa-solid fa-upload  mr-1"></i> {{ \Illuminate\Support\Str::words($item->uploader->name, 2, '') }}
+</span>
                             </div>
                             <!-- Desktop: Penyilang & Pengirim below ID -->
                             <div class="hidden md:block text-xs text-gray-500 mt-1">
-                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna text-green-600 mr-1"></i>{{ \Illuminate\Support\Str::limit($item->penyilang, 5) }}</span>
-                                <span class="inline-flex items-center"><i class="fa-solid fa-upload text-blue-600 mr-1"></i>{{ \Illuminate\Support\Str::limit($item->uploader->name, 5) }}</span>
+                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna  mr-1"></i>{{ \Illuminate\Support\Str::words($item->penyilang, 2, '') }}</span><br>
+                                <span class="inline-flex items-center"><i class="fa-solid fa-upload mr-1"></i>{{ \Illuminate\Support\Str::words($item->uploader->name, 2, '') }}</span>
                             </div>
                         </td>
                         <td class="p-2">{{ $item->induk_betina }} </td>

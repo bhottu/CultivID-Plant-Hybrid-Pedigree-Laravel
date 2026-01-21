@@ -103,6 +103,8 @@
         .htmx-request.htmx-settling .htmx-indicator {
             display: none;
         }
+
+       
     </style>
 </head>
 <body class="{{ session('dark_mode', 'light') }}" x-data="{ showModal: false }">
@@ -120,7 +122,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.2
+                             v1.0.4
                         </div>
 
                     @else
@@ -328,6 +330,10 @@
             }
         });
     </script>
+
+    
+
+
 </body>
     @stack('scripts')
 </html>
