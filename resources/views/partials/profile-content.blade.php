@@ -19,8 +19,8 @@
         </div>
 
         <!-- User Info -->
-        <h1 class="text-xl font-bold mb-1">{{ $user->name }} xxx</h1>
-        <p class="text-gray-500 text-sm mb-2">
+        <h1 class="text-xl font-bold mb-1">{{ $user->name }} </h1>
+        <p class="text-gray-500 text-sm mb-2" id="followers-count">
             <i class="fas fa-users text-blue-500"></i> {{ $user->followers()->count() }} Followers
         </p>
         <p class="text-gray-500 text-xs mb-4">({{ $user->email }})</p>
@@ -42,18 +42,70 @@
             @endif
         </div>
 
-        <!-- Edit Profile / Follow Button -->
         @auth
-            @if(Auth::id() === $user->id)
-                <a href="{{ route('profile.edit') }}" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition mb-6 text-center">Edit Profile</a>
-            @else
-                <button id="follow-button" class="w-full font-bold py-3 rounded-lg transition mb-6 text-white @if(Auth::user()->following->contains($user->id)) bg-red-500 hover:bg-red-600 @else bg-green-500 hover:bg-green-600 @endif" data-user-id="{{ $user->id }}" data-following="{{ Auth::user()->following->contains($user->id) ? 'true' : 'false' }}">
-                    {{ Auth::user()->following->contains($user->id) ? 'Unfollow' : 'Follow' }}
-                </button>
-            @endif
-        @else
-            <a href="{{ route('login') }}" class="block w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition mb-6 text-center">Follow</a>
-        @endauth
+    {{-- JIKA PROFIL SENDIRI --}}
+    @if(auth()->id() === $user->id)
+        <div class="w-full px-4 mb-6">
+            <table class="w-full border-collapse">
+                <tr>
+                    <td class="w-4/5">
+                        <a href="{{ route('profile.edit') }}"
+                           class="block w-full bg-blue-500 hover:bg-blue-600
+                                  text-white font-bold py-3
+                                  rounded-l-lg transition text-center">
+                            Edit Profile
+                        </a>
+                    </td>
+
+                    <td class="w-1/5">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full h-full bg-red-500 hover:bg-red-600
+                                           text-white py-3
+                                           rounded-r-lg transition">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    {{-- JIKA PROFIL USER LAIN --}}
+    @else
+        <div class="w-full px-4 mb-6">
+
+            {{-- CONTAINER TOMBOL (WAJIB untuk HTMX swap) --}}
+            <div id="follow-button">
+                @if(auth()->user()->isFollowing($user))
+                    <button
+                        hx-post="{{ route('profile.unfollow', $user) }}"
+                        hx-target="#follow-button"
+                        hx-swap="outerHTML"
+                        hx-vals='{"_token":"{{ csrf_token() }}"}'
+                        class="w-full font-bold py-3 rounded-lg transition
+                               text-white bg-red-500 hover:bg-red-600">
+                        Unfollow
+                    </button>
+                @else
+                    <button
+                        hx-post="{{ route('profile.follow', $user) }}"
+                        hx-target="#follow-button"
+                        hx-swap="outerHTML"
+                        hx-vals='{"_token":"{{ csrf_token() }}"}'
+                        class="w-full font-bold py-3 rounded-lg transition
+                               text-white bg-green-500 hover:bg-green-600">
+                        Follow
+                    </button>
+                @endif
+            </div>
+
+        </div>
+    @endif
+@endauth
+
+
     </div>
 
     <!-- Plant Submissions Section -->
@@ -91,46 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     const userId = {{ $user->id }};
 
-    // Follow/Unfollow AJAX
-    const followButton = document.getElementById('follow-button');
-    if (followButton) {
-        followButton.addEventListener('click', function() {
-            const isFollowing = this.dataset.following === 'true';
-            const url = isFollowing 
-                ? `/profile/${userId}/unfollow` 
-                : `/profile/${userId}/follow`;
-            
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update button state
-                    const newFollowing = !isFollowing;
-                    this.dataset.following = newFollowing ? 'true' : 'false';
-                    
-                    if (newFollowing) {
-                        this.textContent = 'Unfollow';
-                        this.classList.remove('bg-green-500', 'hover:bg-green-600');
-                        this.classList.add('bg-red-500', 'hover:bg-red-600');
-                    } else {
-                        this.textContent = 'Follow';
-                        this.classList.remove('bg-red-500', 'hover:bg-red-600');
-                        this.classList.add('bg-green-500', 'hover:bg-green-600');
-                    }
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    }
 
     const loadMorePostButton = document.getElementById('load-more-post-profile');
     if (loadMorePostButton) {

@@ -163,16 +163,22 @@
         <nav class="fixed bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 flex justify-around items-end pb-2 px-1 mx-auto max-w-lg">
             <a href="{{ route('home') }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 16l4-4m0 0l4 4m-4-4V5"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10.5L12 3l9 7.5M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/>
                 </svg>
                 <span class="text-xs">Home</span>
             </a>
 
             <a href="{{ route('index.sosmed') }}" hx-get="{{ route('index.sosmed') }}" hx-target="#app-content" hx-push-url="true" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                    <circle cx="9" cy="7" r="3"/>
+                    <circle cx="17" cy="7" r="3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2
+                            M13 15h4a4 4 0 014 4v2"/>
                 </svg>
                 <span class="text-xs">Community</span>
+
             </a>
 
             <button onclick="showAddMenu()" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
