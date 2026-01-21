@@ -19,7 +19,7 @@
         </div>
 
         <!-- User Info -->
-        <h1 class="text-xl font-bold mb-1">{{ $user->name }}</h1>
+        <h1 class="text-xl font-bold mb-1">{{ $user->name }} xxx</h1>
         <p class="text-gray-500 text-sm mb-2">
             <i class="fas fa-users text-blue-500"></i> {{ $user->followers()->count() }} Followers
         </p>

@@ -42,40 +42,69 @@
             @endif
         </div>
 
-        <!-- Edit Profile / Follow Button -->
-       @auth
-@if(Auth::id() === $user->id)
-    <div class="w-full px-4 mb-6">
-        <table class="w-full border-collapse">
-            <tr>
-                <!-- Edit Profile 80% -->
-                <td class="w-4/5">
-                    <a href="{{ route('profile.edit') }}"
-                       class="block w-full bg-blue-500 hover:bg-blue-600
-                              text-white font-bold py-3
-                              rounded-l-lg transition text-center">
-                        Edit Profile
-                    </a>
-                </td>
+        @auth
+    {{-- JIKA PROFIL SENDIRI --}}
+    @if(auth()->id() === $user->id)
+        <div class="w-full px-4 mb-6">
+            <table class="w-full border-collapse">
+                <tr>
+                    <td class="w-4/5">
+                        <a href="{{ route('profile.edit') }}"
+                           class="block w-full bg-blue-500 hover:bg-blue-600
+                                  text-white font-bold py-3
+                                  rounded-l-lg transition text-center">
+                            Edit Profile
+                        </a>
+                    </td>
 
-                <!-- Logout 20% -->
-                <td class="w-1/5">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                                class="w-full h-full bg-red-500 hover:bg-red-600
-                                       text-white py-3
-                                       rounded-r-lg transition
-                                        items-center justify-center">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </table>
-    </div>
-@endif
+                    <td class="w-1/5">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full h-full bg-red-500 hover:bg-red-600
+                                           text-white py-3
+                                           rounded-r-lg transition">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    {{-- JIKA PROFIL USER LAIN --}}
+    @else
+        <div class="w-full px-4 mb-6">
+
+            {{-- CONTAINER TOMBOL (WAJIB untuk HTMX swap) --}}
+            <div id="follow-button">
+                @if(auth()->user()->isFollowing($user))
+                    <button
+                        hx-post="{{ route('profile.unfollow', $user) }}"
+                        hx-target="#follow-button"
+                        hx-swap="outerHTML"
+                        hx-vals='{"_token":"{{ csrf_token() }}"}'
+                        class="w-full font-bold py-3 rounded-lg transition
+                               text-white bg-red-500 hover:bg-red-600">
+                        Unfollow
+                    </button>
+                @else
+                    <button
+                        hx-post="{{ route('profile.follow', $user) }}"
+                        hx-target="#follow-button"
+                        hx-swap="outerHTML"
+                        hx-vals='{"_token":"{{ csrf_token() }}"}'
+                        class="w-full font-bold py-3 rounded-lg transition
+                               text-white bg-green-500 hover:bg-green-600">
+                        Follow
+                    </button>
+                @endif
+            </div>
+
+        </div>
+    @endif
 @endauth
+
 
     </div>
 

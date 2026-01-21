@@ -118,12 +118,17 @@
                 @if(!(request()->route() && request()->route()->getName() !== 'home'))
                 <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
                     @if (isset($settings) && $settings->logo)
-                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo">
+                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                        <div class="text-xxxs pt-2">
+                             v1.0.2
+                        </div>
+
                     @else
-                        Plant Hybrids
+                        Cultiv ID
                     @endif
                 </a>
                 @endif
+                
                 <div class="flex gap-3">
                     @guest
                         <a href="{{ route('login') }}" class="text-white text-sm font-semibold hover:text-blue-400">Login</a>

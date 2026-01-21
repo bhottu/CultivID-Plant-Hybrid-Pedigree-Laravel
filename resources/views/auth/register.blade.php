@@ -4,7 +4,11 @@
 <div class="container mx-auto">
     <div class="max-w-md mx-auto my-8">
         <div class="flex justify-center mb-4">
-            <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="h-16 w-auto"> 
+                    @if (isset($settings) && $settings->logo)
+                        <img class="h-16 mt-4 rounded-xl w-auto" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                    @else
+                        <div class="text-xl font-bold mt-8 w-auto">Cultiv ID</div>
+                    @endif 
         </div>
        
         <form action="{{ route('register') }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
@@ -26,11 +30,7 @@
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
             <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
         </div>
-        <div class="mb-4">
-            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-            <input type="text" name="username" id="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., john_doe" required>
-            <p class="text-xs text-gray-500 mt-1">Only letters, numbers, dots, and hyphens allowed</p>
-        </div>
+       
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
             <input type="email" name="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
@@ -47,13 +47,13 @@
     
         <div class="flex mt-4 items-center">
             <hr class="flex-grow border-t border-gray-300">
-            <span class="mx-4 text-gray-500">login / register</span>
+            <span class="mx-4 text-gray-500">register</span>
             <hr class="flex-grow border-t border-gray-300">
         </div>
         
         <div class="flex mt-4 justify-center">
             <a href="{{ url('auth/google') }}" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 text-center rounded focus:outline-none focus:shadow-outline">
-                Login with Google
+                Register with Google
             </a>
         </div>           
     </form>

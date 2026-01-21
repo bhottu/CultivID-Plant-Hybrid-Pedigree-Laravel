@@ -33,6 +33,10 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontSize: {
+      'xxs': '10px',
+      'xxxs': '9px',
+    },
       colors: {
         dark: { DEFAULT: '#1e2125' },
       },

@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
          $settings = Setting::first();
 
          ## IF YOU RUN ON LOCALHOST, DON'T REMOVE THIS COMMENT ##
-          if (app()->environment('production') || app()->environment('local')) {
-             URL::forceScheme('https');
-          }
+          #if (app()->environment('production') || app()->environment('local')) {
+         #    URL::forceScheme('https');
+         # }
         // ## IF YOU RUN ON LOCALHOST, DON'T REMOVE THIS COMMENT ##
 
          $googleSettings = GoogleSetting::first();

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 
 class AuthController extends Controller
@@ -21,14 +23,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users|regex:/^[a-zA-Z0-9_.-]+$/',
+           
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username,
+            'username' => User::generateUsername($request->name),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -133,24 +135,25 @@ class AuthController extends Controller
         }
 
     public function handleGoogleCallback()
-        {
-            $user = Socialite::driver('google')->user();
+{
+    $googleUser = Socialite::driver('google')->user();
 
-            $existingUser = User::where('email', $user->getEmail())->first();
+    $user = User::where('email', $googleUser->getEmail())->first();
 
-            if ($existingUser) {
-                Auth::login($existingUser, true);
-            } else {
-                $newUser = User::create([
-                    'name' => $user->getName(),
-                    'email' => $user->getEmail(),
-                    'password' => bcrypt('password'), 
-                ]);
+    if (!$user) {
+        $user = User::create([
+            'name'        => $googleUser->getName(),
+            'email'       => $googleUser->getEmail(),
+            'username'    => User::generateUsername($googleUser->getName()),
+            'password'    => Hash::make(Str::random(32)), // random & aman
+            'provider'    => 'google',
+            'provider_id' => $googleUser->getId(),
+        ]);
+    }
 
-                Auth::login($newUser, true);
-            }
+    Auth::login($user, true);
 
-            return redirect()->route('home'); 
-        }
+    return redirect()->route('home');
+}
 
 }

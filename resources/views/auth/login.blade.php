@@ -2,9 +2,16 @@
 @section('title', 'Login')
 @section('content')
 <div class="container mx-auto">
-    <div class="max-w-md mx-auto">
+    <div class="max-w-md mx-auto my-8">
         <div class="flex justify-center mb-4">
-            <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="h-16 mt-4 w-auto"> 
+           
+                    @if (isset($settings) && $settings->logo)
+                        <img class="h-16 mt-4 w-auto rounded-xl" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                    @else
+                        <div class="text-xl font-bold mt-8 w-auto">Cultiv ID</div>
+                    @endif
+                      
+                    
         </div>
         <form action="{{ route('login') }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
             <div class="mb-4">
@@ -35,13 +42,13 @@
             
             <div class="flex mt-4 items-center">
                 <hr class="flex-grow border-t border-gray-300">
-                <span class="mx-4 text-gray-500">login / register</span>
+                <span class="mx-4 text-gray-500">login</span>
                 <hr class="flex-grow border-t border-gray-300">
             </div>
 
             <div class="flex mt-4 justify-center">
                 <a href="{{ url('auth/google') }}" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 text-center rounded focus:outline-none focus:shadow-outline">
-                    Register/Login with Google
+                    Login with Google
                 </a>
             </div>
         </form>

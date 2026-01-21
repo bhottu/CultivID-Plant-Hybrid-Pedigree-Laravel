@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
+
 // class User extends Model
 class User extends Authenticatable
 {
@@ -67,6 +69,12 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
     }
 
+     // 🔥 TAMBAHKAN INI
+    public function isFollowing(User $user): bool
+    {
+        return $this->following()->where('followed_id', $user->id)->exists();
+    }
+
     public function shares()
     {
         return $this->hasMany(Share::class);
@@ -87,6 +95,19 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\PlantSubmission::class, 'uploader_id');
     }
 
+public static function generateUsername($name)
+{
+    $base = Str::slug($name);
+    $username = $base;
+    $i = 1;
+
+    while (self::where('username', $username)->exists()) {
+        $username = $base . $i;
+        $i++;
+    }
+
+    return $username;
+}
     /**
      * The attributes that should be hidden for serialization.
      *
