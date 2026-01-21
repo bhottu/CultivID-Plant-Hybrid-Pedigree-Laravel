@@ -43,17 +43,40 @@
         </div>
 
         <!-- Edit Profile / Follow Button -->
-        @auth
-            @if(Auth::id() === $user->id)
-                <a href="{{ route('profile.edit') }}" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition mb-6 text-center">Edit Profile</a>
-            @else
-                <button id="follow-button" hx-post="{{ Auth::user()->following->contains($user->id) ? route('profile.unfollow', $user) : route('profile.follow', $user) }}" hx-target="#follow-button" hx-swap="outerHTML" hx-vals='{"_token": "{{ csrf_token() }}"}' class="w-full font-bold py-3 rounded-lg transition mb-6 text-white @if(Auth::user()->following->contains($user->id)) bg-red-500 hover:bg-red-600 @else bg-green-500 hover:bg-green-600 @endif">
-                    {{ Auth::user()->following->contains($user->id) ? 'Unfollow' : 'Follow' }}
-                </button>
-            @endif
-        @else
-            <a href="{{ route('login') }}" class="block w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition mb-6 text-center">Follow</a>
-        @endauth
+       @auth
+@if(Auth::id() === $user->id)
+    <div class="w-full px-4 mb-6">
+        <table class="w-full border-collapse">
+            <tr>
+                <!-- Edit Profile 80% -->
+                <td class="w-4/5">
+                    <a href="{{ route('profile.edit') }}"
+                       class="block w-full bg-blue-500 hover:bg-blue-600
+                              text-white font-bold py-3
+                              rounded-l-lg transition text-center">
+                        Edit Profile
+                    </a>
+                </td>
+
+                <!-- Logout 20% -->
+                <td class="w-1/5">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="w-full h-full bg-red-500 hover:bg-red-600
+                                       text-white py-3
+                                       rounded-r-lg transition
+                                        items-center justify-center">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+@endif
+@endauth
+
     </div>
 
     <!-- Plant Submissions Section -->

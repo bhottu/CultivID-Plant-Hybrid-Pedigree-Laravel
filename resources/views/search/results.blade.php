@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto my-8 px-4">
+<div class="container mx-auto my-8 px-4 text-xs">
     <h1 class="text-2xl font-bold mb-6">Search Results for: "{{ $query }}"</h1>
 
     <div class="mb-8">
@@ -10,15 +10,47 @@
             @forelse ($plantSubmissions as $submission)
                 <div class="bg-white rounded-lg overflow-hidden shadow-lg p-4">
                     <a href="{{ route('plant-submissions.show', $submission) }}" class="text-blue-500 hover:underline">
-                        <h2 class="text-xl font-semibold">Plant ID: {{ $submission->plant_id }}</h2>
+                        <h2 class="text-xl font-semibold">{{ $submission->plant_id }}</h2>
                     </a>
-                    <p class="text-gray-600">Induk Jantan: {{ $submission->induk_jantan }}</p>
-                    <p class="text-gray-600">Induk Betina: {{ $submission->induk_betina }}</p>
-                    <p class="text-gray-600">Penyilang: {{ $submission->penyilang }}</p>
+                    <p class="text-gray-600">
+                        <i class="fas fa-venus text-red-600"></i>
+                        {{ $submission->induk_jantan ?? '-' }}
+                    </p>
+                    
+                    <p class="text-gray-600">
+                        <i class="fas fa-mars text-blue-600"></i>
+                        {{ $submission->induk_betina ?? '-' }}
+                    </p>
+                    
+                   
+
                     <p class="text-gray-800">{{ Str::limit($submission->keterangan, 50, '...') }}</p>
-                    @if ($submission->image)
-                        <img src="{{ asset('storage/' . $submission->image) }}" alt="Plant Submission" class="w-full h-64 object-cover mt-2">
-                    @endif
+                         @php
+                            $images = $submission->image
+                                ? json_decode($submission->image, true)
+                                : [];
+                        @endphp
+                        
+                        @if (!empty($images[0]))
+                        <a href="{{ route('plant-submissions.show', $submission) }}" class="text-blue-500 hover:underline">
+                            <img
+                                src="{{ asset('storage/' . ltrim($images[0], '/')) }}"
+                                alt="Plant Submission"
+                                class="w-full h-64 object-cover mt-2 rounded-lg"
+                            > </a>
+                        @else
+                        <a href="{{ route('plant-submissions.show', $submission) }}" class="text-blue-500 hover:underline">
+                            <div
+                                class="w-full h-64 mt-2 rounded-lg bg-gray-200 dark:bg-gray-700
+                                       flex items-center justify-center text-gray-500 dark:text-gray-300
+                                       text-sm font-medium border border-dashed border-gray-400"
+                            >
+                                No Image
+                            </div>
+                            </a>
+                        @endif
+
+
                 </div>
             @empty
                 <p>No plant / Hybrid found.</p>
@@ -26,7 +58,7 @@
         </div>
     </div>
 
-    <!-- <div class="mb-8">
+     <div class="mb-8">
         <h2 class="text-xl font-semibold">Products</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             @forelse ($products as $product)
@@ -52,7 +84,7 @@
             @endforelse
         </div>
     </div>
--->
+
 
 <div class="mb-8">
         <h2 class="text-xl font-semibold">Community Posts</h2>

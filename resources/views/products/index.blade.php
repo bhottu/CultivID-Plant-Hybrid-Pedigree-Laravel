@@ -18,7 +18,7 @@
 
 
     <!-- Icon Navigation overlap bawah banner -->
-    <div class="nav-overlap z-10 p-4 -translate-y-1/2 relative mx-auto max-w-lg">
+    <div class="nav-overlap z-10 p-4 relative mx-auto max-w-lg">
     
     <!-- Search Bar -->
     <div class="search-bar mb-2 shadow-lg mx-auto max-w-3xl rounded-lg">
@@ -113,7 +113,7 @@
     <div class="container mx-auto max-w-lg p-4 bg-white border-t  mt-8">
     <div class="flex items-center justify-between mb-2">
         <h1 class="text-2xl text-sm font-bold border-l-4 border-double border-sky-500 pl-4">NEW HYBRIDS</h1>
-        <a href="{{ route('plant-submissions.create') }}" class="ml-4 bg-gray-800 text-white px-3 py-1 rounded shadow hover:bg-blue-700 transition flex items-center" style="font-size: 0.7rem; height:1.5rem; width:1.5rem; min-width:1.5rem; min-height:1.5rem; justify-content:center;" title="Ajukan Hybrid Baru">
+        <a href="{{ route('plant-submissions.create') }}" class="ml-4 bg-gray-800 text-white px-3 py-1 rounded shadow hover:bg-blue-700 transition flex items-center" style="text-[0.7rem] h-6 w-6 min-w-6 min-h-6 flex items-center justify-center" title="Ajukan Hybrid Baru">
             <span class="sr-only">Ajukan Hybrid Baru</span>
             <i class="fas fa-plus text-base"></i>
         </a>
@@ -122,11 +122,11 @@
             <table id="plants-table" class="min-w-full mt-2">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 ">
-                        <th class="p-2 border-l ">Foto</th>
+                        <th class="p-2 border-l ">Photo</th>
                         <th class="p-2 border-l-4 border-double">ID</th>
-                        <th class="p-2 border-l-4 border-double">Induk <i class='fas fa-venus text-red-600'></i></th>
+                        <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-venus text-red-600'></i></th>
                         <th class="p-2 border-l-4 border-double">✕</th>
-                        <th class="p-2 border-l-4 border-double">Induk <i class='fas fa-mars text-blue-600'></i></th>
+                        <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-mars text-blue-600'></i></th>
                     </tr>
                 </thead>
                 <tbody id="plants-tbody">

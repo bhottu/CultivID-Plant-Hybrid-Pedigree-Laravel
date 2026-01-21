@@ -17,8 +17,13 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+           'name' => 'Bot1',
+            'username' => 'systembot',        // jika ada field username
+            'email' => 'bot@cultiv.id',
+            'password' => Hash::make('testtest'),
+            'is_admin' => 1,             // jika ada kolom admin
         ]);
     }
 }
+
+

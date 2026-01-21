@@ -23,10 +23,11 @@
                     {{ \Illuminate\Support\Str::limit($item->plant_id, 20) }}
                 </a>
                 <p class="text-xs text-gray-700 mb-1">
-                    <span class="font-semibold"><i class='fas fa-venus text-red-600'></i></span> {{ $item->induk_betina ?? '-' }}
+                    <span class="font-semibold"><i class='fas fa-venus text-red-600'></i></span>
+                    {{ \Illuminate\Support\Str::limit($item->induk_betina, 20) }}
                 </p>
                 <p class="text-xs text-gray-700 mb-2">
-                    <span class="font-semibold"><i class='fas fa-mars text-red-600'></i></span> {{ $item->induk_jantan ?? '-' }}
+                    <span class="font-semibold"><i class='fas fa-mars text-blue-600'></i></span>{{ \Illuminate\Support\Str::limit($item->induk_jantan, 20) }}
                 </p>
                 <p class="text-xs font-semibold">
                     @php
