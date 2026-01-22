@@ -73,7 +73,7 @@ class PlantSubmissionController extends Controller
         }
 
         PlantSubmission::create($data);
-        return redirect()->route('admin.plant-submissions.index')->with('success', 'Tanaman berhasil ditambahkan!');
+        return redirect()->route('admin.plant-submissions.index')->with('success', 'Plant added successfully!');
     }
 
     public function show(PlantSubmission $plantSubmission)
@@ -118,7 +118,7 @@ class PlantSubmissionController extends Controller
         }
 
         $plantSubmission->update($data);
-        return redirect()->route('admin.plant-submissions.index')->with('success', 'Tanaman berhasil diupdate!');
+        return redirect()->route('admin.plant-submissions.index')->with('success', 'Plant updated successfully!');
     }
 
     public function review(Request $request, PlantSubmission $plantSubmission)
@@ -132,6 +132,6 @@ class PlantSubmissionController extends Controller
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now(),
         ]);
-        return redirect()->route('admin.plant-submissions.index')->with('success', 'Status review diperbarui!');
+        return redirect()->route('admin.plant-submissions.index')->with('success', 'Status updated successfully!');
     }
 }

@@ -29,111 +29,89 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-3 max-w-3xl mx-auto relative">
-        <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
-       
-        <!-- Approved -->
-        <a href="{{ route('plant-submissions.index') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-                bg-green-50 text-green-600 hover:bg-green-100
-                transition text-xxxs font-medium shadow-sm">
+    <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
 
-            <!-- Badge -->
-            <span
-                class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
-                    flex items-center justify-center
-                    rounded-full bg-green-600 text-white
-                    text-[10px] font-semibold leading-none">
-                1
+        <!-- Approved -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-green-50 text-green-600 hover:bg-green-100 transition text-xxxs font-medium shadow-sm">
+
+            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                flex items-center justify-center rounded-full bg-green-600 text-white
+                text-[10px] font-semibold leading-none">
+                {{ $counts['approved'] ?? 0 }}
             </span>
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M8 12l3 3 5-5"/>
             </svg>
-
             Approved
         </a>
 
-
         <!-- Pending -->
-        <a href="{{ route('plant-submissions.index') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-                    bg-yellow-50 text-yellow-600 hover:bg-yellow-100
-                    transition text-xxxs font-medium shadow-sm">
-            
-                    <!-- Badge -->
-                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
-                            flex items-center justify-center
-                            rounded-full bg-yellow-500 text-white
-                            text-[10px] font-semibold leading-none">
-                    3
-                </span>
-                
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M12 7v5l3 2"/>
-                </svg>
-                Pending
+        <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xxxs font-medium shadow-sm">
+
+            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                flex items-center justify-center rounded-full bg-yellow-500 text-white
+                text-[10px] font-semibold leading-none">
+                {{ $counts['pending'] ?? 0 }}
+            </span>
+
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+            </svg>
+            Pending
         </a>
 
-
-        <!-- Revision -->
-        <a href="{{ route('all.products') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-                    bg-blue-50 text-blue-600 hover:bg-blue-100
-                    transition text-xxxs font-medium shadow-sm">
-
-                <!-- Badge -->
-                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
-                            flex items-center justify-center
-                            rounded-full bg-blue-600 text-white
-                            text-[10px] font-semibold leading-none">
-                   1
-                </span>
-
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M4 20h4l10-10-4-4L4 16v4z"/>
-                    <path d="M14 6l4 4"/>
-                </svg>
-                Revision
-        </a>
-
+       <!-- Revisions -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'revision']) }}" 
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full 
+            bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xxxs font-medium shadow-sm"> 
+       
+            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 
+                flex items-center justify-center rounded-full bg-blue-600 text-white 
+                text-[10px] font-semibold leading-none">
+           {{ $counts['revision'] ?? 0 }}
+        </span> 
+        
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> 
+            <path d="M4 20h4l10-10-4-4L4 16v4z"/> <path d="M14 6l4 4"/> 
+        </svg> 
+        Revisions 
+    </a>
 
         <!-- Reject -->
-        <a href="{{ route('index.sosmed') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-                    bg-red-50 text-red-500 hover:bg-red-100
-                    transition text-xxxs font-medium shadow-sm">
+        <a href="{{ route('plant-submissions.index', ['status' => 'rejected']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-red-50 text-red-500 hover:bg-red-100 transition text-xxxs font-medium shadow-sm">
 
-                <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
-                            flex items-center justify-center
-                            rounded-full bg-red-600 text-white
-                            text-[10px] font-semibold leading-none">
-                    7
-                </span>
-                
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M9 9l6 6M15 9l-6 6"/>
-                </svg>
-                Reject
+            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                flex items-center justify-center rounded-full bg-red-600 text-white
+                text-[10px] font-semibold leading-none">
+                {{ $counts['rejected'] ?? 0 }}
+            </span>
+
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M9 9l6 6M15 9l-6 6"/>
+            </svg>
+            Rejected
         </a>
 
-
         <!-- Appeal -->
-        <a href="{{ route('index.sosmed') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-                    bg-gray-50 text-indigo-600 hover:bg-indigo-100
-                    transition text-xxxs font-medium shadow-sm">
+        <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xxxs font-medium shadow-sm">
 
-            <!-- Badge -->
-            <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1
-                            flex items-center justify-center
-                            rounded-full bg-red-200 text-gray-800
-                            text-[10px] font-semibold leading-none">
-                1
+            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                flex items-center justify-center rounded-full bg-indigo-500 text-white
+                text-[10px] font-semibold leading-none">
+                {{ $counts['appeal'] ?? 0 }}
             </span>
-            
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 3v18"/>
@@ -146,6 +124,7 @@
 
     </div>
 </div>
+
 
     </div>
 </div>
@@ -210,9 +189,9 @@
                                 <span class="inline-flex items-center"><i class="fa-solid fa-upload mr-1"></i>{{ \Illuminate\Support\Str::words($item->uploader->name, 2, '') }}</span>
                             </div>
                         </td>
-                        <td class="p-2">{{ $item->induk_betina }} </td>
+                        <td class="p-2"><span class="rounded text-xs bg-red-200 text-red-900">{{ $item->induk_betina }} </span></td>
                         <td class="p-2">✕</td>
-                        <td class="p-2">{{ $item->induk_jantan }}</td>
+                        <td class="p-2"><span class="rounded text-xs bg-blue-200 text-blue-900"> {{ $item->induk_jantan }}</span></td>
                     </tr>
                     @endif
                     @endforeach

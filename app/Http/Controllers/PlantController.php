@@ -61,7 +61,7 @@ class PlantController extends Controller
             'status' => 'available', // Status default saat input pertama
         ]);
 
-        return redirect()->route('plants.index')->with('success', 'Data tanaman berhasil ditambahkan.');
+        return redirect()->route('plants.index')->with('success', 'Plant added successfully.');
     }
 
     // Metode edit hanya bisa diakses oleh pengguna yang sudah login
@@ -71,7 +71,7 @@ class PlantController extends Controller
         $plants = Plant::select('id', 'common_name')->get(); // Tambahkan ini untuk dropdown parents
 
         if ($plant->status == 'editing' && $plant->user_id != Auth::id()) {
-            return redirect()->route('plants.index')->with('error', 'Tanaman sedang diedit oleh pengguna lain.');
+            return redirect()->route('plants.index')->with('error', 'This plant is currently being edited by another user.');
         }
 
         // Update status menjadi editing jika user sedang mengedit
@@ -119,7 +119,7 @@ class PlantController extends Controller
             'edited_by' => Auth::id(),
         ]);
 
-        return redirect()->route('plants.index')->with('success', 'Data tanaman berhasil diperbarui.');
+        return redirect()->route('plants.index')->with('success', 'Status updated successfully.');
     }
 
     // Metode destroy hanya bisa diakses oleh pengguna yang sudah login
@@ -128,6 +128,6 @@ class PlantController extends Controller
         $plant = Plant::findOrFail($id);
         $plant->delete();
 
-        return redirect()->route('plants.index')->with('success', 'Data tanaman berhasil dihapus.');
+        return redirect()->route('plants.index')->with('success', 'Plant deleted successfully.');
     }
 }

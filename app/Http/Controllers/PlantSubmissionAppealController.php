@@ -37,6 +37,6 @@ class PlantSubmissionAppealController extends Controller
         ]);
         // update status banding di submission jika perlu
         $submission->update(['status_review' => 'banding']);
-        return redirect()->route('plant-submissions.index')->with('success', 'Banding berhasil diajukan!');
+        return redirect()->route('plant-submissions.index')->with('success', 'Appeal has been successfully submitted!');
     }
 }

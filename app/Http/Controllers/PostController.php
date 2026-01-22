@@ -157,9 +157,9 @@ class PostController extends Controller
 
             if ($share && $share->user_id === auth()->user()->id) {
                 $share->delete();
-                return redirect()->back()->with('success', 'Postingan berhasil dihapus dari profil.');
+                return redirect()->back()->with('success', 'Post removed from your profile.');
             } else {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus postingan ini.');
+                return redirect()->back()->with('error', 'You do not have permission to delete this post.');
             }
         }
      // End Delete shared

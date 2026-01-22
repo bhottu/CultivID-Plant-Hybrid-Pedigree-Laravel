@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 //use Intervention\Image\Facades\Image;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\Models\PlantSubmission;
+use App\Models\PlantSubmissionAppeal;
 
 
 class ProductController extends Controller
@@ -22,7 +24,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $discountedProducts = Product::where('discount', '>', 0)->latest()->take(4)->get();
         $posts = Post::orderBy('created_at', 'desc')->paginate(5);
-
+        $user = Auth::user(); // ← WAJIB
         // Ambil tanaman hias yang sudah di-approve admin atau sedang banding
         $approvedPlants = \App\Models\PlantSubmission::with('uploader')
             ->whereIn('status_review', ['approved', 'banding'])
@@ -32,7 +34,31 @@ class ProductController extends Controller
             return view('partials.home-content', compact('products'));
         }
 
-        return view('products.index', compact('products', 'categories', 'posts', 'discountedProducts', 'approvedPlants'));
+         // =========================
+    // BADGE COUNTS
+    // =========================
+    $base = PlantSubmission::query();
+
+    if (!$user->is_admin) {
+        $base->where('uploader_id', $user->id);
+    }
+
+    $counts = [
+        'approved' => (clone $base)->where('status_review','approved')->count(),
+        'pending'  => (clone $base)->where('status_review','pending')->count(),
+        'rejected' => (clone $base)->where('status_review','rejected')->count(),
+        'revision' => (clone $base)->where(function ($q) {
+                            $q->whereNull('induk_jantan')
+                              ->orWhere('induk_jantan','')
+                              ->orWhereNull('induk_betina')
+                              ->orWhere('induk_betina','');
+                        })->count(),
+        'appeal'   => $user->is_admin
+                        ? PlantSubmissionAppeal::count()
+                        : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
+    ];
+
+        return view('products.index', compact('products', 'categories', 'posts', 'discountedProducts', 'approvedPlants','counts'));
     }
 
     public function create()

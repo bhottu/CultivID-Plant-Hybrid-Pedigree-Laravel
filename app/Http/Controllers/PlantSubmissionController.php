@@ -7,28 +7,87 @@ use Illuminate\Http\Request;
 use App\Models\PlantSubmission;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\PlantSubmissionAppeal;
 
 class PlantSubmissionController extends Controller
 {
     // Daftar submission (member & admin)
-    public function index()
-    {
-        if (Auth::check() && Auth::user()->is_admin) {
-            $submissions = PlantSubmission::with(['uploader', 'reviewer'])->latest()->paginate(10);
-        } else {
-            // Data upload sendiri
-            $own = PlantSubmission::with(['uploader', 'reviewer'])
-                ->where('uploader_id', Auth::id());
-            // Data yang user banding (dari tabel appeal, user_id = Auth::id())
-            $appealIds = \App\Models\PlantSubmissionAppeal::where('user_id', Auth::id())
-                ->pluck('plant_submission_id')->toArray();
-            $appeal = PlantSubmission::with(['uploader', 'reviewer'])
-                ->whereIn('id', $appealIds);
-            // Gabungkan, hilangkan duplikat
-            $submissions = $own->union($appeal)->latest('created_at')->paginate(10);
-        }
-        return view('plant_submissions.index', compact('submissions'));
+  
+    public function index(Request $request)
+{
+    $status = $request->get('status');
+    $user = Auth::user();
+
+    $allowedStatuses = ['approved','pending','rejected','revision','appeal'];
+    if ($status && !in_array($status, $allowedStatuses)) {
+        abort(404);
     }
+
+    $query = PlantSubmission::with(['uploader','reviewer']);
+
+    // =========================
+    // ROLE USER
+    // =========================
+    if (!$user->is_admin) {
+        $query->where(function ($q) use ($user) {
+            $q->where('uploader_id', $user->id)
+              ->orWhereIn('id', function ($sub) use ($user) {
+                  $sub->select('plant_submission_id')
+                      ->from('plant_submission_appeals')
+                      ->where('user_id', $user->id);
+              });
+        });
+    }
+
+    // =========================
+    // FILTER STATUS
+    // =========================
+    if ($status === 'revision') {
+        $query->where(function ($q) {
+            $q->whereNull('induk_jantan')
+              ->orWhere('induk_jantan', '')
+              ->orWhereNull('induk_betina')
+              ->orWhere('induk_betina', '');
+        });
+    }
+    elseif ($status === 'appeal') {
+        $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
+    }
+    elseif (in_array($status, ['approved','pending','rejected'])) {
+        $query->where('status_review', $status);
+    }
+
+    $submissions = $query->latest()->paginate(10);
+
+    // =========================
+    // BADGE COUNTS
+    // =========================
+    $base = PlantSubmission::query();
+
+    if (!$user->is_admin) {
+        $base->where('uploader_id', $user->id);
+    }
+
+    $counts = [
+        'approved' => (clone $base)->where('status_review','approved')->count(),
+        'pending'  => (clone $base)->where('status_review','pending')->count(),
+        'rejected' => (clone $base)->where('status_review','rejected')->count(),
+        'revision' => (clone $base)->where(function ($q) {
+                            $q->whereNull('induk_jantan')
+                              ->orWhere('induk_jantan','')
+                              ->orWhereNull('induk_betina')
+                              ->orWhere('induk_betina','');
+                        })->count(),
+        'appeal'   => $user->is_admin
+                        ? PlantSubmissionAppeal::count()
+                        : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
+    ];
+
+    return view('plant_submissions.index', compact('submissions','status','counts'));
+}
+
+
+
 
     // Form create submission
     public function create()
@@ -107,7 +166,7 @@ class PlantSubmissionController extends Controller
         }
 
         PlantSubmission::create($data);
-        return redirect()->route('plant-submissions.index')->with('success', 'Tanaman berhasil ditambahkan!');
+        return redirect()->route('plant-submissions.index')->with('success', 'Plant added successfully!');
     }
 
     // Edit submission (hanya uploader atau member lain dengan approval uploader)
@@ -161,7 +220,7 @@ class PlantSubmissionController extends Controller
         }
 
         $plantSubmission->update($data);
-        return redirect()->route('plant-submissions.index')->with('success', 'Tanaman berhasil diupdate!');
+        return redirect()->route('plant-submissions.index')->with('success', 'Plant updated successfully!');
     }
 
     // Review oleh admin
@@ -176,6 +235,6 @@ class PlantSubmissionController extends Controller
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now(),
         ]);
-        return redirect()->route('plant-submissions.index')->with('success', 'Status review diperbarui!');
+        return redirect()->route('plant-submissions.index')->with('success', 'Status updated successfully!');
     }
 }

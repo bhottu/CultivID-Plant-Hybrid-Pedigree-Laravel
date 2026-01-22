@@ -1,13 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    $activeStatus = request('status') ?? 'pending';
+@endphp
+
 <div class="container mx-auto p-4 bg-white rounded shadow max-w-lg">
     <div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-bold text-green-900">New Hybrids</h1>
+    <h1 class="text-2xl font-bold text-green-900">My Submissions</h1>
 
     <a href="{{ route('plant-submissions.create') }}"
        class="bg-gray-800 text-white px-4 py-2 text-xs rounded hover:bg-gray-900 transition">
-        Add Hybrid
+        Add Plant
     </a>
 </div>
 
@@ -16,13 +21,150 @@
     @endif
     
     <div class="overflow-x-auto">
+        
+        
+    <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
+
+        <!-- Approved -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
+   class="relative flex items-center gap-2 px-4 py-2 rounded-full
+   {{ $activeStatus === 'approved'
+        ? 'bg-gray-200 text-green-800 ring-2 ring-green-400'
+        : 'bg-green-50 text-green-600 hover:bg-green-100'
+   }}
+   transition text-xxxs font-medium shadow-sm">
+
+    @if(($counts['approved'] ?? 0) > 0)
+        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-green-600"></span>
+    @endif
+
+    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-green-600 
+    text-white text-[10px] font-semibold leading-none"> {{ $counts['approved'] ?? 0 }} </span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M8 12l3 3 5-5"/>
+    </svg>
+    Approved
+</a>
+
+
+        <!-- Pending -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
+   class="relative flex items-center gap-2 px-4 py-2 rounded-full
+   {{ $activeStatus === 'pending'
+        ? 'bg-gray-200 text-yellow-800 ring-2 ring-yellow-400'
+        : 'bg-yellow-50 text-yellow-600 hover:bg-yellow-100'
+   }}
+   transition text-xxxs font-medium shadow-sm">
+
+    @if(($counts['pending'] ?? 0) > 0)
+        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+    @endif
+
+    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-yellow-500 
+    text-white text-[10px] font-semibold leading-none"> 
+    {{ $counts['pending'] ?? 0 }} 
+    </span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v5l3 2"/>
+    </svg>
+    Pending
+</a>
+
+
+       <!-- Revisions -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'revision']) }}"
+   class="relative flex items-center gap-2 px-4 py-2 rounded-full
+   {{ $activeStatus === 'revision'
+        ? 'bg-gray-200 text-blue-800 ring-2 ring-blue-400'
+        : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+   }}
+   transition text-xxxs font-medium shadow-sm">
+
+    @if(($counts['revision'] ?? 0) > 0)
+        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+    @endif
+
+    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-blue-600 
+    text-white text-[10px] font-semibold leading-none"> 
+    {{ $counts['revision'] ?? 0 }} 
+    </span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M4 20h4l10-10-4-4L4 16v4z"/>
+        <path d="M14 6l4 4"/>
+    </svg>
+    Revision
+</a>
+
+
+        <!-- Reject -->
+       <a href="{{ route('plant-submissions.index', ['status' => 'rejected']) }}"
+   class="relative flex items-center gap-2 px-4 py-2 rounded-full
+   {{ $activeStatus === 'rejected'
+        ? 'bg-gray-200 text-red-800 ring-2 ring-red-400'
+        : 'bg-red-50 text-red-500 hover:bg-red-100'
+   }}
+   transition text-xxxs font-medium shadow-sm">
+
+    @if(($counts['rejected'] ?? 0) > 0)
+        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-red-600"></span>
+    @endif
+
+    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-600 
+    text-white text-[10px] font-semibold leading-none"> 
+    {{ $counts['rejected'] ?? 0 }} 
+    </span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M9 9l6 6M15 9l-6 6"/>
+    </svg>
+    Reject
+</a>
+
+
+        <!-- Appeal -->
+        <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
+   class="relative flex items-center gap-2 px-4 py-2 rounded-full
+   {{ $activeStatus === 'appeal'
+        ? 'bg-gray-200 text-indigo-800 ring-2 ring-indigo-400'
+        : 'bg-gray-100 text-indigo-600 hover:bg-indigo-100'
+   }}
+   transition text-xxxs font-medium shadow-sm">
+
+    @if(($counts['appeal'] ?? 0) > 0)
+        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-gray-700"></span>
+    @endif
+
+    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-indigo-500 
+    text-white text-[10px] font-semibold leading-none"> 
+    {{ $counts['appeal'] ?? 0 }} 
+    </span>
+
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 3v18"/>
+        <path d="M5 7h14"/>
+        <path d="M7 7l-3 6h6l-3-6z"/>
+        <path d="M17 7l-3 6h6l-3-6z"/>
+    </svg>
+    Appeal
+</a>
+
+
+
+</div>
+
         <table class="min-w-full mt-2 text-xs">
             <thead>
                 <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300">
-                    <th class="p-2 border-l">Foto</th>
-                    <th class="p-2 border-l-4 border-double">ID Tanaman</th>
-                    <th class="p-2 border-l-4 border-double">Induk <i class='fas fa-venus text-red-600'></i></th>
-                    <th class="p-2 border-l-4 border-double">Induk <i class='fas fa-mars text-red-600'></i></th>
+                    <th class="p-2 border-l">Photo</th>
+                    <th class="p-2 border-l-4 border-double">ID</th>
+                    <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-venus text-red-600'></i></th>
+                    <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-mars text-blue-600'></i></th>
                     {{-- Kolom Status hanya untuk admin atau uploader (per baris) --}}
                     @php
                         $showStatusHeader = false;
@@ -38,7 +180,7 @@
                         }
                     @endphp
                     
-                    <th class="p-2">Aksi</th>
+                    <th class="p-2">Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,10 +212,10 @@
                             @php
                                 $status = $item->status_review;
                                 $badgeClass = match($status) {
-                                    'approved' => 'bg-green-200 text-green-900',
-                                    'rejected' => 'bg-red-200 text-red-900',
-                                    'banding' => 'bg-yellow-900 text-yellow-100',
-                                    default => 'bg-gray-200 text-gray-900',
+                                    'approved' => 'bg-green-200 text-xxxs text-green-900',
+                                    'rejected' => 'bg-red-200 text-xxxs text-red-900',
+                                    'banding' => 'bg-yellow-900 text-xxxs text-yellow-100',
+                                    default => 'bg-gray-200 text-xxxs text-gray-900',
                                 };
                             @endphp
                             <span class="px-2 py-1 rounded text-xs {{ $badgeClass }}">
@@ -89,8 +231,8 @@
                                  <span class="font-bold">{{ $item->plant_id }}</span>
                             </a>
                        <br>
-                       Breeder <i class="fas fa-dna text-green-600 mr-1"></i> {{ $item->penyilang }}<br>
-                       Uploader <i class="fa-solid fa-upload text-blue-600 mr-1"></i> {{ $item->uploader->name ?? '-' }}
+                       <i class="fas fa-dna text-green-600 mr-1"></i> {{ $item->penyilang }}<br>
+                       <i class="fa-solid fa-upload text-blue-600 mr-1"></i> {{ $item->uploader->name ?? '-' }}
                     </td>
 
 
@@ -99,7 +241,7 @@
                             $betina = App\Models\PlantSubmission::where('plant_id', $item->induk_betina)->first();
                         @endphp
                         @if($item->induk_betina && $betina)
-                         <span class="rounded text-xs bg-blue-200 text-blue-900">  {{ $item->induk_betina }} </span>
+                         <span class="rounded text-xs bg-red-200 text-red-900">  {{ $item->induk_betina }} </span>
                         @endif
 
                     </td>
@@ -111,7 +253,7 @@
                             $jantan = App\Models\PlantSubmission::where('plant_id', $item->induk_jantan)->first();
                         @endphp
                         @if($item->induk_jantan && $jantan)
-                            <span class="rounded text-xs bg-red-200 text-red-900"> {{ $item->induk_jantan }} </span>
+                            <span class="rounded text-xs bg-blue-200 text-red-blue"> {{ $item->induk_jantan }} </span>
                         @endif
                     </td>
                     
