@@ -20,11 +20,12 @@ class ProductController extends Controller
 {
     public function index()
     {
+         
         $products = Product::with('category', 'user')->latest()->paginate(10);
         $categories = Category::all();
         $discountedProducts = Product::where('discount', '>', 0)->latest()->take(4)->get();
         $posts = Post::orderBy('created_at', 'desc')->paginate(5);
-        $user = Auth::user(); // ← WAJIB
+       
         // Ambil tanaman hias yang sudah di-approve admin atau sedang banding
         $approvedPlants = \App\Models\PlantSubmission::with('uploader')
             ->whereIn('status_review', ['approved', 'banding'])
@@ -34,29 +35,39 @@ class ProductController extends Controller
             return view('partials.home-content', compact('products'));
         }
 
-         // =========================
-    // BADGE COUNTS
-    // =========================
-    $base = PlantSubmission::query();
+        // =========================
+// BADGE COUNTS (AMAN UNTUK GUEST)
+// =========================
+$user = Auth::user(); // bisa null
+$base = PlantSubmission::query();
 
-    if (!$user->is_admin) {
-        $base->where('uploader_id', $user->id);
-    }
+// Jika user login & BUKAN admin → filter milik sendiri
+if ($user && !$user->is_admin) {
+    $base->where('uploader_id', $user->id);
+}
 
-    $counts = [
-        'approved' => (clone $base)->where('status_review','approved')->count(),
-        'pending'  => (clone $base)->where('status_review','pending')->count(),
-        'rejected' => (clone $base)->where('status_review','rejected')->count(),
-        'revision' => (clone $base)->where(function ($q) {
-                            $q->whereNull('induk_jantan')
-                              ->orWhere('induk_jantan','')
-                              ->orWhereNull('induk_betina')
-                              ->orWhere('induk_betina','');
-                        })->count(),
-        'appeal'   => $user->is_admin
+// Jika guest → TIDAK boleh lihat data user
+if (!$user) {
+    $base->whereRaw('1 = 0'); // hasilkan 0 data
+}
+
+$counts = [
+    'approved' => (clone $base)->where('status_review','approved')->count(),
+    'pending'  => (clone $base)->where('status_review','pending')->count(),
+    'rejected' => (clone $base)->where('status_review','rejected')->count(),
+    'revision' => (clone $base)->where(function ($q) {
+                        $q->whereNull('induk_jantan')
+                          ->orWhere('induk_jantan','')
+                          ->orWhereNull('induk_betina')
+                          ->orWhere('induk_betina','');
+                    })->count(),
+    'appeal'   => $user
+                    ? ($user->is_admin
                         ? PlantSubmissionAppeal::count()
-                        : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
-    ];
+                        : PlantSubmissionAppeal::where('user_id', $user->id)->count())
+                    : 0,
+];
+
 
         return view('products.index', compact('products', 'categories', 'posts', 'discountedProducts', 'approvedPlants','counts'));
     }
