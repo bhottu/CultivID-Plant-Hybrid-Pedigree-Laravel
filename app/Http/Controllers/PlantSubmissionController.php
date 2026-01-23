@@ -8,6 +8,7 @@ use App\Models\PlantSubmission;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\PlantSubmissionAppeal;
+use Illuminate\Support\Facades\Storage;
 
 class PlantSubmissionController extends Controller
 {
@@ -237,4 +238,40 @@ class PlantSubmissionController extends Controller
         ]);
         return redirect()->route('plant-submissions.index')->with('success', 'Status updated successfully!');
     }
+
+    public function getFirstImageAttribute()
+{
+    return $this->image[0] ?? null;
+}
+
+
+    public function adminDestroy(PlantSubmission $plantSubmission)
+{
+    if ($plantSubmission->image) {
+
+        $decoded = json_decode($plantSubmission->image, true);
+
+        // Jika multiple images (JSON array)
+        if (is_array($decoded)) {
+            foreach ($decoded as $path) {
+                if ($path && Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
+        } 
+        // Fallback kalau ternyata string tunggal
+        else {
+            if (Storage::disk('public')->exists($plantSubmission->image)) {
+                Storage::disk('public')->delete($plantSubmission->image);
+            }
+        }
+    }
+
+    $plantSubmission->delete();
+
+    return redirect()
+        ->route('admin.plant-submissions.index')
+        ->with('success', 'Plant deleted successfully.');
+}
+
 }

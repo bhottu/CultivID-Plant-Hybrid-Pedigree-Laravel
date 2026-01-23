@@ -51,8 +51,20 @@
                        
                             <tr class="border-b border-gray-200 hover:bg-gray-50">
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
-                                    @if($item->image)
-                                        <img src="{{ asset('storage/'.$item->image) }}" alt="Foto" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="showImageModal('{{ asset('storage/'.$item->image) }}')">
+                                    @php
+                                        $images = [];
+                                        if ($item->image) {
+                                            $decoded = json_decode($item->image, true);
+                                            if (is_array($decoded)) {
+                                                $images = $decoded;
+                                            } else {
+                                                $images = [$item->image];
+                                            }
+                                        }
+                                        $first = count($images) ? $images[0] : null;
+                                    @endphp
+                                    @if($item->image) 
+                                        <img src="{{ asset('storage/'.$first) }}" alt="Foto" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="showImageModal('{{ asset('storage/'.$first) }}')">
                                     @else
                                         <span class="text-gray-400">-</span>
                                     @endif
@@ -97,6 +109,15 @@
                                             @endif
                                         </form>
                                         @endcan
+                                        <form action="{{ route('admin.plant-submissions.destroy', $item) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this plant?')" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-700">
+                                            <svg fill="#D32F2F" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z"/>
+                                            </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

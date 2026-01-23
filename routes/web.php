@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\MembaraSettingController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlantSubmissionAppealController;
 use App\Http\Controllers\PlantSubmissionPublicController;
+use App\Http\Controllers\PlantSubmissionController;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -46,7 +47,7 @@ Route::get('profile/{user}/plant-submissions/load', [ProfileController::class, '
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
 
-use App\Http\Controllers\PlantSubmissionController;
+
 
 
 Route::middleware(['auth'])->group(function () {
@@ -131,7 +132,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/plant-submissions/{plantSubmission}/edit', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'edit'])->name('admin.plant-submissions.edit');
     Route::put('/admin/plant-submissions/{plantSubmission}', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'update'])->name('admin.plant-submissions.update');
     Route::post('/admin/plant-submissions/{plantSubmission}/review', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'review'])->name('admin.plant-submissions.review');
-
+    Route::delete('/admin/plant-submissions/{plantSubmission}', [PlantSubmissionController::class, 'adminDestroy'])->name('admin.plant-submissions.destroy');
    // Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
     //Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
 
