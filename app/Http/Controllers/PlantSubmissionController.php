@@ -182,6 +182,7 @@ class PlantSubmissionController extends Controller
     public function update(Request $request, PlantSubmission $plantSubmission)
     {
         $this->authorize('update', $plantSubmission);
+
         $request->validate([
             'plant_id' => 'required|string|max:255',
             'induk_jantan' => 'nullable|string|max:255',
@@ -192,36 +193,65 @@ class PlantSubmissionController extends Controller
             'images.*' => 'image|max:4096',
         ]);
 
-        $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
-        
-        // Convert empty strings to null for nullable fields
-        foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan'] as $field) {
+        $data = $request->only([
+            'plant_id',
+            'induk_jantan',
+            'induk_betina',
+            'penyilang',
+            'keterangan'
+        ]);
+
+        // Convert empty string → null
+        foreach (['induk_jantan','induk_betina','penyilang','keterangan'] as $field) {
             if (isset($data[$field]) && $data[$field] === '') {
                 $data[$field] = null;
             }
         }
-        
-        // Handle multiple images on update (replace existing)
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $imagePaths[] = $file->store('plant_images', 'public');
-            }
-        } elseif ($request->hasFile('image')) {
-            $imagePaths[] = $request->file('image')->store('plant_images', 'public');
-        }
 
-        if (!empty($imagePaths)) {
+        // =====================================================
+        // ✅ AUTO DELETE GAMBAR LAMA JIKA ADA GAMBAR BARU
+        // =====================================================
+        if ($request->hasFile('images') || $request->hasFile('image')) {
+
+            // ✅ Ambil & hapus gambar lama
+            if ($plantSubmission->image) {
+                $oldImages = json_decode($plantSubmission->image, true);
+
+                if (!is_array($oldImages)) {
+                    $oldImages = [$plantSubmission->image];
+                }
+
+                foreach ($oldImages as $oldImage) {
+                    if (Storage::disk('public')->exists($oldImage)) {
+                        Storage::disk('public')->delete($oldImage);
+                    }
+                }
+            }
+
+            // ✅ Simpan gambar baru
+            $imagePaths = [];
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $file) {
+                    $imagePaths[] = $file->store('plant_images', 'public');
+                }
+            } else {
+                $imagePaths[] = $request->file('image')->store('plant_images', 'public');
+            }
+
             $data['image'] = json_encode($imagePaths);
         }
 
-        // Jika yang update bukan uploader, set uploader_approval = false
-        if (Auth::id() !== $plantSubmission->uploader_id) {
+        // Jika updater bukan uploader
+        if (auth()->id() !== $plantSubmission->uploader_id) {
             $data['uploader_approval'] = false;
         }
 
         $plantSubmission->update($data);
-        return redirect()->route('plant-submissions.index')->with('success', 'Plant updated successfully!');
+
+        return redirect()
+            ->route('plant-submissions.index')
+            ->with('success', 'Plant updated successfully!');
     }
 
     // Review oleh admin
@@ -240,38 +270,82 @@ class PlantSubmissionController extends Controller
     }
 
     public function getFirstImageAttribute()
-{
-    return $this->image[0] ?? null;
-}
+    {
+        return $this->image[0] ?? null;
+    }
 
 
     public function adminDestroy(PlantSubmission $plantSubmission)
+        {
+            if ($plantSubmission->image) {
+
+                $decoded = json_decode($plantSubmission->image, true);
+
+                // Jika multiple images (JSON array)
+                if (is_array($decoded)) {
+                    foreach ($decoded as $path) {
+                        if ($path && Storage::disk('public')->exists($path)) {
+                            Storage::disk('public')->delete($path);
+                        }
+                    }
+                } 
+                // Fallback kalau ternyata string tunggal
+                else {
+                    if (Storage::disk('public')->exists($plantSubmission->image)) {
+                        Storage::disk('public')->delete($plantSubmission->image);
+                    }
+                }
+            }
+
+            $plantSubmission->delete();
+
+            return redirect()
+                ->route('admin.plant-submissions.index')
+                ->with('success', 'Plant deleted successfully.');
+        }
+
+        public function destroy(PlantSubmission $plantSubmission)
 {
+    // =========================
+    // AUTHORIZATION
+    // =========================
+    if (
+        !Auth::check() ||
+        (!Auth::user()->is_admin && Auth::id() !== $plantSubmission->uploader_id)
+    ) {
+        abort(403, 'Unauthorized');
+    }
+
+    // =========================
+    // DELETE IMAGE(S)
+    // =========================
     if ($plantSubmission->image) {
 
-        $decoded = json_decode($plantSubmission->image, true);
+        // decode JSON image (support single & multiple)
+        $images = json_decode($plantSubmission->image, true);
 
-        // Jika multiple images (JSON array)
-        if (is_array($decoded)) {
-            foreach ($decoded as $path) {
+        if (is_array($images)) {
+            foreach ($images as $path) {
                 if ($path && Storage::disk('public')->exists($path)) {
                     Storage::disk('public')->delete($path);
                 }
             }
-        } 
-        // Fallback kalau ternyata string tunggal
-        else {
+        } else {
+            // fallback jika image bukan JSON
             if (Storage::disk('public')->exists($plantSubmission->image)) {
                 Storage::disk('public')->delete($plantSubmission->image);
             }
         }
     }
 
+    // =========================
+    // DELETE DATA
+    // =========================
     $plantSubmission->delete();
 
     return redirect()
-        ->route('admin.plant-submissions.index')
-        ->with('success', 'Plant deleted successfully.');
+        ->back()
+        ->with('success', 'Plant deleted successfully!');
 }
 
 }

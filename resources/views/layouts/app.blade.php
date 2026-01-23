@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <link rel="manifest" href="/manifest.json">
 
@@ -104,6 +106,7 @@
             display: none;
         }
 
+        [x-cloak] { display: none !important; }
        
     </style>
 </head>
@@ -122,7 +125,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.11
+                             v1.0.12
                         </div>
 
                     @else
@@ -245,7 +248,10 @@
 
     <!-- Add Menu Modal -->
     <div id="addMenuModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end">
-        <div class="w-full bg-white dark:bg-gray-800 rounded-t-3xl p-6 animate-slide-up">
+        <div class="w-full bg-white dark:bg-gray-800 rounded-t-3xl p-3 animate-slide-up">
+                <div class="flex justify-center py-2">
+                  <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+                </div>
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold">What do you want to do?</h2>
                 <button onclick="closeAddMenu()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl">×</button>

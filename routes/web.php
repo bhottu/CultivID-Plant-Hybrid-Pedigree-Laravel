@@ -71,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('plant-submissions/{plantSubmission}/edit', [PlantSubmissionController::class, 'edit'])->name('plant-submissions.edit');
     Route::put('plant-submissions/{plantSubmission}', [PlantSubmissionController::class, 'update'])->name('plant-submissions.update');
     Route::post('plant-submissions/{plantSubmission}/review', [PlantSubmissionController::class, 'review'])->name('plant-submissions.review');
+    Route::delete('plant-submissions/{plantSubmission}', [PlantSubmissionController::class, 'destroy'])->name('plant-submissions.destroy');
 
     // Banding Plant Submission (hanya untuk user login)
     Route::get('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'create'])->name('plant-submissions.appeal.create');
