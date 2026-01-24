@@ -10,11 +10,6 @@
 <div class="container mx-auto p-4 bg-white rounded shadow max-w-lg">
     <div class="flex items-center justify-between mb-4">
     <h1 class="text-2xl font-bold text-green-900">My Submissions</h1>
-
-    <a href="{{ route('plant-submissions.create') }}"
-       class="bg-gray-800 text-white px-4 py-2 text-xs rounded hover:bg-gray-900 transition">
-        Add Plant
-    </a>
 </div>
 
     @if(session('success'))

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-8 mb-8 p-4 bg-gray-100 rounded shadow max-w-lg border border-gray-300">
+<div class="container mx-auto mt-8 mb-8 p-4 max-w-lg">
     <h1 class="text-2xl font-bold mb-4 text-gray-800">Add to Community</h1>
     <form action="{{ route('post.store') }}" method="post" enctype="multipart/form-data" class="max-w-lg mx-auto">
         @csrf

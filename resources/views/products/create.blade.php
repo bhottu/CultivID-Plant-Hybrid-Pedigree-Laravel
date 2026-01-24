@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-8 mb-8 p-4 bg-gray-100 rounded shadow max-w-lg border border-gray-300">
+<div class="container mx-auto mt-8 mb-8 p-4 max-w-lg">
     <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="max-w-md mx-auto">
         @if ($errors->any())
             <div class="mb-4">

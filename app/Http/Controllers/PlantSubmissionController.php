@@ -118,8 +118,18 @@ class PlantSubmissionController extends Controller
             'images' => 'nullable|array|max:3',
             'images.*' => 'image|max:4096',
         ]);
+        
 
         $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
+
+        // ✅ AUTO CAPITAL (SETELAH $data ADA)
+        foreach (['induk_jantan', 'induk_betina'] as $field) {
+            if (!empty($data[$field])) {
+                $data[$field] = ucfirst(strtolower($data[$field]));
+            } else {
+                $data[$field] = null;
+            }
+        }
         
         // Convert empty strings to null for nullable fields
         foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan'] as $field) {
