@@ -70,7 +70,14 @@ class PlantSubmissionController extends Controller
     }
 
     $counts = [
-        'approved' => (clone $base)->where('status_review','approved')->count(),
+     // 'approved' => (clone $base)->where('status_review','approved')->count(),
+        'approved' => (clone $base)
+                    ->where('status_review', 'approved') // WAJIB
+                    ->whereNotNull('induk_jantan')
+                    ->where('induk_jantan', '!=', '')
+                    ->whereNotNull('induk_betina')
+                    ->where('induk_betina', '!=', '')
+                    ->count(),
         'pending'  => (clone $base)->where('status_review','pending')->count(),
         'rejected' => (clone $base)->where('status_review','rejected')->count(),
         'revision' => (clone $base)->where(function ($q) {
@@ -103,7 +110,7 @@ class PlantSubmissionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'plant_id' => 'required|string|max:255',
+            'plant_id' => ['required','string','max:255','unique:plant_submissions,plant_id',],
             'induk_jantan' => 'nullable|string|max:255',
             'induk_betina' => 'nullable|string|max:255',
             'penyilang' => 'nullable|string|max:255',
@@ -184,7 +191,8 @@ class PlantSubmissionController extends Controller
         $this->authorize('update', $plantSubmission);
 
         $request->validate([
-            'plant_id' => 'required|string|max:255',
+            //'plant_id' => 'required|string|max:255',
+            'plant_id' => ['required','string','max:255','unique:plant_submissions,plant_id',],
             'induk_jantan' => 'nullable|string|max:255',
             'induk_betina' => 'nullable|string|max:255',
             'penyilang' => 'nullable|string|max:255',

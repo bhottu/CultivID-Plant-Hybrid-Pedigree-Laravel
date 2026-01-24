@@ -1,7 +1,7 @@
     <div class="container mx-auto max-w-lg px-4 my-4">
         <div class="text-left mb-4">
         <h1 class="text-2xl font-bold text-gray-800">Communitys</h1>
-        <p class="text-sm text-gray-500">Place to share, discuss & share</p>
+        <p class="text-sm text-gray-500">Share, Discuss & Grow together.</p>
     </div>
     
     @if($posts->count())

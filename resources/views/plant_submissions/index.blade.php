@@ -33,7 +33,7 @@
         ? 'bg-gray-200 text-green-800 ring-2 ring-green-400'
         : 'bg-green-50 text-green-600 hover:bg-green-100'
    }}
-   transition text-xxxs font-medium shadow-sm">
+   transition text-xs font-medium shadow-sm">
 
     @if(($counts['approved'] ?? 0) > 0)
         <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-green-600"></span>
@@ -57,7 +57,7 @@
         ? 'bg-gray-200 text-yellow-800 ring-2 ring-yellow-400'
         : 'bg-yellow-50 text-yellow-600 hover:bg-yellow-100'
    }}
-   transition text-xxxs font-medium shadow-sm">
+   transition text-xs font-medium shadow-sm">
 
     @if(($counts['pending'] ?? 0) > 0)
         <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
@@ -83,7 +83,7 @@
         ? 'bg-gray-200 text-blue-800 ring-2 ring-blue-400'
         : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
    }}
-   transition text-xxxs font-medium shadow-sm">
+   transition text-xs font-medium shadow-sm">
 
     @if(($counts['revision'] ?? 0) > 0)
         <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600"></span>
@@ -109,7 +109,7 @@
         ? 'bg-gray-200 text-red-800 ring-2 ring-red-400'
         : 'bg-red-50 text-red-500 hover:bg-red-100'
    }}
-   transition text-xxxs font-medium shadow-sm">
+   transition text-xs font-medium shadow-sm">
 
     @if(($counts['rejected'] ?? 0) > 0)
         <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-red-600"></span>
@@ -135,7 +135,7 @@
         ? 'bg-gray-200 text-indigo-800 ring-2 ring-indigo-400'
         : 'bg-gray-100 text-indigo-600 hover:bg-indigo-100'
    }}
-   transition text-xxxs font-medium shadow-sm">
+   transition text-xs font-medium shadow-sm">
 
     @if(($counts['appeal'] ?? 0) > 0)
         <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-gray-700"></span>

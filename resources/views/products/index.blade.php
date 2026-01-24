@@ -34,13 +34,17 @@
         <!-- Approved -->
         <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-green-50 text-green-600 hover:bg-green-100 transition text-xxxs font-medium shadow-sm">
+           bg-green-50 text-green-600 hover:bg-green-100 transition text-xs font-medium shadow-sm">
 
-            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                flex items-center justify-center rounded-full bg-green-600 text-white
-                text-[10px] font-semibold leading-none">
-                {{ $counts['approved'] ?? 0 }}
-            </span>
+            @auth
+                @if(($counts['approved'] ?? 0) > 0)
+                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-green-600 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['approved'] }}
+                </span>
+                @endif
+            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -52,13 +56,17 @@
         <!-- Pending -->
         <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xxxs font-medium shadow-sm">
+           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xs font-medium shadow-sm">
 
-            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                flex items-center justify-center rounded-full bg-yellow-500 text-white
-                text-[10px] font-semibold leading-none">
-                {{ $counts['pending'] ?? 0 }}
-            </span>
+            @auth
+                @if(($counts['pending'] ?? 0) > 0)
+                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-yellow-500 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['pending'] ?? 0 }}
+                </span>
+                @endif
+            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -70,13 +78,17 @@
        <!-- Revisions -->
         <a href="{{ route('plant-submissions.index', ['status' => 'revision']) }}" 
             class="relative flex items-center gap-2 px-4 py-2 rounded-full 
-            bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xxxs font-medium shadow-sm"> 
-       
-            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 
-                flex items-center justify-center rounded-full bg-blue-600 text-white 
-                text-[10px] font-semibold leading-none">
-           {{ $counts['revision'] ?? 0 }}
-        </span> 
+            bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xs font-medium shadow-sm"> 
+
+                @auth
+                    @if(($counts['revision'] ?? 0) > 0)
+                    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 
+                        flex items-center justify-center rounded-full bg-blue-600 text-white 
+                        text-[10px] font-semibold leading-none">
+                        {{ $counts['revision'] ?? 0 }}
+                    </span> 
+                    @endif
+                @endauth
         
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> 
             <path d="M4 20h4l10-10-4-4L4 16v4z"/> <path d="M14 6l4 4"/> 
@@ -87,13 +99,17 @@
         <!-- Reject -->
         <a href="{{ route('plant-submissions.index', ['status' => 'rejected']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-red-50 text-red-500 hover:bg-red-100 transition text-xxxs font-medium shadow-sm">
+           bg-red-50 text-red-500 hover:bg-red-100 transition text-xs font-medium shadow-sm">
 
-            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                flex items-center justify-center rounded-full bg-red-600 text-white
-                text-[10px] font-semibold leading-none">
-                {{ $counts['rejected'] ?? 0 }}
-            </span>
+            @auth
+                @if(($counts['rejected'] ?? 0) > 0)
+                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-red-600 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['rejected'] ?? 0 }}
+                </span>
+                @endif
+            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -105,13 +121,17 @@
         <!-- Appeal -->
         <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xxxs font-medium shadow-sm">
+           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xs font-medium shadow-sm">
 
-            <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                flex items-center justify-center rounded-full bg-indigo-500 text-white
-                text-[10px] font-semibold leading-none">
-                {{ $counts['appeal'] ?? 0 }}
-            </span>
+            @auth
+                @if(($counts['appeal'] ?? 0) > 0)
+                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-indigo-500 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['appeal'] ?? 0 }}
+                </span>
+                @endif
+            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 3v18"/>

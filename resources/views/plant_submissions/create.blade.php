@@ -7,8 +7,9 @@
         @csrf
         <div>
             <label class="block text-gray-800 font-semibold">Plant ID <span class="text-red-600">*</span></label>
-            <input type="text" name="plant_id" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200" required value="{{ old('plant_id') }}">
-            @error('plant_id') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
+            <input type="text" name="plant_id" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                oninput="this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase();" required value="{{ old('plant_id') }}">
+                @error('plant_id') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         
         <div>
