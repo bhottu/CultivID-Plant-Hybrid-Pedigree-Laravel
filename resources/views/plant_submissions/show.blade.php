@@ -3,8 +3,8 @@
 @section('content')
 <div class="container mx-auto max-w-lg p-4 bg-white">
     <div class="flex items-center justify-between mb-4">
-        <h1 class="text-2xl font-bold text-green-900 flex items-center">
-            <i class='fas fa-seedling text-green-600 mr-2'></i> {{ $plantSubmission->plant_id }}
+        <h1 class="text-2xl font-bold text-green-900 flex items-center bg-red-200 rounded-lg py-1 px-2">
+            <i class='fas fa-seedling text-green-600 mr-2'></i> <span class="italic">{{ $plantSubmission->plant_id }}</span>
         </h1>
        
     </div>
@@ -53,35 +53,97 @@
                 @endif
             @else
                 <div class="w-full bg-white rounded border border-gray-200 shadow p-4 text-center">
-                    <span class="text-gray-400">Tidak ada foto</span>
+                    <span class="text-xs  text-gray-400">No photo</span>
+                     @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
+                                <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="text-xs text-red-400 underline">Add</a>
+                            @elseif(Auth::check())
+                                <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @else
+                                <a href="{{ route('login') }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @endif
                 </div>
             @endif
         </div>
+        
     <div class="p-4 rounded border border-gray-200 shadow text-sm w-full">
         
             <table class="table-auto text-sm mb-4  w-full">
                 <tr>
-                    <td class="pr-2">ID Tanaman</td>
-                   <td class="text-italic font-semibold ">→ {{ $plantSubmission->plant_id }}</td>
+                    <td class="pr-2">ID</td>
+                   <td class="italic text-xs">→ 
+                    @if($plantSubmission->plant_id)
+                           <span class="italic"> {{ $plantSubmission->plant_id }}</span>
+                        @else
+                            <span class="italic text-gray-400">No data</span> 
+                        @endif
+                   </td>
                 </tr>
                 <tr>
-                    <td class="pr-2">Induk</td>
-                    <td class="text-italic font-semibold ">→ {{ $plantSubmission->induk_betina }}</td>
+                    <td class="pr-2">Parent <i class='fas fa-venus text-red-600'></td>
+                    <td class="italic text-xs">→ 
+                        @if($plantSubmission->induk_betina)
+                            {{ $plantSubmission->induk_betina }}
+                        @else
+                            <span class="italic text-gray-400">No data, </span>
+                            
+                            @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
+                                <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="text-xs text-red-400 underline">Add</a>
+                            @elseif(Auth::check())
+                                <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @else
+                                <a href="{{ route('login') }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @endif
+                        
+                        @endif
+                    </td>
                 </tr>
                 <tr>
-                    <td class="pr-2">Induk </td>
-                    <td class="text-italic font-semibold ">→ {{ $plantSubmission->induk_jantan }}</td>
+                    <td class="pr-2">Parent <i class='fas fa-mars text-blue-600'></td>
+                    <td class="italic text-xs">→
+                        @if($plantSubmission->induk_jantan)
+                            {{ $plantSubmission->induk_jantan }}
+                        @else
+                            <span class="italic text-gray-400">No data, </span> 
+                            @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
+                                <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="text-xs text-red-400 underline">Add</a>
+                            @elseif(Auth::check())
+                                <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @else
+                                <a href="{{ route('login') }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @endif
+                        
+                        @endif
+                    </td>
                 </tr>
                 <tr>
-                    <td class="pr-2">Penyilang </td>
-                    <td class="text-italic font-semibold ">→ {{ $plantSubmission->penyilang }}</td>
+                    <td class="pr-2">Breeder </td>
+                    <td class="italic text-xs">→ 
+                        @if($plantSubmission->penyilang)
+                            {{ $plantSubmission->penyilang }}
+                        @else
+                            <span class="italic text-gray-400">No data, </span>
+                            @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
+                                <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="text-xs text-red-400 underline">Add</a>
+                            @elseif(Auth::check())
+                                <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @else
+                                <a href="{{ route('login') }}" class="text-xs text-red-400 underline">Appeal</a>
+                            @endif
+                        
+                        @endif
+                        </td>
                 </tr>
                 
                 @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
                 <tr>
                     <td class="pr-2">Status</td>
                     <td>→
-                       <span class="font-semibold  px-2 py-1 text-green-700 rounded text-xs {{ $plantSubmission->status_review == 'approved' ? 'bg-green-500 text-green-900' : ($plantSubmission->status_review == 'rejected' ? 'bg-red-500 text-red-900' : ($plantSubmission->status_review == 'banding' ? 'bg-yellow-500 text-yellow-900' : 'bg-gray-500 text-gray-900')) }}">
+                       <span class="font-semibold  px-2 py-1 text-gray-700 rounded text-xs 
+                       {{ 
+                        $plantSubmission->status_review == 'approved' ? 'bg-green-500 text-green-900' : 
+                        ($plantSubmission->status_review == 'rejected' ? 'bg-red-500 text-red-900' : 
+                        ($plantSubmission->status_review == 'banding' ? 'bg-yellow-500 text-yellow-900' : 'bg-gray-500 text-gray-900')) 
+                        }}">
                            {{ ucfirst($plantSubmission->status_review) }}
                         </span>
                     </td>
@@ -89,15 +151,40 @@
                 @endif
             </table>
            
-            <div class="flex gap-2 mt-2">
-                @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
-                    <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="bg-gray-800 text-white px-4 py-2 rounded text-xs">Ubah</a>
-                @elseif(Auth::check())
-                    <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="bg-red-600 text-white px-2 py-1 rounded mb-2 inline-block hover:bg-red-800 transition text-xs">Banding</a>
-                @else
-                    <a href="{{ route('login') }}" class="bg-white-600 border text-red-600 hover:text-gray-600 px-2 py-1 rounded mb-2 inline-block  transition text-xs">Banding</a>
-                @endif
+            <div class="mt-4 text-xs rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
+    <div class="flex items-start justify-between gap-4">
+        <div class="flex items-start gap-3">
+            <svg class="mt-0.5 h-5 w-5 text-yellow-500"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.5"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 9v3.75M12 15.75h.01M10.29 3.86l-8.03 13.9a1.5 1.5 0 001.3 2.24h16.88a1.5 1.5 0 001.3-2.24l-8.03-13.9a1.5 1.5 0 00-2.6 0z" />
+            </svg>
+
+            <div>
+                <p>
+                    <strong>Warning:</strong>
+                    If there is any mistake in the breeder or parent plant name,
+                    please submit an appeal to move this plant to your account.
+                </p>
+                <p class="mt-2">
+                    <strong>Alternatively</strong>, you may ask the uploader to update the data
+                    without transferring ownership on this page.
+                </p>
             </div>
+        </div>
+                @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
+                    <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="bg-gray-800 text-white px-4 py-1 rounded text-xs">Edit</a>
+                @elseif(Auth::check())
+                    <a href="{{ route('plant-submissions.appeal.create', $plantSubmission) }}" class="whitespace-nowrap rounded-md bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-yellow-600">Appeal</a>
+                @else
+                    <a href="{{ route('login') }}" class="whitespace-nowrap rounded-md bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-yellow-600">Appeal</a>
+                @endif
+
+    </div>
+</div>
         
       </div>
     </div>
@@ -106,7 +193,7 @@
      {{-- Silsilah Tanaman (Pedigree) --}}
     @if(isset($pedigree) && $pedigree)
     <div class="mt-2">
-        <h2 class="text-md font-bold text-green-900 mb-2">Pedigree</h2>
+        <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
         <div class="bg-gray-50 p-4 rounded shadow text-sm">
             @php
                 function renderPedigree($node) {
@@ -151,7 +238,10 @@
     </div>
     @endif
 
-    <h2 class="text-md font-bold text-green-900 mb-2 mt-2">Uploader</h2>
+    
+
+
+    <h2 class="text-md text-green-900 mb-2 mt-2">Uploader</h2>
      @if($plantSubmission->uploader)
             <div class="bg-gray-50 p-4 rounded shadow text-sm">
                 <div class="flex items-center gap-3 mb-2">

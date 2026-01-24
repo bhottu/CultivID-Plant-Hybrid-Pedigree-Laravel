@@ -1,35 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4 bg-gray-100 rounded shadow max-w-lg border border-gray-300">
+<div class="container mx-auto p-4 rounded max-w-lg ">
     <h1 class="text-2xl font-bold mb-4 text-gray-800">Edit Pengajuan Tanaman</h1>
     <form action="{{ route('plant-submissions.update', $plantSubmission) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
         <div>
-            <label class="block text-gray-800 font-semibold">ID Tanaman <span class="text-red-600">*</span></label>
+            <label class="block text-gray-800 font-semibold">Plant ID  <span class="text-red-600">*</span></label>
             <input type="text" name="plant_id" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200" 
              oninput="this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase();" required value="{{ old('plant_id', $plantSubmission->plant_id) }}">
             @error('plant_id') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
+
         <div>
-            <label class="block text-gray-800 font-semibold">Induk Jantan</label>
-            <select name="induk_jantan" id="induk_jantan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-                <option value="">-- Pilih/Isi Plant ID atau Nama Penyilang --</option>
-                @foreach($parentSubmissions as $parent)
-                    <option value="{{ $parent->plant_id }}" {{ old('induk_jantan', $plantSubmission->induk_jantan) == $parent->plant_id ? 'selected' : '' }}>
-                        {{ $parent->plant_id }}
-                        @if($parent->induk_jantan) ({{ $parent->induk_jantan }}) @endif
-                        @if($parent->induk_betina) ({{ $parent->induk_betina }}) @endif
-                    </option>
-                @endforeach
-            </select>
-            @error('induk_jantan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
-        </div>
-        <div>
-            <label class="block text-gray-800 font-semibold">Induk Betina</label>
+            <label class="block text-gray-800 font-semibold">Seed parent <i class='fas fa-venus text-red-600'></i> <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
             <select name="induk_betina" id="induk_betina" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-                <option value="">-- Pilih/Isi Plant ID atau Nama Penyilang --</option>
+                <option value="">-- Pilih / Tambah baru --</option>
                 @foreach($parentSubmissions as $parent)
                     <option value="{{ $parent->plant_id }}" {{ old('induk_betina', $plantSubmission->induk_betina) == $parent->plant_id ? 'selected' : '' }}>
                         {{ $parent->plant_id }}
@@ -40,10 +27,26 @@
             </select>
             @error('induk_betina') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
+
         <div>
-            <label class="block text-gray-800 font-semibold">Penyilang <span class="text-gray-500 font-normal">(Opsional)</span></label>
+            <label class="block text-gray-800 font-semibold">Pollen parent <i class='fas fa-mars text-blue-600'></i>  <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
+            <select name="induk_jantan" id="induk_jantan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
+                <option value="">-- Pilih / Tambah baru --</option>
+                @foreach($parentSubmissions as $parent)
+                    <option value="{{ $parent->plant_id }}" {{ old('induk_jantan', $plantSubmission->induk_jantan) == $parent->plant_id ? 'selected' : '' }}>
+                        {{ $parent->plant_id }}
+                        @if($parent->induk_jantan) ({{ $parent->induk_jantan }}) @endif
+                        @if($parent->induk_betina) ({{ $parent->induk_betina }}) @endif
+                    </option>
+                @endforeach
+            </select>
+            @error('induk_jantan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
+        </div>
+        
+        <div>
+            <label class="block text-gray-800 font-semibold">Breeder <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
             <select name="penyilang" id="penyilang" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-                <option value="">-- Pilih/Isi Nama Penyilang --</option>
+                <option value="">-- Pilih / Tambah baru --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->name }}" {{ old('penyilang', $plantSubmission->penyilang) == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
                 @endforeach
@@ -58,15 +61,28 @@
             <input type="text" class="w-full border border-gray-300 rounded p-2 bg-gray-100" value="{{ $plantSubmission->uploader ? $plantSubmission->uploader->name : '-' }}" readonly>
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Keterangan</label>
+            <label class="block text-gray-800 font-semibold">Description</label>
             <textarea name="keterangan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">{{ old('keterangan', $plantSubmission->keterangan) }}</textarea>
             @error('keterangan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Foto Tanaman</label>
+            <label class="block text-gray-800 font-semibold">Photos</label>
             <input type="file" name="image" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
+            @php
+                $images = [];
+                if ($plantSubmission->image) {
+                    $decoded = json_decode($plantSubmission->image, true);
+                    if (is_array($decoded)) {
+                        $images = $decoded;
+                    } else {
+                        $images = [$plantSubmission->image];
+                    }
+                }
+                $mainImage = count($images) ? $images[0] : null;
+            @endphp
+            
             @if($plantSubmission->image)
-                <img src="{{ asset('storage/'.$plantSubmission->image) }}" alt="Foto Tanaman" class="mt-2 w-32 h-32 object-cover rounded">
+                <img src="{{ asset('storage/'.$mainImage) }}" alt="Foto Tanaman" class="mt-2 w-32 h-32 object-cover rounded">
             @endif
             @error('image') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
@@ -81,19 +97,19 @@
         $(document).ready(function() {
             $('#induk_jantan').select2({
                 tags: true,
-                placeholder: '-- Pilih/Isi ID atau Nama Tanaman --',
+                placeholder: '-- Pilih / Tambah baru --',
                 allowClear: true,
                 width: '100%'
             });
             $('#induk_betina').select2({
                 tags: true,
-                placeholder: '-- Pilih/Isi ID atau Nama Tanaman --',
+                placeholder: '-- Pilih / Tambah baru --',
                 allowClear: true,
                 width: '100%'
             });
             $('#penyilang').select2({
                 tags: true,
-                placeholder: '-- Pilih/Isi Nama Penyilang --',
+                placeholder: '-- Pilih / Tambah baru --',
                 allowClear: true,
                 width: '100%'
             });

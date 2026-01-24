@@ -202,7 +202,7 @@ class PlantSubmissionController extends Controller
 
         $request->validate([
             //'plant_id' => 'required|string|max:255',
-            'plant_id' => ['required','string','max:255','unique:plant_submissions,plant_id',],
+            'plant_id' => 'required|string|max:255',
             'induk_jantan' => 'nullable|string|max:255',
             'induk_betina' => 'nullable|string|max:255',
             'penyilang' => 'nullable|string|max:255',

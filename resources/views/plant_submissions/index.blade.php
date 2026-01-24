@@ -184,51 +184,71 @@
                     @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
                 <tr class="border-b hover:bg-gray-100">
                     <td class="p-2">
-                        @php
-                            $images = [];
-                            if ($item->image) {
-                                $decoded = json_decode($item->image, true);
-                                if (is_array($decoded)) {
-                                    $images = $decoded;
-                                } else {
-                                    $images = [$item->image];
-                                }
+                    @php
+                        $images = [];
+                        if ($item->image) {
+                            $decoded = json_decode($item->image, true);
+                            if (is_array($decoded)) {
+                                $images = $decoded;
+                            } else {
+                                $images = [$item->image];
                             }
-                            $first = count($images) ? $images[0] : null;
-                        @endphp
+                        }
+                        $first = count($images) ? $images[0] : null;
+
+                        $status = $item->status_review;
+                        $badgeClass = match($status) {
+                            'approved' => 'bg-green-600 text-white text-xxxs',
+                            'rejected' => 'bg-red-600 text-white',
+                            'banding'  => 'bg-yellow-600 text-white',
+                            default    => 'bg-gray-600 text-white',
+                        };
+                    @endphp
+
+                    <div class="relative w-12">
                         @if($first)
-                        <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-12 h-12 object-cover rounded cursor-pointer border border-gray-300 hover:shadow-lg transition" onclick="showImageModal('{{ asset('storage/'.$first) }}')">
+                            <img src="{{ asset('storage/'.$first) }}"
+                                alt="Foto Tanaman"
+                                class="w-12 h-12 object-cover rounded border border-gray-300 cursor-pointer"
+                                onclick="showImageModal('{{ asset('storage/'.$first) }}')">
                         @else
-                        <span class="text-gray-400">-</span>
+                            <div class="w-12 h-12 flex items-center justify-center rounded border border-gray-300 bg-gray-100
+                                        text-xxxs leading-tight text-gray-500 text-center">
+                                No Image
+                            </div>
                         @endif
 
                         {{-- Status Badge --}}
                         @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
-                       
-                            @php
-                                $status = $item->status_review;
-                                $badgeClass = match($status) {
-                                    'approved' => 'bg-green-200 text-xxxs text-green-900',
-                                    'rejected' => 'bg-red-200 text-xxxs text-red-900',
-                                    'banding' => 'bg-yellow-900 text-xxxs text-yellow-100',
-                                    default => 'bg-gray-200 text-xxxs text-gray-900',
-                                };
-                            @endphp
-                            <span class="px-2 py-1 rounded text-xs {{ $badgeClass }}">
+                            <span class="absolute bottom-0 left-0 w-full rounded-b text-[9px] text-xxxs text-center {{ $badgeClass }}">
                                 {{ ucfirst($status) }}
                             </span>
-                        
                         @endif
-                        {{-- Status Badge --}}
-                    </td>
+                    </div>
+                </td>
+
 
                     <td class="p-2"  onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
-                         <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-700 hover:text-blue-700" title="Lihat Detil">
-                                 <span class="font-bold">{{ $item->plant_id }}</span>
-                            </a>
-                       <br>
-                       <i class="fas fa-dna text-green-600 mr-1"></i> {{ $item->penyilang }}<br>
-                       <i class="fa-solid fa-upload text-blue-600 mr-1"></i> {{ $item->uploader->name ?? '-' }}
+                        <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-700 hover:text-blue-700" title="Lihat Detil">
+                            <span class="text-gray-800 hover:underline italic">{{ $item->plant_id }}</span>
+                        </a>
+                            <div class=" md:block text-xs text-gray-500 mt-1">
+                                <span class="inline-flex items-center mr-4">
+                                    @if($item->penyilang)
+                                        <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
+                                    @else
+                                        <span class="italic text-gray-400 my-1"> No breeder, 
+                                        @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
+                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add</a>
+                                        @elseif(Auth::check())
+                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                        @else
+                                            <a href="{{ route('login') }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                        @endif
+                                        </span>
+                                    @endif                          
+                                </span><br>
+                            </div>
                     </td>
 
 
@@ -237,7 +257,7 @@
                             $betina = App\Models\PlantSubmission::where('plant_id', $item->induk_betina)->first();
                         @endphp
                         @if($item->induk_betina && $betina)
-                         <span class="rounded text-xs bg-red-200 text-red-900">  {{ $item->induk_betina }} </span>
+                         <span class="rounded text-xs bg-red-200 text-red-900 italic">  {{ $item->induk_betina }} </span>
                         @endif
 
                     </td>
@@ -249,7 +269,7 @@
                             $jantan = App\Models\PlantSubmission::where('plant_id', $item->induk_jantan)->first();
                         @endphp
                         @if($item->induk_jantan && $jantan)
-                            <span class="rounded text-xs bg-blue-200 text-red-blue"> {{ $item->induk_jantan }} </span>
+                            <span class="rounded text-xs bg-blue-200 text-red-blue italic"> {{ $item->induk_jantan }} </span>
                         @endif
                     </td>
                     

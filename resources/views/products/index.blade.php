@@ -191,27 +191,37 @@
                         @if($first)
                         <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-12 h-12 object-cover rounded cursor-pointer border border-gray-300 hover:shadow-lg transition">
                         @else
-                        <span class="text-gray-400">-</span>
+                        <div class="w-12 h-12 flex items-center justify-center rounded border border-gray-300 bg-gray-100
+                                    text-[10px] text-xxxs leading-none text-gray-500 text-center whitespace-nowrap">
+                            No Image
+                        </div>
                         @endif
                         </td>
                         <td class="p-2 align-top text-xs" >
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline font-semibold">{{ \Illuminate\Support\Str::words($item->plant_id, 2, '..') }}</a>
-                            <!-- Mobile only: Penyilang & Pengirim di bawah ID -->
-                            <div class="block md:hidden text-xs text-gray-500 mt-1">
-                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna mr-1"></i> {{ \Illuminate\Support\Str::words($item->penyilang, 2, '') }}</span><br>
+                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 2, '..') }}</a>
 
-                                <span class="inline-flex items-center"><i class="fa-solid fa-upload  mr-1"></i> {{ \Illuminate\Support\Str::words($item->uploader->name, 2, '') }}
-</span>
+                            <div class=" md:block text-xs text-gray-500 mt-1">
+                                <span class="inline-flex items-center mr-4">
+                                    @if($item->penyilang)
+                                        <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
+                                    @else
+                                        <span class="italic text-gray-400 my-1"> No breeder, 
+                                        @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
+                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add</a>
+                                        @elseif(Auth::check())
+                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                        @else
+                                            <a href="{{ route('login') }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                        @endif
+                                        </span>
+                                    @endif                          
+                                </span><br>
                             </div>
-                            <!-- Desktop: Penyilang & Pengirim below ID -->
-                            <div class="hidden md:block text-xs text-gray-500 mt-1">
-                                <span class="inline-flex items-center mr-4"><i class="fas fa-dna  mr-1"></i>{{ \Illuminate\Support\Str::words($item->penyilang, 2, '') }}</span><br>
-                                <span class="inline-flex items-center"><i class="fa-solid fa-upload mr-1"></i>{{ \Illuminate\Support\Str::words($item->uploader->name, 2, '') }}</span>
-                            </div>
+
                         </td>
-                        <td class="p-2"><span class="rounded text-xs bg-red-200 text-red-900">{{ $item->induk_betina }} </span></td>
+                        <td class="p-2"><span class="rounded text-xs bg-red-200 text-red-900 italic">{{ $item->induk_betina }} </span></td>
                         <td class="p-2">✕</td>
-                        <td class="p-2"><span class="rounded text-xs bg-blue-200 text-blue-900"> {{ $item->induk_jantan }}</span></td>
+                        <td class="p-2"><span class="rounded text-xs bg-blue-200 text-blue-900 italic"> {{ $item->induk_jantan }}</span></td>
                     </tr>
                     @endif
                     @endforeach

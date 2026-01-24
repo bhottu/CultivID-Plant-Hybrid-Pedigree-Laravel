@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-8 mb-8 p-4 rounded max-w-lg">
+<div class="container mx-auto p-4 rounded max-w-lg">
     <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Hybrid</h1>
     <form action="{{ route('plant-submissions.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
@@ -13,7 +13,7 @@
         </div>
         
         <div>
-            <label class="block text-gray-800 font-semibold">Seed parent <i class='fas fa-venus text-red-600'></i></label>
+            <label class="block text-gray-800 font-semibold">Seed parent <i class='fas fa-venus text-red-600'></i> <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
             <select name="induk_betina" id="induk_betina" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
                 <option value="">-- Pilih / Tambah baru --</option>
                 @foreach($parentSubmissions as $parent)
@@ -29,7 +29,7 @@
         </div>
         
         <div>
-            <label class="block text-gray-800 font-semibold">Pollen parent <i class='fas fa-mars text-blue-600'></i></label>
+            <label class="block text-gray-800 font-semibold">Pollen parent <i class='fas fa-mars text-blue-600'></i> <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
             <select name="induk_jantan" id="induk_jantan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
                 <option value="">-- Pilih / Tambah baru --</option>
                 @foreach($parentSubmissions as $parent)
@@ -44,7 +44,7 @@
             @error('induk_jantan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Breeder <span class="text-gray-500 font-normal">(Opsional)</span></label>
+            <label class="block text-gray-800 font-semibold">Breeder <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
             <select name="penyilang" id="penyilang" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
                 <option value="">-- Pilih / Tambah baru --</option>
                 @foreach($users as $user)

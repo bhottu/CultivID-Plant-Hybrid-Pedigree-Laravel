@@ -13,36 +13,54 @@
                         }
                     }
                     $first = count($images) ? $images[0] : null;
+
+                    $status = $item->status_review;
+                    $badgeClass = match($status) {
+                        'approved' => 'bg-green-100 text-green-700',
+                        'rejected' => 'bg-red-100 text-red-700',
+                        'banding'  => 'bg-yellow-100 text-yellow-700',
+                        default    => 'bg-gray-200 text-gray-700',
+                    };
                 @endphp
-                @if($first)
-                     <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="text-xs text-blue-600 hover:text-blue-800 hover:underline font-semibold block mb-2">
-                        <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-full bg-cover h-48 object-cover rounded mb-3 cursor-pointer border border-gray-300 hover:shadow-lg transition">
-                    </a>
-                @endif
-                <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="text-xs text-blue-600 hover:text-blue-800 hover:underline font-semibold block mb-2">
+
+                <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="block mb-3">
+                    <div class="relative w-full h-48 rounded overflow-hidden border border-gray-300 hover:shadow-lg transition">
+
+                        @if($first)
+                            <!-- IMAGE -->
+                            <img src="{{ asset('storage/'.$first) }}"
+                                alt="Foto Tanaman"
+                                class="w-full h-full object-cover">
+                        @else
+                            <!-- NO IMAGE -->
+                            <div class="w-full h-full flex items-center justify-center
+                                        bg-gray-100 text-xs text-gray-500 text-center">
+                                No Image
+                            </div>
+                        @endif
+
+                        <!-- BADGE (SELALU MUNCUL) -->
+                        <span class="absolute bottom-2 right-2 px-2 py-1 rounded text-xs font-semibold {{ $badgeClass }}">
+                            {{ ucfirst($status) }}
+                        </span>
+
+                    </div>
+                </a>
+
+                
+
+                
+                <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="text-mf text-blue-600 hover:text-blue-800 hover:underline  block mb-2 italic">
                     {{ \Illuminate\Support\Str::limit($item->plant_id, 20) }}
                 </a>
-                <p class="text-xs text-gray-700 mb-1">
-                    <span class="font-semibold"><i class='fas fa-venus text-red-600'></i></span>
+                <p class="text-xs text-gray-700 mb-1 italic">
+                    <span class="mr-2"><i class='fas fa-venus text-red-600'></i></span>
                     {{ \Illuminate\Support\Str::limit($item->induk_betina, 20) }}
                 </p>
-                <p class="text-xs text-gray-700 mb-2">
-                    <span class="font-semibold"><i class='fas fa-mars text-blue-600'></i></span>{{ \Illuminate\Support\Str::limit($item->induk_jantan, 20) }}
+                <p class="text-xs text-gray-700 mb-1 italic">
+                    <span class="mr-2"><i class='fas fa-mars text-blue-600'></i></span>{{ \Illuminate\Support\Str::limit($item->induk_jantan, 20) }}
                 </p>
-                <p class="text-xs font-semibold">
-                    @php
-                        $status = $item->status_review;
-                        $badgeClass = match($status) {
-                            'approved' => 'bg-green-100 text-green-700',
-                            'rejected' => 'bg-red-100 text-red-700',
-                            'banding' => 'bg-yellow-100 text-yellow-700',
-                            default => 'bg-gray-200 text-gray-700',
-                        };
-                    @endphp
-                    <span class="px-2 py-1 rounded text-xs {{ $badgeClass }}">
-                        {{ ucfirst($status) }}
-                    </span>
-                </p>
+                
             </div>
 @endforeach
         
