@@ -15,10 +15,10 @@
     </div>
 
 
-    <!-- Icon Navigation overlap bawah banner -->
+    {{-- Icon Navigation overlap bawah banner --}}
     <div class="nav-overlap z-10 p-4 relative mx-auto max-w-lg">
     
-    <!-- Search Bar -->
+    {{-- Search Bar --}}
     <div class="search-bar mb-2 shadow-lg mx-auto max-w-3xl rounded-lg">
         <form action="{{ route('search') }}" method="GET" class="flex items-center justify-center gap-2">
             <input type="text" name="query" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search..." required>
@@ -31,107 +31,106 @@
     <div class="bg-white rounded-xl shadow-md p-3 max-w-3xl mx-auto relative">
     <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
 
-        <!-- Approved -->
+        {{-- All --}}
+        <a href="{{ route('plant-submissions.index') }}"
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium shadow-sm transition
+            {{ request()->routeIs('plant-submissions.index')
+                    ? 'bg-gray-200 text-gray-800 ring-2 ring-gray-400'
+                    : 'bg-green-50 text-gray-600 hover:bg-green-100'
+            }}">
+                All
+        </a>
+
+        {{-- Approved --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
            bg-green-50 text-green-600 hover:bg-green-100 transition text-xs font-medium shadow-sm">
-
-            @auth
-                @if(($counts['approved'] ?? 0) > 0)
-                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                    flex items-center justify-center rounded-full bg-green-600 text-white
-                    text-[10px] font-semibold leading-none">
-                    {{ $counts['approved'] }}
-                </span>
-                @endif
-            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M8 12l3 3 5-5"/>
             </svg>
             Approved
-        </a>
-
-        <!-- Pending -->
-        <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
-           class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xs font-medium shadow-sm">
 
             @auth
-                @if(($counts['pending'] ?? 0) > 0)
-                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                    flex items-center justify-center rounded-full bg-yellow-500 text-white
+                @if(($counts['approved'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-green-600 text-white
                     text-[10px] font-semibold leading-none">
-                    {{ $counts['pending'] ?? 0 }}
+                    {{ $counts['approved'] }}
                 </span>
                 @endif
             @endauth
+        </a>
+
+        {{-- Pending --}}
+        <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xs font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M12 7v5l3 2"/>
             </svg>
             Pending
+            @auth
+                @if(($counts['pending'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-yellow-500 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['pending'] ?? 0 }}
+                </span>
+                @endif
+            @endauth
         </a>
 
-       <!-- Revisions -->
+       {{-- Revision --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'revision']) }}" 
             class="relative flex items-center gap-2 px-4 py-2 rounded-full 
             bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xs font-medium shadow-sm"> 
-
-                @auth
-                    @if(($counts['revision'] ?? 0) > 0)
-                    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 
-                        flex items-center justify-center rounded-full bg-blue-600 text-white 
-                        text-[10px] font-semibold leading-none">
-                        {{ $counts['revision'] ?? 0 }}
-                    </span> 
-                    @endif
-                @endauth
-        
+ 
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> 
             <path d="M4 20h4l10-10-4-4L4 16v4z"/> <path d="M14 6l4 4"/> 
         </svg> 
         Revisions 
+
+         @auth
+            @if(($counts['revision'] ?? 0) > 0)
+            <span class="min-w-[16px] h-4 px-1 
+            flex items-center justify-center rounded-full bg-blue-600 text-white 
+            text-[10px] font-semibold leading-none">
+            {{ $counts['revision'] ?? 0 }}
+            </span> 
+            @endif
+        @endauth
     </a>
 
-        <!-- Reject -->
+        {{-- Reject --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'rejected']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
            bg-red-50 text-red-500 hover:bg-red-100 transition text-xs font-medium shadow-sm">
-
-            @auth
-                @if(($counts['rejected'] ?? 0) > 0)
-                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                    flex items-center justify-center rounded-full bg-red-600 text-white
-                    text-[10px] font-semibold leading-none">
-                    {{ $counts['rejected'] ?? 0 }}
-                </span>
-                @endif
-            @endauth
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M9 9l6 6M15 9l-6 6"/>
             </svg>
             Rejected
-        </a>
 
-        <!-- Appeal -->
-        <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
-           class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xs font-medium shadow-sm">
-
-            @auth
-                @if(($counts['appeal'] ?? 0) > 0)
-                <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1
-                    flex items-center justify-center rounded-full bg-indigo-500 text-white
+             @auth
+                @if(($counts['rejected'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-red-600 text-white
                     text-[10px] font-semibold leading-none">
-                    {{ $counts['appeal'] ?? 0 }}
+                    {{ $counts['rejected'] ?? 0 }}
                 </span>
                 @endif
             @endauth
+        </a>
+
+        {{-- Appeal --}}
+        <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
+           class="relative flex items-center gap-2 px-4 py-2 rounded-full
+           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xs font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 3v18"/>
@@ -140,6 +139,16 @@
                 <path d="M17 7l-3 6h6l-3-6z"/>
             </svg>
             Appeal
+
+             @auth
+                @if(($counts['appeal'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-indigo-500 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['appeal'] ?? 0 }}
+                </span>
+                @endif
+            @endauth
         </a>
 
     </div>
@@ -151,15 +160,15 @@
 
 <section class="w-full mx-auto max-w-lg">
 
-    <!-- New Hybrids -->
+    {{-- New Hybrids --}}
     <div class="container mx-auto max-w-lg p-4 bg-white border-t  mt-8">
     <div class="flex items-center justify-between mb-2">
-        <h1 class="text-2xl text-sm font-bold border-l-4 border-double border-sky-500 pl-4">NEW HYBRIDS</h1>
-        <a href="{{ route('plant-submissions.create') }}" class="ml-4 bg-gray-800 text-white px-3 py-1 rounded shadow hover:bg-blue-700 transition flex items-center" style="text-[0.7rem] h-6 w-6 min-w-6 min-h-6 flex items-center justify-center" title="Ajukan Hybrid Baru">
-            <span class="sr-only">Ajukan Hybrid Baru</span>
-            <i class="fas fa-plus text-base"></i>
-        </a>
-    </div>
+    <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
+        <span class="block text-sm text-gray-800">NEW PLANTS & HYBRIDS</span>
+        <span class="block text-xs text-gray-400 italic">cultivar registration & history</span>
+    </h1>
+</div>
+
         <div class="overflow-x-auto">
             <table id="plants-table" class="min-w-full mt-2">
                 <thead>
@@ -229,7 +238,8 @@
             </table>
         </div>
 
-        <!-- Load More Sentinel -->
+        {{-- Load More Sentinel --}}
+         
         <div id="load-more" class="text-center py-4">
             <div id="loading-spinner" class="hidden">
                 <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading more...
@@ -240,7 +250,7 @@
     </div>
 
 
-    <!-- Modal Popout Foto Tanaman -->
+   {{-- Modal popuout foto tanaman --}}
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div class="relative">
             <button onclick="closeImageModal()" class="absolute -top-6 -right-6 md:top-0 md:right-0 bg-gray-800 text-white rounded-full p-2 hover:bg-red-600 shadow-lg z-50" style="right: -2rem; top: -2rem;">

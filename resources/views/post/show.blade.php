@@ -63,7 +63,7 @@
                     @foreach($post->comments as $comment)
                         <div class="border-t border-gray-200 mt-2 pt-2">
                             <p>{{ $comment->content }}</p>
-                            <p class="text-sm text-gray-600"><a href="{{ route('profile', $comment->user->username) }}" class="font-bold hover:text-blue-600">{{ $comment->user->name }}</a> <span class="text-xs">܁ {{ $comment->created_at->diffForHumans() }}</span></p>
+                            <p class="text-sm text-gray-600"><a href="{{ route('profile', $comment->user->username) }}" class="font-bold hover:text-blue-600">{{ $comment->user->name }}</a> - <span class="text-xs">{{ $comment->created_at->diffForHumans() }}</span></p>
                         </div>
                     @endforeach
                 @else

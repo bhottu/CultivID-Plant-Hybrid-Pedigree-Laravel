@@ -3,7 +3,7 @@
 @section('content')
 
 @php
-    $activeStatus = request('status') ?? 'pending';
+    $activeStatus = request('status') ?? 'approved';
 @endphp
 
  {{-- Status Badge --}}
@@ -21,28 +21,39 @@
         
     <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
 
+        {{-- All --}}
+        <a href="{{ route('plant-submissions.index') }}"
+        class="relative flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium shadow-sm transition
+        {{ request()->routeIs('plant-submissions.index')
+                ? 'bg-gray-200 text-gray-800 ring-2 ring-gray-400'
+                : 'bg-green-50 text-green-600 hover:bg-green-100'
+        }}">
+            All
+        </a>
+
+
         {{-- Approved --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
-   class="relative flex items-center gap-2 px-4 py-2 rounded-full
-   {{ $activeStatus === 'approved'
-        ? 'bg-gray-200 text-green-800 ring-2 ring-green-400'
-        : 'bg-green-50 text-green-600 hover:bg-green-100'
-   }}
-   transition text-xs font-medium shadow-sm">
+        class="relative flex items-center gap-2 px-4 py-2 rounded-full
+        {{ $activeStatus === 'approved'
+                ? 'bg-gray-200 text-green-800 ring-2 ring-green-400'
+                : 'bg-green-50 text-green-600 hover:bg-green-100'
+        }}
+        transition text-xs font-medium shadow-sm">
 
-    @if(($counts['approved'] ?? 0) > 0)
-        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-green-600"></span>
-    @endif
-
-    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-green-600 
-    text-white text-[10px] font-semibold leading-none"> {{ $counts['approved'] ?? 0 }} </span>
-
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M8 12l3 3 5-5"/>
-    </svg>
-    Approved
-</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M8 12l3 3 5-5"/>
+            </svg>
+            Approved 
+            @if(($counts['approved'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1
+                flex items-center justify-center rounded-full bg-green-600 text-white
+                text-[10px] font-semibold leading-none">
+                {{ $counts['approved'] }}
+                </span>
+            @endif
+        </a>
 
 
          {{-- Pending --}}
@@ -54,20 +65,19 @@
    }}
    transition text-xs font-medium shadow-sm">
 
-    @if(($counts['pending'] ?? 0) > 0)
-        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-    @endif
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+        </svg>
+        Pending
 
-    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-yellow-500 
-    text-white text-[10px] font-semibold leading-none"> 
-    {{ $counts['pending'] ?? 0 }} 
-    </span>
-
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7v5l3 2"/>
-    </svg>
-    Pending
+        @if(($counts['pending'] ?? 0) > 0)
+            <span class="min-w-[16px] h-4 px-1
+            flex items-center justify-center rounded-full bg-yellow-500 text-white
+            text-[10px] font-semibold leading-none">
+            {{ $counts['pending'] ?? 0 }}
+            </span>
+        @endif
 </a>
 
 
@@ -80,20 +90,19 @@
    }}
    transition text-xs font-medium shadow-sm">
 
-    @if(($counts['revision'] ?? 0) > 0)
-        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-    @endif
-
-    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-blue-600 
-    text-white text-[10px] font-semibold leading-none"> 
-    {{ $counts['revision'] ?? 0 }} 
-    </span>
-
     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M4 20h4l10-10-4-4L4 16v4z"/>
         <path d="M14 6l4 4"/>
     </svg>
     Revision
+
+    @if(($counts['revision'] ?? 0) > 0)
+        <span class="min-w-[16px] h-4 px-1 
+        flex items-center justify-center rounded-full bg-blue-600 text-white 
+        text-[10px] font-semibold leading-none">
+        {{ $counts['revision'] ?? 0 }}
+        </span> 
+    @endif
 </a>
 
 
@@ -106,20 +115,19 @@
    }}
    transition text-xs font-medium shadow-sm">
 
-    @if(($counts['rejected'] ?? 0) > 0)
-        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-red-600"></span>
-    @endif
-
-    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-600 
-    text-white text-[10px] font-semibold leading-none"> 
-    {{ $counts['rejected'] ?? 0 }} 
-    </span>
-
     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="9"/>
         <path d="M9 9l6 6M15 9l-6 6"/>
     </svg>
     Reject
+
+    @if(($counts['rejected'] ?? 0) > 0)
+        <span class="min-w-[16px] h-4 px-1
+        flex items-center justify-center rounded-full bg-red-600 text-white
+        text-[10px] font-semibold leading-none">
+        {{ $counts['rejected'] ?? 0 }}
+        </span>
+    @endif
 </a>
 
 
@@ -132,15 +140,6 @@
    }}
    transition text-xs font-medium shadow-sm">
 
-    @if(($counts['appeal'] ?? 0) > 0)
-        <span class="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-gray-700"></span>
-    @endif
-
-    <span class="absolute -top-2 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-indigo-500 
-    text-white text-[10px] font-semibold leading-none"> 
-    {{ $counts['appeal'] ?? 0 }} 
-    </span>
-
     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M12 3v18"/>
         <path d="M5 7h14"/>
@@ -148,6 +147,14 @@
         <path d="M17 7l-3 6h6l-3-6z"/>
     </svg>
     Appeal
+
+     @if(($counts['appeal'] ?? 0) > 0)
+        <span class="min-w-[16px] h-4 px-1
+        flex items-center justify-center rounded-full bg-indigo-500 text-white
+        text-[10px] font-semibold leading-none">
+        {{ $counts['appeal'] ?? 0 }}
+        </span>
+    @endif
 </a>
 
 
@@ -181,7 +188,7 @@
             </thead>
             <tbody>
                 @foreach($submissions as $item)
-                    @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
+                    
                 <tr class="border-b hover:bg-gray-100">
                     <td class="p-2">
                     @php
@@ -199,8 +206,10 @@
                         $status = $item->status_review;
                         $badgeClass = match($status) {
                             'approved' => 'bg-green-600 text-white text-xxxs',
+                            'pending' => 'bg-yellow-600 text-white',
                             'rejected' => 'bg-red-600 text-white',
                             'banding'  => 'bg-yellow-600 text-white',
+                            'revision'  => 'bg-blue-600 text-white',
                             default    => 'bg-gray-600 text-white',
                         };
                     @endphp
@@ -237,13 +246,9 @@
                                     @if($item->penyilang)
                                         <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
                                     @else
-                                        <span class="italic text-gray-400 my-1"> No breeder, 
+                                        <span class="italic text-gray-400 my-1"> 
                                         @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
-                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add</a>
-                                        @elseif(Auth::check())
-                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-xs text-red-400 underline"> Appeal</a>
-                                        @else
-                                            <a href="{{ route('login') }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                        <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add Breeder</a>
                                         @endif
                                         </span>
                                     @endif                          
@@ -258,6 +263,12 @@
                         @endphp
                         @if($item->induk_betina && $betina)
                          <span class="rounded text-xs bg-red-200 text-red-900 italic">  {{ $item->induk_betina }} </span>
+                        @else
+                            <span class="italic text-gray-400 my-1"> 
+                            @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
+                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add parent</a>
+                            @endif
+                            </span>
                         @endif
 
                     </td>
@@ -270,6 +281,12 @@
                         @endphp
                         @if($item->induk_jantan && $jantan)
                             <span class="rounded text-xs bg-blue-200 text-red-blue italic"> {{ $item->induk_jantan }} </span>
+                            @else
+                                <span class="italic text-gray-400 my-1"> 
+                                @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
+                                <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add parent</a>
+                                @endif
+                                </span>
                         @endif
                     </td>
                     
@@ -381,7 +398,7 @@
 
 
                 </tr>
-                    @endif
+                    
                 @endforeach
             </tbody>
         </table>

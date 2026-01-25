@@ -43,19 +43,48 @@ class PlantSubmissionController extends Controller
     // =========================
     // FILTER STATUS
     // =========================
+    
+    //if ($status === 'revision') {
+    //    $query->where(function ($q) {
+    //        $q->whereNull('induk_jantan')
+    //          ->orWhere('induk_jantan', '')
+    //          ->orWhereNull('induk_betina')
+    //          ->orWhere('induk_betina', '');
+    //   });
+    //}
+    //elseif ($status === 'appeal') {
+    //   $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
+    //}
+    //elseif (in_array($status, ['approved','pending','rejected'])) {
+    //    $query->where('status_review', $status);
+    // =========================}
+
     if ($status === 'revision') {
-        $query->where(function ($q) {
-            $q->whereNull('induk_jantan')
-              ->orWhere('induk_jantan', '')
-              ->orWhereNull('induk_betina')
-              ->orWhere('induk_betina', '');
+
+    $query->where(function ($q) {
+        $q->where(function ($qq) {
+            $qq->whereNull('induk_jantan')
+               ->orWhere('induk_jantan', '');
+        })
+        ->where(function ($qq) {
+            $qq->whereNull('induk_betina')
+               ->orWhere('induk_betina', '');
         });
+    });
+
     }
     elseif ($status === 'appeal') {
-        $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
+
+        $query->whereIn(
+            'id',
+            PlantSubmissionAppeal::select('plant_submission_id')
+        );
+
     }
     elseif (in_array($status, ['approved','pending','rejected'])) {
+
         $query->where('status_review', $status);
+
     }
 
     $submissions = $query->latest()->paginate(10);
@@ -70,14 +99,7 @@ class PlantSubmissionController extends Controller
     }
 
     $counts = [
-     // 'approved' => (clone $base)->where('status_review','approved')->count(),
-        'approved' => (clone $base)
-                    ->where('status_review', 'approved') // WAJIB
-                    ->whereNotNull('induk_jantan')
-                    ->where('induk_jantan', '!=', '')
-                    ->whereNotNull('induk_betina')
-                    ->where('induk_betina', '!=', '')
-                    ->count(),
+        'approved' => (clone $base)->where('status_review','approved')->count(),
         'pending'  => (clone $base)->where('status_review','pending')->count(),
         'rejected' => (clone $base)->where('status_review','rejected')->count(),
         'revision' => (clone $base)->where(function ($q) {
