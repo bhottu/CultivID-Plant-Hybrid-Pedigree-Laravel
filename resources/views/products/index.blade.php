@@ -244,7 +244,7 @@
             <div id="loading-spinner" class="hidden">
                 <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading more...
             </div>
-            <div id="no-more" class="hidden text-gray-500">No more hybrids</div>
+            <div id="no-more" class="hidden text-gray-500">No more plants</div>
         </div>
 
     </div>

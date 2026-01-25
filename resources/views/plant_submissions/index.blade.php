@@ -403,7 +403,33 @@
             </tbody>
         </table>
     </div>
-    <div class="mt-4">{{ $submissions->links() }}</div>
+    @if ($submissions->lastPage() > 1)
+<div class="flex justify-center mt-6 space-x-1 text-sm">
+
+    {{-- Prev --}}
+    <a href="{{ $submissions->previousPageUrl() }}"
+       class="px-3 py-1 rounded border {{ $submissions->onFirstPage() ? 'text-gray-400 pointer-events-none' : 'hover:bg-gray-100' }}">
+        «
+    </a>
+
+    {{-- Page Numbers --}}
+    @for ($i = 1; $i <= $submissions->lastPage(); $i++)
+        <a href="{{ $submissions->url($i) }}"
+           class="px-3 py-1 rounded border
+           {{ $submissions->currentPage() == $i ? 'bg-gray-300 font-bold' : 'hover:bg-gray-100' }}">
+            {{ $i }}
+        </a>
+    @endfor
+
+    {{-- Next --}}
+    <a href="{{ $submissions->nextPageUrl() }}"
+       class="px-3 py-1 rounded border {{ !$submissions->hasMorePages() ? 'text-gray-400 pointer-events-none' : 'hover:bg-gray-100' }}">
+        »
+    </a>
+
+</div>
+@endif
+
 </div>
     {{-- Modal Popout Foto --}}
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">

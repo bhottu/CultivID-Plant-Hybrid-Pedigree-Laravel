@@ -15,106 +15,107 @@ class PlantSubmissionController extends Controller
     // Daftar submission (member & admin)
   
     public function index(Request $request)
-{
-    $status = $request->get('status');
-    $user = Auth::user();
+    {
+        $status = $request->get('status');
+        $user = Auth::user();
 
-    $allowedStatuses = ['approved','pending','rejected','revision','appeal'];
-    if ($status && !in_array($status, $allowedStatuses)) {
-        abort(404);
-    }
+        $allowedStatuses = ['approved','pending','rejected','revision','appeal'];
+        if ($status && !in_array($status, $allowedStatuses)) {
+            abort(404);
+        }
 
-    $query = PlantSubmission::with(['uploader','reviewer']);
+        $query = PlantSubmission::with(['uploader','reviewer']);
 
-    // =========================
-    // ROLE USER
-    // =========================
-    if (!$user->is_admin) {
-        $query->where(function ($q) use ($user) {
-            $q->where('uploader_id', $user->id)
-              ->orWhereIn('id', function ($sub) use ($user) {
-                  $sub->select('plant_submission_id')
-                      ->from('plant_submission_appeals')
-                      ->where('user_id', $user->id);
-              });
+        // =========================
+        // ROLE USER
+        // =========================
+        if (!$user->is_admin) {
+            $query->where(function ($q) use ($user) {
+                $q->where('uploader_id', $user->id)
+                ->orWhereIn('id', function ($sub) use ($user) {
+                    $sub->select('plant_submission_id')
+                        ->from('plant_submission_appeals')
+                        ->where('user_id', $user->id);
+                });
+            });
+        }
+
+        // =========================
+        // FILTER STATUS
+        // =========================
+        
+        //if ($status === 'revision') {
+        //    $query->where(function ($q) {
+        //        $q->whereNull('induk_jantan')
+        //          ->orWhere('induk_jantan', '')
+        //          ->orWhereNull('induk_betina')
+        //          ->orWhere('induk_betina', '');
+        //   });
+        //}
+        //elseif ($status === 'appeal') {
+        //   $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
+        //}
+        //elseif (in_array($status, ['approved','pending','rejected'])) {
+        //    $query->where('status_review', $status);
+        // =========================}
+
+        if ($status === 'revision') {
+
+        $query->where(function ($q) {
+            $q->where(function ($qq) {
+                $qq->whereNull('induk_jantan')
+                ->orWhere('induk_jantan', '');
+            })
+            ->where(function ($qq) {
+                $qq->whereNull('induk_betina')
+                ->orWhere('induk_betina', '');
+            });
         });
+
+        }
+        elseif ($status === 'appeal') {
+
+            $query->whereIn(
+                'id',
+                PlantSubmissionAppeal::select('plant_submission_id')
+            );
+
+        }
+        elseif (in_array($status, ['approved','pending','rejected'])) {
+
+            $query->where('status_review', $status);
+
+        }
+
+        //$submissions = $query->latest()->paginate(10);
+        $submissions = $query->paginate(15)->withQueryString();
+
+        // =========================
+        // BADGE COUNTS
+        // =========================
+        $base = PlantSubmission::query();
+
+        if (!$user->is_admin) {
+            $base->where('uploader_id', $user->id);
+        }
+
+        $counts = [
+            'approved' => (clone $base)->where('status_review','approved')->count(),
+            'pending'  => (clone $base)->where('status_review','pending')->count(),
+            'rejected' => (clone $base)->where('status_review','rejected')->count(),
+            'revision' => (clone $base)->where(function ($q) {
+                                $q->whereNull('induk_jantan')
+                                ->orWhere('induk_jantan','')
+                                ->orWhereNull('induk_betina')
+                                ->orWhere('induk_betina','');
+                            })->count(),
+            'appeal'   => $user->is_admin
+                            ? PlantSubmissionAppeal::count()
+                            : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
+        ];
+
+        return view('plant_submissions.index', compact('submissions','status','counts'));
     }
-
-    // =========================
-    // FILTER STATUS
-    // =========================
-    
-    //if ($status === 'revision') {
-    //    $query->where(function ($q) {
-    //        $q->whereNull('induk_jantan')
-    //          ->orWhere('induk_jantan', '')
-    //          ->orWhereNull('induk_betina')
-    //          ->orWhere('induk_betina', '');
-    //   });
-    //}
-    //elseif ($status === 'appeal') {
-    //   $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
-    //}
-    //elseif (in_array($status, ['approved','pending','rejected'])) {
-    //    $query->where('status_review', $status);
-    // =========================}
-
-    if ($status === 'revision') {
-
-    $query->where(function ($q) {
-        $q->where(function ($qq) {
-            $qq->whereNull('induk_jantan')
-               ->orWhere('induk_jantan', '');
-        })
-        ->where(function ($qq) {
-            $qq->whereNull('induk_betina')
-               ->orWhere('induk_betina', '');
-        });
-    });
-
-    }
-    elseif ($status === 'appeal') {
-
-        $query->whereIn(
-            'id',
-            PlantSubmissionAppeal::select('plant_submission_id')
-        );
-
-    }
-    elseif (in_array($status, ['approved','pending','rejected'])) {
-
-        $query->where('status_review', $status);
-
-    }
-
-    $submissions = $query->latest()->paginate(10);
-
-    // =========================
-    // BADGE COUNTS
-    // =========================
-    $base = PlantSubmission::query();
-
-    if (!$user->is_admin) {
-        $base->where('uploader_id', $user->id);
-    }
-
-    $counts = [
-        'approved' => (clone $base)->where('status_review','approved')->count(),
-        'pending'  => (clone $base)->where('status_review','pending')->count(),
-        'rejected' => (clone $base)->where('status_review','rejected')->count(),
-        'revision' => (clone $base)->where(function ($q) {
-                            $q->whereNull('induk_jantan')
-                              ->orWhere('induk_jantan','')
-                              ->orWhereNull('induk_betina')
-                              ->orWhere('induk_betina','');
-                        })->count(),
-        'appeal'   => $user->is_admin
-                        ? PlantSubmissionAppeal::count()
-                        : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
-    ];
-
-    return view('plant_submissions.index', compact('submissions','status','counts'));
-}
 
 
 
@@ -345,47 +346,49 @@ class PlantSubmissionController extends Controller
         }
 
         public function destroy(PlantSubmission $plantSubmission)
-{
-    // =========================
-    // AUTHORIZATION
-    // =========================
-    if (
-        !Auth::check() ||
-        (!Auth::user()->is_admin && Auth::id() !== $plantSubmission->uploader_id)
-    ) {
-        abort(403, 'Unauthorized');
-    }
+    {
+        // =========================
+        // AUTHORIZATION
+        // =========================
+        if (
+            !Auth::check() ||
+            (!Auth::user()->is_admin && Auth::id() !== $plantSubmission->uploader_id)
+        ) {
+            abort(403, 'Unauthorized');
+        }
 
-    // =========================
-    // DELETE IMAGE(S)
-    // =========================
-    if ($plantSubmission->image) {
+        // =========================
+        // DELETE IMAGE(S)
+        // =========================
+        if ($plantSubmission->image) {
 
-        // decode JSON image (support single & multiple)
-        $images = json_decode($plantSubmission->image, true);
+            // decode JSON image (support single & multiple)
+            $images = json_decode($plantSubmission->image, true);
 
-        if (is_array($images)) {
-            foreach ($images as $path) {
-                if ($path && Storage::disk('public')->exists($path)) {
-                    Storage::disk('public')->delete($path);
+            if (is_array($images)) {
+                foreach ($images as $path) {
+                    if ($path && Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                }
+            } else {
+                // fallback jika image bukan JSON
+                if (Storage::disk('public')->exists($plantSubmission->image)) {
+                    Storage::disk('public')->delete($plantSubmission->image);
                 }
             }
-        } else {
-            // fallback jika image bukan JSON
-            if (Storage::disk('public')->exists($plantSubmission->image)) {
-                Storage::disk('public')->delete($plantSubmission->image);
-            }
         }
+
+        // =========================
+        // DELETE DATA
+        // =========================
+        $plantSubmission->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', 'Plant deleted successfully!');
     }
 
-    // =========================
-    // DELETE DATA
-    // =========================
-    $plantSubmission->delete();
-
-    return redirect()
-        ->back()
-        ->with('success', 'Plant deleted successfully!');
-}
+    
 
 }
