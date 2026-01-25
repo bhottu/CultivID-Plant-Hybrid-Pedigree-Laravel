@@ -87,8 +87,12 @@ class PlantSubmissionController extends Controller
 
         }
 
-        //$submissions = $query->latest()->paginate(10);
-        $submissions = $query->paginate(15)->withQueryString();
+       // $submissions = $query->latest()->paginate(3);
+        $submissions = $query
+        ->latest()
+        ->paginate(3)
+        ->withQueryString();
+        
 
         // =========================
         // BADGE COUNTS
