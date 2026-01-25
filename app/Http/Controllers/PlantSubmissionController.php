@@ -90,7 +90,7 @@ class PlantSubmissionController extends Controller
        // $submissions = $query->latest()->paginate(3);
         $submissions = $query
         ->latest()
-        ->paginate(3)
+        ->paginate(10)
         ->withQueryString();
         
 
