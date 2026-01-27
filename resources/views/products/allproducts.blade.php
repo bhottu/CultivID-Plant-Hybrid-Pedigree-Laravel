@@ -74,15 +74,15 @@
                         </div>
                     </div>
 
-                    <p class="text-gray-800">{{ Str::limit($product->description, 50, '...') }} <span class="inline-block bg-blue-200 text-blue-800 rounded-300 px-3 py-1 text-xs font-semibold mr-2">
-                        <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">Read more</a></p>
+                    <p class="text-gray-800">{{ Str::limit($product->description, 50, '...') }} </p>
                     </span>
 
                     @if ($product->category)
-                    <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300">
+                    <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-xs text-gray-700 px-2 py-1 rounded-md text-sm hover:bg-gray-300">
                         #{{ $product->category->name }}
                     </a>
                     @endif
+                    
                 </div>
             </div>
         @endforeach

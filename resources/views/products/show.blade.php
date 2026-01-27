@@ -4,10 +4,10 @@
 
 @section('content')
 
-<div class="container px-4 mx-auto  my-4">
-    <div class="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-lg flex flex-wrap">
+<div class="container mx-auto max-w-lg text-xs">
+    <div class="bg-white overflow-hidden  flex flex-wrap">
         <!-- Kolom Kiri -->
-        <div class="w-full md:w-2/3 p-4">
+        <div class="w-full p-4">
 
            <!-- Slider Container -->
             <div class="swiper-container z-1">
@@ -15,7 +15,7 @@
                 <div class="swiper-wrapper">
                     <!-- Slide 1: Image -->
                     @if($product->image_path)
-                    <div class="swiper-slide">
+                    <div class="swiper-slide w-full z-0">
                         <img 
                             id="post-image-{{ $product->id }}" 
                             src="{{ asset('storage/' . $product->image_path) }}" 
@@ -75,83 +75,52 @@
                 });
             </script>
 
-            <div class="border-t border-gray-300 p-4 py-4 mb-4">
-                <h3 class="text-lg font-semibold mb-2">Description</h3>
+        <div class="w-full max-w-lg p-4 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <ul class="my-6 space-y-3">
+                            <li>
+                                <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group" disabled>
+                                   
+
+                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700">{{ $product->name }} <p class="text-gray-600 mb-2 text-xs">{{ $product->created_at->diffForHumans() }}</p></span> 
+
+                                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700">
+                                        @if($product->discount)
+                                            <span class="text-red-600 line-through mr-2 text-sm">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
+                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
+                                        @else
+                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                                        @endif
+
+                                       <p class="mb-2 text-gray-500">
+                                        @if($product->is_sold_out)
+                                            <span class="text-red-600">Sold Out</span>
+                                        @else
+                                            <span class="text-sky-900">Available</span>
+                                        @endif
+                                        </p>
+
+                                    </span>
+                                </a>
+                            </li>
+                            
+            </ul>
+
+            <div class="mb-2">
+              
+                <p class="text-xs font-semibold mb-2 mt-2">Description</p>
                 <p>{{ $product->description }}</p>
 
-                <div class="border-t border-gray-300 py-4 mt-4">
+                <div class="mt-2">
                     @if ($product->category)
-                        Category : <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-300">
+                        Category : <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-gray-700 px-2 py-1 rounded-md text-xs hover:bg-gray-300">
                             #{{ $product->category->name }}
                         </a>
                     @endif
                 </div>
             </div>
 
-       
-        </div>
-
-        <!-- Kolom Kanan -->
-        <div class="w-full z-10 bg-white md:w-1/3 p-4 border-t md:border-t-0 md:border-l border-gray-300">
-            <div class="mb-4 flex items-center">
-                <div class="w-full md:w-auto">
-                    <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
-                    
-                    @if($product->discount)
-                        <span class="text-red-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
-                        <span class="text-gray-600 text-xl">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                    @else
-                        <span class="text-gray-600 text-xl">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                    @endif
-                    
-                    <p class="text-gray-600 mb-2 ">{{ $product->created_at->diffForHumans() }}</p>
-                    <p class="mb-2 text-gray-500">
-                    @if($product->is_sold_out)
-                        <span class="text-red-600">Sold Out</span>
-                    @else
-                        <span class="text-sky-900">Available</span>
-                    @endif
-                    </p>
-                </div>
-            </div>
-
-            <div class="mb-4 flex items-center">
-                @if($product->user->phone_number)
-                    <a href="https://wa.me/{{ $product->user->phone_number }}" class="hover:text-gray-500">
-                        <button class="fab fa-whatsapp hover:text-green-500 dark:text-white text-blue-900 text-2xl mr-2"></button>
-                    </a>
-                    <a href="tel:{{ $product->user->phone_number }}" class="hover:text-gray-500">
-                        <button class="fas fa-phone-alt hover:text-green-500 dark:text-white text-blue-900 text-2xl mr-2"></button>
-                    </a>
-                @else
-                    <a href="#" class="hover:text-gray-500">
-                        <button onclick='alert("The seller has not entered a phone number.")' class="fab fa-whatsapp hover:text-green-500 dark:text-white text-blue-900 text-2xl mr-2"></button>
-                    </a>
-                    <a href="#" class="hover:text-gray-500">
-                        <button onclick='alert("The seller has not entered a phone number.")' class="fas fa-phone-alt hover:text-green-500 dark:text-white text-blue-900 text-2xl mr-2"></button>
-                    </a>
-                @endif
-
-                <a href="mailto:{{ $product->user->email }}" class="hover:text-gray-500">
-                    <button class="fas fa-envelope hover:text-green-500 text-blue-900 dark:text-white text-2xl mr-2"></button>
-                </a>
-
-                <div class="ml-auto flex items-center">
-                    @if(Auth::check() && Auth::id() === $product->user_id)
-                        <a href="{{ route('products.edit', $product) }}" class="hover:text-gray-500">
-                            <button class="fas fa-pencil-alt hover:text-green-500 text-blue-900 text-2xl mr-2"></button>
-                        </a>
-                        <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button class="fas fa-trash hover:text-red-500 text-blue-900 text-2xl" type="submit"></button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-            
             @if (Auth::id() == $product->user_id)
-            <div class="border-t border-gray-300 py-4">
+            <div class="border-t border-gray-300">
                 <form action="{{ route('products.toggle-soldout', $product) }}" method="POST">
                     @csrf
                     @if (!$product->is_sold_out)
@@ -162,36 +131,108 @@
                 </form>
                 </div>
             @endif
-            
-            <div class="border-t border-gray-300 py-4 mb-4">
-                <h3 class="text-lg font-semibold mb-2">Seller</h3>
-                <div class="flex items-center">
-                    <div class="bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center mr-4">
-                        @if($product->user->profile_photo_path)
-                            <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-16 w-16 rounded-full">
-                        @else
-                            <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-16 w-16 rounded-full">
-                        @endif
+
+            </div>
+       
+        
+
+            <div class="w-full mt-3 max-w-lg p-4 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+                    @if($product->user)
+                        <ul class="my-6 space-y-3">
+                            <li>
+                                <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                    @if($product->user->profile_photo_path)
+                                        <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-16 w-16 rounded-full">
+                                    @else
+                                        <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-16 w-16 rounded-full">
+                                    @endif
+
+                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700">
+                                        <form action="{{ url('profile/' . $product->user->username) }}" hx-get="{{ url('profile/' . $product->user->username) }}" hx-target="#app-content" hx-push-url="true">
+                                            <button class="text-gray-700 py-1  text-smrounded py-1 mt-2">
+                                                {{ $product->user->name ?? 'Unknown' }}
+                                            </button>
+                                        </form>  
+                                        
+                                        <div class="flex justify-between text-xs text-gray-600">
+                                            <div class="flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"></path>
+                                                </svg>
+                                                <span>{{ $product->user->plantSubmissions->count() }} Plants</span>
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                                </svg>
+                                                <span>{{ $product->user->posts->count() }} Posts</span>
+                                            </div>
+                                            <div class="flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                                </svg>
+                                                <span>{{ $product->user->products->count() }} Products</span>
+                                            </div>
+                                        </div>
+
+                                        </span> 
+                                    <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700"> 
+                                       Member since  <p class="text-xs text-gray-500">{{ $product->user->created_at->diffForHumans() }}</p>
+                                    </span>
+                                </a>
+                            </li>
+                    @endif
+                            <div class="flex items-center ml-4">
+                                @if($product->user->phone_number)
+                                    <a href="https://wa.me/{{ $product->user->phone_number }}" class="hover:text-gray-500">
+                                        <button class="fab fa-whatsapp hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    </a>
+                                    <a href="tel:{{ $product->user->phone_number }}" class="hover:text-gray-500">
+                                        <button class="fas fa-phone-alt hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    </a>
+                                @else
+                                    <a href="#" class="hover:text-gray-500">
+                                        <button onclick='alert("The seller has not entered a phone number.")' class="fab fa-whatsapp hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    </a>
+                                    <a href="#" class="hover:text-gray-500">
+                                        <button onclick='alert("The seller has not entered a phone number.")' class="fas fa-phone-alt hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    </a>
+                                @endif
+
+                                <a href="mailto:{{ $product->user->email }}" class="hover:text-gray-500">
+                                    <button class="fas fa-envelope hover:text-green-500 text-md text-gray-400 dark:text-white text-2xl mr-2"></button>
+                                </a>
+
+                            <div class="ml-auto flex items-center">
+                                @if(Auth::check() && Auth::id() === $product->user_id)
+                                    <a href="{{ route('products.edit', $product) }}" class="hover:text-gray-500">
+                                        <button class="fas fa-pencil-alt hover:text-green-500 text-md text-blue-400 text-2xl mr-2"></button>
+                                    </a>
+                                    <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="fas fa-trash hover:text-red-500 text-red-400 text-2xl" type="submit"></button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                        
+                            
+                        </ul>
                     </div>
-                    <div>
-                        <h4 class="text-lg font-semibold"> {{ $product->user->name ?? 'Unknown' }} </h4>
-                        <div class="flex items-center">
-                            <form action="{{ url('profile/' . $product->user->username) }}" hx-get="{{ url('profile/' . $product->user->username) }}" hx-target="#app-content" hx-push-url="true">
-                                <button class="bg-blue-200 text-gray-700 px-3 py-1 rounded-sm text-sm hover:bg-gray-300 rounded px-2 py-1 mt-2">
-                                    <i class="fas fa-store"></i> Profil
-                                </button>
-                            </form>
+
+                    <div class="border-t border-gray-300 py-4">
+                        <h3 class="text-lg border-green-200 border-l-4 px-2 border-doubled mb-2">Location</h3>
+                        <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                            <div id="map" class="h-full w-full z-0"></div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="border-t border-gray-300 py-4">
-                <h3 class="text-lg font-semibold mb-2">Location</h3>
-                <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
-                    <div id="map" class="h-full w-full z-0"></div>
-                </div>
-            </div>
+        </div>
+
+        
+
+        
         </div>
     </div>
 </div>

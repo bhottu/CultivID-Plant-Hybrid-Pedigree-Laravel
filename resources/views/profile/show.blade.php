@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="container px-4 mx-auto max-w-lg">
+<div class="container px-4 mx-auto max-w-lg text-xs">
     <!-- Profile Header -->
     <div class="py-6 text-center">
         <!-- Avatar -->
@@ -75,6 +75,10 @@
                         <span class="flex-1 text-left whitespace-nowrap text-gray-700">Edit profile</span>
                     </a>
                 </li>
+            </ul>
+        </div>
+        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <ul class="my-6 space-y-3">
                 <li>
                     <a href="{{ route('plant-submissions.index') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
@@ -87,6 +91,22 @@
                     </a>
                 </li>
                 @if(isset($user))
+                 <li>
+                    <a href="{{ route('posts.by.username', $user->username) }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-6 h-6 text-gray-700"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11 4h6m-6 4h6m-6 4h6M5 20h14a1 1 0 001-1V7l-5-5H6a1 1 0 00-1 1v16a1 1 0 001 1z" />
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My posts</span>
+                    </a>
+                </li>
+                
                 <li>
                     <a href="{{ route('products.by.username', $user->username) }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -161,7 +161,14 @@
 
 </div>
 
-        <table class="min-w-full mt-2 text-xs">
+        <table class="min-w-full mt-2 text-xs table-fixed">
+            <colgroup>
+                    <col style="width:10%">
+                    <col style="width:40%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    <col style="width:10%">
+                </colgroup>
             <thead>
                 <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300">
                     <th class="p-2 border-l">Photo</th>
@@ -353,7 +360,7 @@
 
                                             @if($item->status_review == 'approved')
                                                 <button disabled
-                                                    class="w-full flex items-center gap-3 p-3 rounded-lg text-gray-400 cursor-not-allowed bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg">
+                                                    class="w-full flex items-center gap-3 p-3 mb-3 rounded-lg text-gray-400 cursor-not-allowed bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg">
                                                     ❌ <span>Reject</span>
                                                 </button>
 
@@ -363,7 +370,7 @@
                                                 </button>
                                             @else
                                                 <button name="status_review" value="approved"
-                                                    class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 text-green-600 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg">
+                                                    class="w-full flex items-center gap-3 p-3 mb-3 rounded-lg hover:bg-green-50 text-green-600 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg">
                                                     ✅ <span>Approve</span>
                                                 </button>
 

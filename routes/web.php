@@ -47,9 +47,7 @@ Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name(
 Route::get('profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
-
-
-
+Route::get('/discuss/@{username}', [HomeController::class, 'postsByUsername'])->name('posts.by.username');
 
 
 

@@ -170,13 +170,18 @@
 </div>
 
         <div class="overflow-x-auto">
-            <table id="plants-table" class="min-w-full mt-2">
+            <table id="plants-table" class="min-w-full mt-2 table-fixed">
+                <colgroup>
+                    <col style="width:10%">
+                    <col style="width:50%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                </colgroup>
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 ">
                         <th class="p-2 border-l ">Photo</th>
-                        <th class="p-2 border-l-4 border-double">ID</th>
+                        <th class="p-2 border-l-4 border-double w-1/4">Plant ID</th>
                         <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-venus text-red-600'></i></th>
-                        <th class="p-2 border-l-4 border-double">✕</th>
                         <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-mars text-blue-600'></i></th>
                     </tr>
                 </thead>
@@ -214,7 +219,7 @@
                                     @if($item->penyilang)
                                         <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
                                     @else
-                                        <span class="italic text-gray-400 my-1 text-xxxs"> No breeder, 
+                                        <span class="italic text-gray-400 my-1 text-xxs"> No breeder, 
                                         @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
                                             <a href="{{ route('plant-submissions.edit', $item) }}" class="text-red-400 underline">Add</a>
                                         @elseif(Auth::check())
@@ -229,7 +234,7 @@
 
                         </td>
                         <td class="p-2"><span class="rounded text-xs bg-red-200 text-red-900 italic">{{ $item->induk_betina }} </span></td>
-                        <td class="p-2">✕</td>
+                        
                         <td class="p-2"><span class="rounded text-xs bg-blue-200 text-blue-900 italic"> {{ $item->induk_jantan }}</span></td>
                     </tr>
                     @endif

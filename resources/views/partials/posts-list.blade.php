@@ -1,7 +1,21 @@
+
+
     <div class="container mx-auto max-w-lg px-4 my-4">
-        <div class="text-left mb-4">
-        <h1 class="text-2xl font-bold text-gray-800">Communitys</h1>
-        <p class="text-sm text-gray-500">Share, Discuss & Grow together.</p>
+        @if(isset($user))
+            <h1 class="text-2xl font-bold text-gray-800">
+                {{ $user->name }}'s Posts
+            </h1>
+            <p class="text-sm text-gray-500">
+                All posts uploaded by {{ '@' . $user->username }}
+            </p>
+        @else
+            <h1 class="text-2xl font-bold text-gray-800">
+                Communitys
+            </h1>
+            <p class="text-sm text-gray-500">
+                Share, Discuss & Grow together.
+            </p>
+        @endif
     </div>
     
     @if($posts->count())

@@ -8,7 +8,7 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Share;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 
 
 class HomeController extends Controller
@@ -23,6 +23,20 @@ class HomeController extends Controller
 
         return view('home', ['posts' => $posts]);
     }
+
+
+
+    public function postsByUsername($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $posts = Post::where('user_id', $user->id)
+            ->latest()
+            ->paginate(5);
+
+        return view('home', compact('posts', 'user'));
+    }
+
     
     public function anyOtherMethod()
     {

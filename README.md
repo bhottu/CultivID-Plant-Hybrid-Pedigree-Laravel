@@ -1,11 +1,11 @@
-v1.0.16
+v1.0.18
 
 New migration
-database\migrations\2026_01_26_015201_create_user_transactions_table.php
-database\migrations\2026_01_26_015923_add_balance_to_users_table.php
-database\migrations\2026_01_26_020951_change_balance_to_decimal_on_users_table.php
-database\migrations\2026_01_26_021157_create_withdrawals_table.php
-database\migrations\2026_01_26_021614_add_bank_to_users_table.php
+database/migrations/2026_01_26_015201_create_user_transactions_table.php ✅
+database/migrations/2026_01_26_015923_add_balance_to_users_table.php ✅
+database/migrations/2026_01_26_020951_change_balance_to_decimal_on_users_table.php ✅
+database/migrations/2026_01_26_021157_create_withdrawals_table.php
+database/migrations/2026_01_26_021614_add_bank_to_users_table.php
 
 perbaiki payment gateway saya yang tidak berfungsi
 

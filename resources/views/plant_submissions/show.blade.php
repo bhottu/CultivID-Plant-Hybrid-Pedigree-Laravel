@@ -138,11 +138,11 @@
                 <tr>
                     <td class="pr-2">Status</td>
                     <td>
-                       <span class="font-semibold  px-2 py-1 text-gray-700 rounded text-xs 
+                       <span class="px-1 text-gray-700 font-semibold rounded text-xxs 
                        {{ 
-                        $plantSubmission->status_review == 'approved' ? 'bg-green-500 text-green-900' : 
-                        ($plantSubmission->status_review == 'rejected' ? 'bg-red-500 text-red-900' : 
-                        ($plantSubmission->status_review == 'banding' ? 'bg-yellow-500 text-yellow-900' : 'bg-gray-500 text-gray-900')) 
+                        $plantSubmission->status_review == 'approved' ? 'bg-green-200 text-green-900' : 
+                        ($plantSubmission->status_review == 'rejected' ? 'bg-red-200 text-red-900' : 
+                        ($plantSubmission->status_review == 'banding' ? 'bg-yellow-200 text-yellow-900' : 'bg-gray-200 text-gray-900')) 
                         }}">
                            {{ ucfirst($plantSubmission->status_review) }}
                         </span>
@@ -242,7 +242,7 @@
 
 
     <h2 class="text-md text-green-900 mb-2 mt-2">Uploader</h2>
-     @if($plantSubmission->uploader)
+        @if($plantSubmission->uploader)
             <div class="bg-gray-50 p-4 rounded shadow text-sm">
                 <div class="flex items-center gap-3 mb-2">
                     @if($plantSubmission->uploader->profile_photo_path)
@@ -260,7 +260,7 @@
                 <div class="flex justify-between text-xs text-gray-600">
                     
                     <div class="flex items-center gap-1">
-                       : <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"></path>
                         </svg>
                         <span>{{ $plantSubmission->uploader->plantSubmissions->count() }} Plants</span>
@@ -279,11 +279,11 @@
                     </div>
                 </div>
             </div>
-            @endif
+        @endif
 
             {{-- Buy Me a Coffee Section --}}
-            <div class="border rounded p-4 mt-4">
-                <h3 class="font-bold mb-2">☕ Buy Me a Coffee</h3>
+            <div class="border rounded p-4 mt-4 bg-yellow-50">
+                <h3 class="mb-2 bg-red-50">☕ Buy Me a Coffee</h3>
 
                 <form action="{{ route('buy.coffee') }}" method="POST">
                     @csrf
@@ -291,16 +291,16 @@
                     <input type="hidden" name="to_user_id"
                         value="{{ $plantSubmission->uploader_id }}">
 
-                    <div class="flex gap-2 mb-2">
-                        <label><input type="radio" name="amount" value="5000" checked> 5K</label>
-                        <label><input type="radio" name="amount" value="10000"> 10K</label>
-                        <label><input type="radio" name="amount" value="20000"> 20K</label>
+                    <div class="flex gap-2 mb-2 text-sm">
+                        <label><input type="radio" name="amount" value="5000" checked> Rp 5,000</label>
+                        <label><input type="radio" name="amount" value="10000"> Rp 10,000</label>
+                        <label><input type="radio" name="amount" value="20000"> Rp 20,000</label>
                     </div>
 
                     <input type="number"
                         name="custom_amount"
                         min="5000"
-                        placeholder="Custom nominal"
+                        placeholder="Enter nominal amount (min Rp 5,000)"
                         class="border rounded w-full p-2 mb-2">
 
                     <button class="bg-yellow-500 text-white px-4 py-2 rounded">
@@ -308,6 +308,8 @@
                     </button>
                 </form>
             </div>
+
+            
 
 
 </div>
