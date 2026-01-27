@@ -67,10 +67,10 @@
         
     <div class="p-4 rounded border border-gray-200 shadow text-sm w-full">
         
-            <table class="table-auto text-sm mb-4  w-full">
+            <table class="table-auto text-sm mb-4 text-xs w-full">
                 <tr>
-                    <td class="pr-2">ID</td>
-                   <td class="italic text-xs">→ 
+                    <td class="pr-2 text-xs">ID</td>
+                   <td class="italic text-xs"> 
                     @if($plantSubmission->plant_id)
                            <span class="italic"> {{ $plantSubmission->plant_id }}</span>
                         @else
@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                     <td class="pr-2">Parent <i class='fas fa-venus text-red-600'></td>
-                    <td class="italic text-xs">→ 
+                    <td class="italic text-xs"> 
                         @if($plantSubmission->induk_betina)
                             {{ $plantSubmission->induk_betina }}
                         @else
@@ -99,7 +99,7 @@
                 </tr>
                 <tr>
                     <td class="pr-2">Parent <i class='fas fa-mars text-blue-600'></td>
-                    <td class="italic text-xs">→
+                    <td class="italic text-xs">
                         @if($plantSubmission->induk_jantan)
                             {{ $plantSubmission->induk_jantan }}
                         @else
@@ -117,7 +117,7 @@
                 </tr>
                 <tr>
                     <td class="pr-2">Breeder </td>
-                    <td class="italic text-xs">→ 
+                    <td class="italic text-xs"> 
                         @if($plantSubmission->penyilang)
                             {{ $plantSubmission->penyilang }}
                         @else
@@ -137,7 +137,7 @@
                 @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
                 <tr>
                     <td class="pr-2">Status</td>
-                    <td>→
+                    <td>
                        <span class="font-semibold  px-2 py-1 text-gray-700 rounded text-xs 
                        {{ 
                         $plantSubmission->status_review == 'approved' ? 'bg-green-500 text-green-900' : 
@@ -152,29 +152,29 @@
             </table>
            
             <div class="mt-4 text-xs rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
-    <div class="flex items-start justify-between gap-4">
-        <div class="flex items-start gap-3">
-            <svg class="mt-0.5 h-5 w-5 text-yellow-500"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="1.5"
-                 viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 9v3.75M12 15.75h.01M10.29 3.86l-8.03 13.9a1.5 1.5 0 001.3 2.24h16.88a1.5 1.5 0 001.3-2.24l-8.03-13.9a1.5 1.5 0 00-2.6 0z" />
-            </svg>
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="mt-0.5 h-5 w-5 text-yellow-500"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3.75M12 15.75h.01M10.29 3.86l-8.03 13.9a1.5 1.5 0 001.3 2.24h16.88a1.5 1.5 0 001.3-2.24l-8.03-13.9a1.5 1.5 0 00-2.6 0z" />
+                        </svg>
 
-            <div>
-                <p>
-                    <strong>Warning:</strong>
-                    If there is any mistake in the breeder or parent plant name,
-                    please submit an appeal to move this plant to your account.
-                </p>
-                <p class="mt-2">
-                    <strong>Alternatively</strong>, you may ask the uploader to update the data
-                    without transferring ownership on this page.
-                </p>
-            </div>
-        </div>
+                        <div>
+                            <p>
+                                <strong>Warning:</strong>
+                                If there is any mistake in the breeder or parent plant name,
+                                please submit an appeal to move this plant to your account.
+                            </p>
+                            <p class="mt-2">
+                                <strong>Alternatively</strong>, you may ask the uploader to update the data
+                                without transferring ownership on this page.
+                            </p>
+                        </div>
+                    </div>
                 @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
                     <a href="{{ route('plant-submissions.edit', $plantSubmission) }}" class="bg-gray-800 text-white px-4 py-1 rounded text-xs">Edit</a>
                 @elseif(Auth::check())
@@ -205,9 +205,9 @@
                             // Cek apakah induk_betina adalah ID yang valid (ada di DB)
                             $betinaExists = \App\Models\PlantSubmission::where("plant_id", $node['induk_betina'])->exists();
                             if($betinaExists) {
-                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_betina']]).'" class="text-xs text-blue-600 underline ml-1">'.$node['induk_betina'].'</a></span>';
+                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_betina']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_betina'].'</a></span>';
                             } else {
-                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <span class="text-xs text-gray-700 ml-1">'.$node['induk_betina'].'</span></span>';
+                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <span class="text-xs text-gray-700 ml-1 italic">'.$node['induk_betina'].'</span></span>';
                             }
                         }
                         if($node['induk_betina'] && $node['induk_jantan']) {
@@ -216,9 +216,9 @@
                         if($node['induk_jantan']) {
                             $jantanExists = \App\Models\PlantSubmission::where("plant_id", $node['induk_jantan'])->exists();
                             if($jantanExists) {
-                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_jantan']]).'" class="text-xs text-blue-600 underline ml-1">'.$node['induk_jantan'].'</a></span>';
+                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_jantan']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_jantan'].'</a></span>';
                             } else {
-                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <span class="text-xs text-gray-700 ml-1">'.$node['induk_jantan'].'</span></span>';
+                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <span class="text-xs text-gray-700 ml-1 italic">'.$node['induk_jantan'].'</span></span>';
                             }
                         }
                         echo '</div>';
@@ -229,7 +229,7 @@
                     }
                     // Anak (ID)
                     echo '<div class="flex flex-col items-center mb-2">';
-                    echo '<span class="font-semibold text-green-900 text-lg text-sm">'.$node['plant_id'].'</span>';
+                    echo '<span class="text-green-900 text-lg text-sm italic">'.$node['plant_id'].'</span>';
                     echo '</div>';
                 }
                 renderPedigree($pedigree);
@@ -257,12 +257,13 @@
                         <p class="text-xs text-gray-500">Member since {{ $plantSubmission->uploader->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
-                <div class="flex justify-between text-sm text-gray-600">
+                <div class="flex justify-between text-xs text-gray-600">
+                    
                     <div class="flex items-center gap-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       : <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"></path>
                         </svg>
-                        <span>{{ $plantSubmission->uploader->plantSubmissions->count() }} Hybrid</span>
+                        <span>{{ $plantSubmission->uploader->plantSubmissions->count() }} Plants</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,6 +280,34 @@
                 </div>
             </div>
             @endif
+
+            {{-- Buy Me a Coffee Section --}}
+            <div class="border rounded p-4 mt-4">
+                <h3 class="font-bold mb-2">☕ Buy Me a Coffee</h3>
+
+                <form action="{{ route('buy.coffee') }}" method="POST">
+                    @csrf
+
+                    <input type="hidden" name="to_user_id"
+                        value="{{ $plantSubmission->uploader_id }}">
+
+                    <div class="flex gap-2 mb-2">
+                        <label><input type="radio" name="amount" value="5000" checked> 5K</label>
+                        <label><input type="radio" name="amount" value="10000"> 10K</label>
+                        <label><input type="radio" name="amount" value="20000"> 20K</label>
+                    </div>
+
+                    <input type="number"
+                        name="custom_amount"
+                        min="5000"
+                        placeholder="Custom nominal"
+                        class="border rounded w-full p-2 mb-2">
+
+                    <button class="bg-yellow-500 text-white px-4 py-2 rounded">
+                        ☕ Buy Me a Coffee
+                    </button>
+                </form>
+            </div>
 
 
 </div>

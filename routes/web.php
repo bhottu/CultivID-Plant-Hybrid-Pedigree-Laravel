@@ -22,6 +22,7 @@ use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlantSubmissionAppealController;
 use App\Http\Controllers\PlantSubmissionPublicController;
 use App\Http\Controllers\PlantSubmissionController;
+use App\Http\Controllers\UserTransactionController;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -45,6 +46,8 @@ Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more
 Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile');
 Route::get('profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
+
+
 
 
 
@@ -76,7 +79,22 @@ Route::middleware(['auth'])->group(function () {
     // Banding Plant Submission (hanya untuk user login)
     Route::get('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'create'])->name('plant-submissions.appeal.create');
     Route::post('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'store'])->name('plant-submissions.appeal.store');
+
+     // DUITKU ROUTES (AUTHENTICATED)
+    Route::post('/buy-coffee', [UserTransactionController::class, 'buyCoffee'])
+        ->name('buy.coffee');
+
+    Route::get('/transactions/coffee-success', [UserTransactionController::class, 'coffeeSuccess'])
+        ->name('transactions.coffeeSuccess');
+
 });
+
+    // DUITKU CALLBACK (PUBLIC)
+        Route::post(
+            '/duitku/callback',
+            [UserTransactionController::class, 'duitkuCallback']
+        )->name('duitku.callback');
+
 // Public detail plant submission (setelah semua route plant-submissions yang spesifik)
 Route::get('plant-submissions/{plantSubmission}', [PlantSubmissionPublicController::class, 'show'])->name('plant-submissions.show');
 
@@ -86,7 +104,8 @@ Route::get('plants', [PlantController::class, 'index'])->name('plants.index');
 
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
-Route::get('allproducts', [ProductController::class, 'allproducts'])->name('all.products');
+Route::get('market', [ProductController::class, 'allproducts'])->name('all.products');
+Route::get('/market/@{username}', [ProductController::class, 'productsByUsername'])->name('products.by.username');
 Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])->name('load-more-products');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/discounted-products', [ProductController::class, 'discountedProducts'])->name('discounted.products');
@@ -94,6 +113,7 @@ Route::get('/discounted-products/load-more', [ProductController::class, 'loadMor
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/categories/{slug}/load-more-products', [CategoryController::class, 'loadMoreProducts'])->name('categories.loadMoreProducts');
 Route::post('/products/{product}/soldout', [ProductController::class, 'toggleSoldOut'])->name('products.toggle-soldout');
+
 
 Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
 

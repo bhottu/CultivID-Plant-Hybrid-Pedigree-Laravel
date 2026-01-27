@@ -138,9 +138,7 @@
                     @guest
                         <a href="{{ route('login') }}" class="text-white text-sm font-semibold hover:text-blue-400">Login</a>
                     @else
-                        <button id="dark-mode-toggle" class="text-white text-lg">
-                            <i class="fas fa-toggle-on"></i>
-                        </button>
+                        <!-- kosong bisa isi html-->
                         @if(auth()->user()->profile_photo_path)
                             <a href="{{ route('profile', auth()->user()->username) }}" hx-get="{{ route('profile', auth()->user()->username) }}" hx-target="#app-content" hx-push-url="true" class="w-8 h-8 rounded-full hover:opacity-80 transition">
                                 <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="Profile Photo" class="w-8 h-8 rounded-full">
@@ -174,7 +172,7 @@
                 <span class="text-xs">Home</span>
             </a>
 
-            <a href="{{ route('index.sosmed') }}" hx-get="{{ route('index.sosmed') }}" hx-target="#app-content" hx-push-url="true" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
+            <a href="{{ route('index.sosmed') }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <circle cx="9" cy="7" r="3"/>
                     <circle cx="17" cy="7" r="3"/>
@@ -193,7 +191,7 @@
                 <span class="text-xs">Add</span>
             </button>
 
-            <a href="{{ route('all.products') }}" hx-get="{{ route('all.products') }}" hx-target="#app-content" hx-push-url="true" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
+            <a href="{{ route('all.products') }}"  class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>
@@ -208,11 +206,7 @@
                     : route('login');
             @endphp
 
-            <a href="{{ $profileUrl }}"
-            hx-get="{{ $profileUrl }}"
-            hx-target="#app-content"
-            hx-push-url="true"
-            class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
+            <a href="{{ $profileUrl }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

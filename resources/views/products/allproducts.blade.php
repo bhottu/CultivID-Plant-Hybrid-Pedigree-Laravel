@@ -3,9 +3,23 @@
 @section('content')
 
 <div class="container mx-auto max-w-lg px-4 my-4">
-        <h1 class="text-2xl font-bold text-gray-800">Market</h1>
-        <p class="text-sm text-gray-500">No fee & free to submit.</p>
+    @if(isset($user))
+        <h1 class="text-2xl font-bold text-gray-800">
+            {{ $user->name }}'s Products
+        </h1>
+        <p class="text-sm text-gray-500">
+            All products uploaded by {{ '@' . $user->username }}
+        </p>
+    @else
+        <h1 class="text-2xl font-bold text-gray-800">
+            Market
+        </h1>
+        <p class="text-sm text-gray-500">
+            No fee & free to submit.
+        </p>
+    @endif
 </div>
+
 
 <div class="container mx-auto max-w-lg px-4 my-4">
     

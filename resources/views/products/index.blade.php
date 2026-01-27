@@ -207,20 +207,20 @@
                         @endif
                         </td>
                         <td class="p-2 align-top text-xs" >
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 2, '..') }}</a>
+                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}</a>
 
                             <div class=" md:block text-xs text-gray-500 mt-1">
                                 <span class="inline-flex items-center mr-4">
                                     @if($item->penyilang)
                                         <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
                                     @else
-                                        <span class="italic text-gray-400 my-1"> No breeder, 
+                                        <span class="italic text-gray-400 my-1 text-xxxs"> No breeder, 
                                         @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
-                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-xs text-red-400 underline">Add</a>
+                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-red-400 underline">Add</a>
                                         @elseif(Auth::check())
-                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-red-400 underline"> Appeal</a>
                                         @else
-                                            <a href="{{ route('login') }}" class="text-xs text-red-400 underline"> Appeal</a>
+                                            <a href="{{ route('login') }}" class="text-red-400 underline"> Appeal</a>
                                         @endif
                                         </span>
                                     @endif                          

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6">
+<div class="container max-w-lg mx-auto p-6">
     <h2 class="text-2xl font-bold mb-6">Edit Product</h2>
 
     @if(session('success'))
@@ -34,7 +34,7 @@
 
         <div class="mb-4">
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-            <input type="text" id="price" name="price" value="{{ number_format(old('price', $product->price), 0, '', '') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2" required>
+            <input type="number" id="price" name="price" value="{{ number_format(old('price', $product->price), 0, '', '') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2" required>
             @error('price')
                 <span class="text-red-600 text-sm">{{ $message }}</span> 
             @enderror
@@ -42,7 +42,7 @@
 
         <div class="mb-4">
             <label for="discount" class="block text-sm font-medium text-gray-700">Discount (%)</label>
-            <input type="text" id="discount" name="discount" value="{{ number_format(old('discount', $product->discount), 0, '', '') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+            <input type="number" id="discount" name="discount" value="{{ number_format(old('discount', $product->discount), 0, '', '') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
             @error('discount')
                 <span class="text-red-600 text-sm">{{ $message }}</span>
             @enderror

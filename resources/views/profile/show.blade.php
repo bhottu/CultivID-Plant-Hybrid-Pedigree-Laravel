@@ -45,32 +45,116 @@
         @auth
     {{-- JIKA PROFIL SENDIRI --}}
     @if(auth()->id() === $user->id)
-        <div class="w-full px-4 mb-6">
-            <table class="w-full border-collapse">
-                <tr>
-                    <td class="w-4/5">
-                        <a href="{{ route('profile.edit') }}"
-                           class="block w-full bg-blue-500 hover:bg-blue-600
-                                  text-white font-bold py-3
-                                  rounded-l-lg transition text-center">
-                            Edit Profile
-                        </a>
-                    </td>
+        
 
-                    <td class="w-1/5">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                    class="w-full h-full bg-red-500 hover:bg-red-600
-                                           text-white py-3
-                                           rounded-r-lg transition">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+        
+        <div class="w-full max-w-lg p-4 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+           
+            <ul class="my-6 space-y-3">
+                <li>
+                    <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11l5 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16 12h.01" />
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Wallet <span class="flex-1 text-left whitespace-nowrap text-xxxs italic">(under development)</span></span> 
+                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700">Rp {{ $user->balance }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('profile.edit') }}" class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.862 3.487a2.1 2.1 0 013.003 3.003L7.5 18.855 3 21l2.145-4.5L16.862 3.487z" />
+                        </svg>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Edit profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('plant-submissions.index') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 20V10m0 0c-3 0-6-2-6-5 3 0 6 2 6 5zm0 0c3 0 6-2 6-5-3 0-6 2-6 5z" />
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My submissions</span>
+                    </a>
+                </li>
+                @if(isset($user))
+                <li>
+                    <a href="{{ route('products.by.username', $user->username) }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My products</span>
+                    </a>
+                </li>
+                @endif
+                
+
+            </ul>
+                <div>
+        
+            </div>
         </div>
+
+        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <ul class="my-6 space-y-3">
+                <li>
+                    <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Dark mode</span>
+                        <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
+                            <button id="dark-mode-toggle" class="text-gray-700 text-lg">
+                            <i class="fas fa-toggle-on"></i>
+                            </button>
+                    </span>
+                    </div>
+                </li>
+
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <button type="submit"
+                            class="group flex w-full items-center gap-3 rounded-base p-3
+                            text-lg font-semibold
+                            bg-red-100 hover:bg-red-50
+                            transition-colors rounded-full">
+
+                            <!-- Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 shrink-0 text-gray-700"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8">
+                            <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h1a3 3 0 013 3v1" />
+                            </svg>
+
+                            <!-- Text -->
+                            <span class="flex-1 text-left whitespace-nowrap text-gray-700">
+                                Logout
+                            </span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
 
     {{-- JIKA PROFIL USER LAIN --}}
     @else
@@ -102,13 +186,8 @@
             </div>
 
         </div>
-    @endif
-@endauth
 
-
-    </div>
-
-    <!-- Plant Submissions Section -->
+        <!-- Plant Submissions Section -->
     @if($plantSubmissions && !$plantSubmissions->isEmpty())
     <div class="mt-6">
         <h2 class="text-lg font-bold mb-4">Plant Submissions</h2>
@@ -137,6 +216,14 @@
         @endif
     </div>
     @endif
+    
+    @endif
+@endauth
+
+
+    </div>
+
+    
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -197,5 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+
     
 @endsection

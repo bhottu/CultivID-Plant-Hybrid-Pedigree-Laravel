@@ -82,7 +82,20 @@ $counts = [
     {
         $products = Product::orderBy('created_at', 'desc')->paginate(9);
         return view('products.allproducts', compact('products'));
+        
     }
+
+    public function productsByUsername($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $products = Product::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+        return view('products.allproducts', compact('products', 'user'));
+    }
+
 
     public function store(Request $request)
     {
@@ -127,7 +140,7 @@ $counts = [
 
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Product added successfully.');
+        return redirect()->route('all.products')->with('success', 'Product added successfully.');
     }
 
     public function show(Product $product)
