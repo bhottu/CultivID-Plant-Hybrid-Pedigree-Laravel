@@ -1,4 +1,4 @@
-v1.0.20
+v1.0.21
 
 New migration
 database/migrations/2026_01_26_015201_create_user_transactions_table.php ✅
@@ -74,5 +74,6 @@ perbaiki agar tombol buy me a coffee berfungsi, agar callback berfungsi, transak
 
 ______________
 
-use App\Models\Product;use Illuminate\Support\Str;Product::whereNull('slug')    ->orWhere('slug', '')    ->get()    ->each(function ($product) {        $product->s
-lug = Str::slug($product->name) . '-' . $product->id;        $product->save();    });
+use App\Models\Product;use Illuminate\Support\Str;Product::whereNull('slug')    ->orWhere('slug', '')    ->get()    ->each(function ($product) {        $product->slug = Str::slug($product->name) . '-' . $product->id;        $product->save();    });
+
+Missing required parameter for [Route: products.show] [URI: market/{slug}] [Missing parameter: slug].

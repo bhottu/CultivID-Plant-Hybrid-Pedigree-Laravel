@@ -74,40 +74,37 @@
                     },
                 });
             </script>
-
-        <div class="w-full max-w-lg p-4 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
-            <ul class="my-6 space-y-3">
                             <li>
-                                <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group" disabled>
+                                <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group" disabled>
                                    
 
                                     <span class="flex-1 min-w-0 text-left text-gray-700">{{ $product->name }} 
-                                        <p class="text-gray-600 text-xs">{{ $product->created_at->diffForHumans() }}</p>
+                                        
                                         <p class=" text-gray-500">
-                                            @if($product->is_sold_out)
-                                                <span class="text-red-600 text-xs">Sold Out</span>
+                                            @if($product->discount)
+                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
+                                            <span class="text-red-600 line-through text-xs">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
+                                            
                                             @else
-                                                <span class="text-sky-900 text-xs">Available</span>
+                                                <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                                             @endif
-                                            </p>
+                                        </p>
+                                        <p class="text-gray-600 text-xs">{{ $product->created_at->diffForHumans() }}</p>
                                     </span> 
 
-                                        <span class="flex-1 min-w-0 text-right text-gray-700">
-                                        @if($product->discount)
-                                            <span class="text-red-600 line-through mr-2 text-xs break-normal">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
-                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                                        @else
-                                            <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                                        @endif
-
-                                       
-
+                                    <span class="flex-1 min-w-0 text-right text-gray-700">
+                                            @if($product->is_sold_out)
+                                                <span class="text-red-600 text-xs bg-red-400 py-1 px-1 rounded-md">Sold Out</span>
+                                            @else
+                                                <span class="text-sky-900 text-xs bg-green-400 py-1 px-1 rounded-md">Available</span>
+                                            @endif
                                     </span>
-                                </a>
-                            </li>
-                            
-            </ul>
 
+                                        
+                                </div>
+                            </li>
+
+        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base">
             <div class="mb-2">
               
                 <p class="text-xs font-semibold mb-2 mt-2">Description</p>
@@ -139,7 +136,7 @@
        
         
 
-            <div class="w-full mt-3 max-w-lg p-4 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="w-full mt-3 max-w-lg bg-neutral-primary-soft ">
                     @if($product->user)
                         <ul class="my-6 space-y-3">
                             <li>
@@ -225,7 +222,7 @@
                         </ul>
                     </div>
 
-                    <div class="border-t border-gray-300 py-4">
+                    <div class=" py-4">
                         <h3 class="text-lg border-green-200 border-l-4 px-2 border-doubled mb-2">Location</h3>
                         <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
                             <div id="map" class="h-full w-full z-0"></div>

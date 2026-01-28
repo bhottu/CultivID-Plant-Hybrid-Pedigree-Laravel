@@ -31,6 +31,11 @@
     @endif
 
     <style>
+        @layer utilities {
+            .bg-cus-500 {
+                background-color: #365b6d;
+            }
+        }
         .nav-overlap {
             position: absolute;
             bottom: -20%;
@@ -55,7 +60,7 @@
             background-color: #383b3e;
         }
         .dark .text-gray-800 {
-            color: #c8ccd1;
+            color: #365b6d;
         }
         .dark .text-red-600 {
             color: #ff4d4f;
@@ -72,7 +77,7 @@
         .dark .text-blue-500 {
             color: #1890ff;
         }
-
+         
         #app-content {
             animation: fadeIn 0.3s ease-in;
         }
@@ -113,7 +118,7 @@
 <body class="{{ session('dark_mode', 'light') }}" x-data="{ showModal: false }">
     <div class="min-h-screen flex flex-col">
         <!-- Fixed Header -->
-        <header class="fixed top-0 left-0 right-0 h-14 bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-40 flex items-center px-4 ">
+        <header class="fixed top-0 left-0 right-0 h-14 bg-cus-500 border-b border-gray-200 dark:border-gray-700 z-40 flex items-center px-4 ">
             <div class="flex items-center justify-between w-full mx-auto max-w-lg">
                 @if(request()->route() && request()->route()->getName() !== 'home')
                     <button onclick="window.history.back()" class="text-white text-lg mr-2">
@@ -125,7 +130,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.20
+                             v1.0.21
                         </div>
 
                     @else
