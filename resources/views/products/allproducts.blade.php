@@ -21,14 +21,14 @@
 </div>
 
 
-<div class="container mx-auto max-w-lg px-4 my-4">
+<div class="container mx-auto max-w-lg px-2 my-2">
     
     <div id="product-list" class="grid grid-cols-1 gap-4 mt-4">
         @foreach ($products as $product)
             <div class="bg-white rounded-lg overflow-hidden shadow-lg">
                     @if ($product->image_path)
                     <div class="relative">
-                            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
+                            <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:underline">
                                 <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
                                 @if ($product->is_sold_out)
                                     <span class="absolute bottom-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
@@ -44,7 +44,7 @@
                     @endif
 
                 <div class="p-4">
-                    <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:text-gray-500">
                         <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
                     </a>
                     <div class="flex items-center mb-2">

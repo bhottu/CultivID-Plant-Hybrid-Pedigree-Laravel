@@ -13,14 +13,14 @@
                 Communitys
             </h1>
             <p class="text-sm text-gray-500">
-                Share, Discuss & Grow together.
+                Share, Discuss & Grow together. 
             </p>
         @endif
     </div>
     
     @if($posts->count())
         @foreach($posts as $post)
-        <div class=" mx-auto max-w-lg ">
+        <div class="container mx-auto max-w-lg px-2 my-2">
             <div class="bg-white dark:bg-gray-800 shadow-md mb-3 rounded-lg">
                 <div class="flex justify-between items-start">
                     <div class="flex items-center gap-3 p-4">

@@ -10,7 +10,13 @@ class Product extends Model
 {
     use HasFactory, HasApiTokens;
 
-    protected $fillable = ['name', 'description', 'price', 'category_id','discount'];
+    protected $fillable = ['name', 'slug', 'description', 'price', 'category_id','discount'];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
 
     public function category()
     {

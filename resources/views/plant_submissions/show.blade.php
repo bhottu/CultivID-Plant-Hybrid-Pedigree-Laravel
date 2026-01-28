@@ -241,7 +241,7 @@
     
 
 
-    <h2 class="text-md text-green-900 mb-2 mt-2">Uploader</h2>
+    <h2 class="text-md text-green-900 mb-2 mt-2">Contributor</h2>
         @if($plantSubmission->uploader)
             <div class="bg-gray-50 p-4 rounded shadow text-sm">
                 <div class="flex items-center gap-3 mb-2">
@@ -300,7 +300,7 @@
                     <input type="number"
                         name="custom_amount"
                         min="5000"
-                        placeholder="Enter nominal amount (min Rp 5,000)"
+                        placeholder="Enter amount (min Rp 5,000)"
                         class="border rounded w-full p-2 mb-2">
 
                     <button class="bg-yellow-500 text-white px-4 py-2 rounded">

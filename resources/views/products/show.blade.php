@@ -81,23 +81,26 @@
                                 <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group" disabled>
                                    
 
-                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700">{{ $product->name }} <p class="text-gray-600 mb-2 text-xs">{{ $product->created_at->diffForHumans() }}</p></span> 
+                                    <span class="flex-1 min-w-0 text-left text-gray-700">{{ $product->name }} 
+                                        <p class="text-gray-600 text-xs">{{ $product->created_at->diffForHumans() }}</p>
+                                        <p class=" text-gray-500">
+                                            @if($product->is_sold_out)
+                                                <span class="text-red-600 text-xs">Sold Out</span>
+                                            @else
+                                                <span class="text-sky-900 text-xs">Available</span>
+                                            @endif
+                                            </p>
+                                    </span> 
 
-                                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700">
+                                        <span class="flex-1 min-w-0 text-right text-gray-700">
                                         @if($product->discount)
-                                            <span class="text-red-600 line-through mr-2 text-sm">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
+                                            <span class="text-red-600 line-through mr-2 text-xs break-normal">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
                                             <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
                                         @else
-                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                                            <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                                         @endif
 
-                                       <p class="mb-2 text-gray-500">
-                                        @if($product->is_sold_out)
-                                            <span class="text-red-600">Sold Out</span>
-                                        @else
-                                            <span class="text-sky-900">Available</span>
-                                        @endif
-                                        </p>
+                                       
 
                                     </span>
                                 </a>
@@ -147,14 +150,14 @@
                                         <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-16 w-16 rounded-full">
                                     @endif
 
-                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700">
+                                    <span class="flex-1 min-w-0 text-left text-gray-700">
                                         <form action="{{ url('profile/' . $product->user->username) }}" hx-get="{{ url('profile/' . $product->user->username) }}" hx-target="#app-content" hx-push-url="true">
                                             <button class="text-gray-700 py-1  text-smrounded py-1 mt-2">
                                                 {{ $product->user->name ?? 'Unknown' }}
                                             </button>
                                         </form>  
                                         
-                                        <div class="flex justify-between text-xs text-gray-600">
+                                        <div class="flex justify-between min-w-0 text-xs text-gray-600">
                                             <div class="flex items-center gap-1">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"></path>
@@ -173,12 +176,13 @@
                                                 </svg>
                                                 <span>{{ $product->user->products->count() }} Products</span>
                                             </div>
+                                            
                                         </div>
-
-                                        </span> 
                                     <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700"> 
-                                       Member since  <p class="text-xs text-gray-500">{{ $product->user->created_at->diffForHumans() }}</p>
+                                       Member since  <span class="text-xs text-gray-500">{{ $product->user->created_at->diffForHumans() }}</span>
                                     </span>
+                                        </span> 
+                                    
                                 </a>
                             </li>
                     @endif
@@ -205,10 +209,10 @@
 
                             <div class="ml-auto flex items-center">
                                 @if(Auth::check() && Auth::id() === $product->user_id)
-                                    <a href="{{ route('products.edit', $product) }}" class="hover:text-gray-500">
+                                    <a href="{{ route('products.edit', $product->slug) }}" class="hover:text-gray-500">
                                         <button class="fas fa-pencil-alt hover:text-green-500 text-md text-blue-400 text-2xl mr-2"></button>
                                     </a>
-                                    <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="inline">
+                                    <form action="{{ route('products.destroy', $product->slug) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button class="fas fa-trash hover:text-red-500 text-red-400 text-2xl" type="submit"></button>

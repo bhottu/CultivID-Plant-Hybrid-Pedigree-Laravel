@@ -102,10 +102,10 @@ Route::get('plants', [PlantController::class, 'index'])->name('plants.index');
 
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
-Route::get('market', [ProductController::class, 'allproducts'])->name('all.products');
+Route::get('market/', [ProductController::class, 'allproducts'])->name('all.products');
 Route::get('/market/@{username}', [ProductController::class, 'productsByUsername'])->name('products.by.username');
 Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])->name('load-more-products');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/market/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/discounted-products', [ProductController::class, 'discountedProducts'])->name('discounted.products');
 Route::get('/discounted-products/load-more', [ProductController::class, 'loadMoreDiscountedProducts']);
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
@@ -116,7 +116,7 @@ Route::post('/products/{product}/soldout', [ProductController::class, 'toggleSol
 Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
 
 Route::get('profile/{userId}/products', [ProductController::class, 'loadProducts'])->name('profile.products');
-Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('auth');
+Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('auth');
 Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('auth');
 Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('auth');
 

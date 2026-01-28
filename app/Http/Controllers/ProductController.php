@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\Models\PlantSubmission;
 use App\Models\PlantSubmissionAppeal;
+use Illuminate\Support\Str;
 
 
 class ProductController extends Controller
@@ -101,6 +102,7 @@ $counts = [
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
@@ -114,6 +116,8 @@ $counts = [
 
         $product = new Product();
         $product->name = $request->input('name');
+       # $product->slug = Str::slug($request->name);
+        $product->slug = Str::random(6) . '-' . Str::slug($request->name);
         $product->description = $request->input('description');
         $product->category_id = $request->input('category_id');
         $product->price = $request->input('price');
@@ -143,8 +147,10 @@ $counts = [
         return redirect()->route('all.products')->with('success', 'Product added successfully.');
     }
 
-    public function show(Product $product)
+    public function show($slug)
     {
+        $product = Product::where('slug', $slug)->firstOrFail();
+
         return view('products.show', compact('product'));
     }
 
@@ -203,26 +209,26 @@ $counts = [
         return response()->json(['error' => 'Non-AJAX request'], 400);
     }
     
-    public function destroy($id)
+   public function destroy(Product $product)
     {
-        // Temukan produk berdasarkan ID
-        $product = Product::findOrFail($id);
-    
-        // Hapus file gambar jika ada
+        // Hapus file gambar
         if ($product->image_path && Storage::exists('public/' . $product->image_path)) {
             Storage::delete('public/' . $product->image_path);
         }
-    
-        // Hapus file video jika ada
+
+        // Hapus file video
         if ($product->video_path && Storage::exists('public/' . $product->video_path)) {
             Storage::delete('public/' . $product->video_path);
         }
-    
-        // Hapus produk dari database
+
+        // Hapus produk
         $product->delete();
-    
-        return redirect()->route('profile', auth()->user())->with('success', 'Product deleted successfully.');
+
+        return redirect()
+            ->route('all.products', auth()->user()->username)
+            ->with('success', 'Product deleted successfully.');
     }
+
     
     public function edit(Product $product)
     {

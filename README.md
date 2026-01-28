@@ -1,4 +1,4 @@
-v1.0.18
+v1.0.20
 
 New migration
 database/migrations/2026_01_26_015201_create_user_transactions_table.php ✅
@@ -71,3 +71,8 @@ database\migrations\2026_01_26_021157_create_withdrawals_table.php
 database\migrations\2026_01_26_021614_add_bank_to_users_table.php
 
 perbaiki agar tombol buy me a coffee berfungsi, agar callback berfungsi, transaksi tercatat di database
+
+______________
+
+use App\Models\Product;use Illuminate\Support\Str;Product::whereNull('slug')    ->orWhere('slug', '')    ->get()    ->each(function ($product) {        $product->s
+lug = Str::slug($product->name) . '-' . $product->id;        $product->save();    });
