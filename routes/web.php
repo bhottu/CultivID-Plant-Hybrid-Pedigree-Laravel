@@ -199,7 +199,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 });
 
 // Public About Us page (moved Company & Shop content here)
-Route::view('/about-us', 'about')->name('about');
+//Route::view('/about-us', 'about')->name('admin.settings.about');
+Route::get('/about-us', [SettingController::class, 'showAbout'])->name('admin.settings.about');
 Route::get('/contact-us', [SettingController::class, 'showContact'])->name('admin.settings.contact');
 Route::get('/terms-conditions', [SettingController::class, 'showTerms'])->name('admin.settings.terms');
 Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->name('admin.settings.privacy');

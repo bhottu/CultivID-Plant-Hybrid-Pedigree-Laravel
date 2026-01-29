@@ -130,7 +130,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.21
+                             v1.0.22
                         </div>
 
                     @else
@@ -139,22 +139,104 @@
                 </a>
                 @endif
                 
-                <div class="flex gap-3">
-                    @guest
-                        <a href="{{ route('login') }}" class="text-white text-sm font-semibold hover:text-blue-400">Login</a>
-                    @else
-                        <!-- kosong bisa isi html-->
-                        @if(auth()->user()->profile_photo_path)
-                            <a href="{{ route('profile', auth()->user()->username) }}" hx-get="{{ route('profile', auth()->user()->username) }}" hx-target="#app-content" hx-push-url="true" class="w-8 h-8 rounded-full hover:opacity-80 transition">
-                                <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="Profile Photo" class="w-8 h-8 rounded-full">
-                            </a>
-                        @else
-                            <a href="{{ route('profile', auth()->user()->username) }}" hx-get="{{ route('profile', auth()->user()->username) }}" hx-target="#app-content" hx-push-url="true" class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-semibold text-white">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                            </a>
-                        @endif
-                    @endguest
-                </div>
+  <div class="relative">
+        <button 
+            id="menuToggle"
+            class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
+            aria-label="Menu"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+
+
+<div 
+    id="mobileMenu"
+    class="fixed inset-0 bg-white z-50 hidden flex-col"
+>
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+        <span class="text-lg font-semibold text-gray-800">Menu</span>
+
+        <button id="menuClose" class="text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+         @php
+                $profileUrl = auth()->check()
+                    ? route('profile', auth()->user()->username)
+                    : route('login');
+            @endphp
+        @guest
+            <a href="#" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 17l5-5m0 0l-5-5m5 5H3"/>
+                </svg>
+         <span class="flex-1 text-left whitespace-nowrap text-gray-700">Login / Register</span>
+            </a>
+            
+        @else
+            <a href="{{ $profileUrl }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg> My Profile
+            </a>
+        @endguest
+
+        <a href="{{ route('admin.settings.about') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.75"
+     stroke-linecap="round" stroke-linejoin="round"
+     class="w-6 h-6">
+  <circle cx="12" cy="12" r="9"/>
+  <path d="M12 10v5"/>
+  <path d="M12 7h.01"/>
+</svg>
+
+            About Us
+        </a>
+
+        <a href="{{ route('admin.settings.contact') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.75"
+     stroke-linecap="round" stroke-linejoin="round"
+     class="w-6 h-6">
+  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+</svg>
+Contact Us
+        </a>
+
+        <a href="{{ route('admin.settings.privacy') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.75"
+     stroke-linecap="round" stroke-linejoin="round"
+     class="w-6 h-6">
+  <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"/>
+  <path d="M9 12l2 2 4-4"/>
+</svg>
+  Privacy Policy
+        </a>
+    </div>
+</div>
+
+
+
             </div>
         </header>
 
@@ -205,11 +287,7 @@
 
             
                 
-            @php
-                $profileUrl = auth()->check()
-                    ? route('profile', auth()->user()->username)
-                    : route('login');
-            @endphp
+            
 
             <a href="{{ $profileUrl }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 
@@ -337,6 +415,26 @@
     </script>
 
     
+
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose  = document.getElementById('menuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+        mobileMenu.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+    });
+
+    menuClose.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+    });
+</script>
+
+
 
 
 </body>

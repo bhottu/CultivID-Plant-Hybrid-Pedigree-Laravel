@@ -127,6 +127,43 @@
         <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
             <ul class="my-6 space-y-3">
                 <li>
+                    <a href="{{ route('admin.settings.contact') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Contact Us</span>
+                        
+                    </a>
+                </li>
+
+                 <li>
+                    <a href="{{ route('admin.settings.about') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-6 h-6 text-gray-700"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 11v5"/>
+                        <circle cx="12" cy="8" r="1"/>
+                        </svg>
+
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">About Us</span>
+                        
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <ul class="my-6 space-y-3">
+                <li>
                     <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
