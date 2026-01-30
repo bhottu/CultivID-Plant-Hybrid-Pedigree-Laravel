@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto mt-4 px-4 py-8 max-w-lg">
     <h1 class="text-2xl font-bold mb-4">Edit Profile</h1>
-    <div class="border-doubled border-2 border-sky-200 bg-blue-100  shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div class="border-doubled border-2 border-sky-200 bg-blue-100 dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="flex items-center">
                 <div class="mr-4">
                     @if(Auth::user()->profile_photo_path)
@@ -14,15 +14,15 @@
                 </div>
                 <div>
                 <div class="text-gray-500 text-sm">
-                    <p class="text-gray-700 text-sm font-bold">Name:</p>
+                    <p class="text-gray-700 text-sm font-bold dark:text-gray-400">Name:</p>
                     <p><span class="font-normal">{{ auth()->user()->name }}</span></p>
                 </div>
                 <div class="text-gray-500 text-sm">
-                    <p class="text-gray-700 text-sm font-bold">Email:</p>
+                    <p class="text-gray-700 text-sm font-bold dark:text-gray-400">Email:</p>
                     <p><span class="font-normal">{{ auth()->user()->email }}</span></p>
                 </div>
                 <div class="text-gray-500 text-sm">
-                    <p class="text-gray-700 text-sm font-bold">Phone number:</p>
+                    <p class="text-gray-700 text-sm font-bold dark:text-gray-400">Phone number:</p>
                     <p><span class="font-normal">{{ auth()->user()->phone_number }}</span></p>
                 </div>
 
@@ -40,20 +40,20 @@
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         @csrf
         <div class="mb-4">
-            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-            <input type="text" class="bg-gray-200 border-dashed border-2 border-sky-500 shadow border-dashed border-2 border-sky-500 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="name" value="{{ old('username') ?? auth()->user()->username }}" disabled>
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Username</label>
+            <input type="text" class="bg-gray-200 border-dashed border-2 border-sky-500 shadow border-dashed border-2 border-sky-500 appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-400 leading-tight focus:outline-none focus:shadow-outline" id="username" name="name" value="{{ old('username') ?? auth()->user()->username }}" disabled>
         </div>
         <div class="mb-4">
-            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <label for="name" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Name</label>
             <input type="text" class="border-dashed border-2 border-sky-500 shadow border-dashed border-2 border-sky-500 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" value="{{ old('name') ?? auth()->user()->name }}">
         </div>
         <div class="mb-4">
-            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <label for="email" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Email</label>
             <input type="email" class="border-dashed border-2 border-sky-500 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" value="{{ old('email') ?? auth()->user()->email }}">
         </div>
    
         <div class="mb-4">
-            <label for="currency" class="block font-medium text-sm text-gray-700">Currency <label class="text-xs text-gray-500">(Not on the list? <a href="{{ route('admin.settings.contact') }}" class="hover:text-red-700 text-red-400">Contact Us</a>)</label></label>
+            <label for="currency" class="block font-medium text-sm text-gray-700 dark:text-gray-400">Currency <label class="text-xs text-gray-500">(Not on the list? <a href="{{ route('admin.settings.contact') }}" class="hover:text-red-700 text-red-400">Contact Us</a>)</label></label>
             <select id="currency" name="currency" class="form-control w-auto border-dashed border-2 border-sky-500 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <option value="" disabled>Select Currency</option>
                 @foreach($currencies as $currency)
@@ -65,26 +65,26 @@
         </div>
 
         <div class="mb-4">
-            <label for="phone_number" class="block font-medium text-sm text-gray-700">Phone Number</label>
+            <label for="phone_number" class="block font-medium text-sm text-gray-700 dark:text-gray-400">Phone Number</label>
             <input id="phone_number" type="text" class="border-dashed border-2 border-sky-500 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="phone_number" value="{{ old('phone_number', Auth::user()->phone_number) }}">
         </div>
 
         <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">New Password</label>
+            <label for="password" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">New Password</label>
             <input type="password" class="border-dashed border-2 border-sky-500 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password">
         </div>
         <div class="mb-4">
-            <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirm New Password</label>
+            <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Confirm New Password</label>
             <input type="password" class="border-dashed border-2 border-sky-500 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password_confirmation" name="password_confirmation">
         </div>
 
         <div class="mb-4">
-            <label for="profile_photo" class="block text-gray-700 text-sm font-bold mb-2">Profile Photo</label>
+            <label for="profile_photo" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Profile Photo</label>
             <input type="file" class="border-dashed border-2 border-sky-500 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_photo" name="profile_photo">
         </div>
 
         <div class="mb-4">
-            <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Lokasi</label>
+            <label for="location" class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400">Lokasi</label>
             <div id="map" style="height: 400px; width: 100%;"></div>
             <div class="mt-4">
                 <button type="button" id="getLocationBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-xs mb-2">Get Current Location</button>
@@ -92,11 +92,11 @@
             <div class="flex items-center space-x-4">
         <div>
             
-            <label for="latitude" class="block text-gray-600 text-sm font-medium">Latitude</label>
+            <label for="latitude" class="block text-gray-600 text-sm font-medium dark:text-gray-400">Latitude</label>
             <input type="text" id="latitude" name="latitude" value="{{ old('latitude', $user->latitude) }}" class="border border-gray-300 rounded-md p-2 text-sm w-32">
         </div>
         <div>
-            <label for="longitude" class="block text-gray-600 text-sm font-medium">Longitude</label>
+            <label for="longitude" class="block text-gray-600 text-sm font-medium dark:text-gray-400">Longitude</label>
             <input type="text" id="longitude" name="longitude" value="{{ old('longitude', $user->longitude) }}" class="border border-gray-300 rounded-md p-2 text-sm w-32">
         </div>
         

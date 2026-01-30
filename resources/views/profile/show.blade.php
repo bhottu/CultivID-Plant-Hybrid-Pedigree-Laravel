@@ -52,8 +52,8 @@
            
             <ul class="my-6 space-y-3">
                 <li>
-                    <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                    <a class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11l5 5z" />
@@ -61,18 +61,18 @@
                                 d="M16 12h.01" />
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Wallet <span class="flex-1 text-left whitespace-nowrap text-xxxs italic">(under development)</span></span> 
-                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700">Rp {{ $user->balance }}</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Wallet <span class="flex-1 text-left whitespace-nowrap text-xxxs italic">(under development)</span></span> 
+                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">Rp {{ $user->balance }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.edit') }}" class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                    <a href="{{ route('profile.edit') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50  group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M16.862 3.487a2.1 2.1 0 013.003 3.003L7.5 18.855 3 21l2.145-4.5L16.862 3.487z" />
                         </svg>
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Edit profile</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Edit profile</span>
                     </a>
                 </li>
             </ul>
@@ -80,21 +80,21 @@
         <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
             <ul class="my-6 space-y-3">
                 <li>
-                    <a href="{{ route('plant-submissions.index') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                    <a href="{{ route('plant-submissions.index') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-2 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 20V10m0 0c-3 0-6-2-6-5 3 0 6 2 6 5zm0 0c3 0 6-2 6-5-3 0-6 2-6 5z" />
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My submissions</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My submissions</span>
                     </a>
                 </li>
                 @if(isset($user))
                  <li>
-                    <a href="{{ route('posts.by.username', $user->username) }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                    <a href="{{ route('posts.by.username', $user->username) }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="w-6 h-6 text-gray-700"
+                            class="w-6 h-6 text-gray-700 dark:text-gray-400"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -103,16 +103,16 @@
                                 d="M11 4h6m-6 4h6m-6 4h6M5 20h14a1 1 0 001-1V7l-5-5H6a1 1 0 00-1 1v16a1 1 0 001 1z" />
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My posts</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My posts</span>
                     </a>
                 </li>
                 
                 <li>
-                    <a href="{{ route('products.by.username', $user->username) }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('products.by.username', $user->username) }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">My products</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My products</span>
                     </a>
                 </li>
                 @endif
@@ -127,22 +127,22 @@
         <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
             <ul class="my-6 space-y-3">
                 <li>
-                    <a href="{{ route('admin.settings.contact') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                    <a href="{{ route('admin.settings.contact') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Contact Us</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Contact Us</span>
                         
                     </a>
                 </li>
 
                  <li>
-                    <a href="{{ route('admin.settings.about') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                    <a href="{{ route('admin.settings.about') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="w-6 h-6 text-gray-700"
+                            class="w-6 h-6 text-gray-700 dark:text-gray-400"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -153,7 +153,7 @@
                         <circle cx="12" cy="8" r="1"/>
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">About Us</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">About Us</span>
                         
                     </a>
                 </li>
@@ -164,16 +164,16 @@
         <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
             <ul class="my-6 space-y-3">
                 <li>
-                    <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none"
+                    <div class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Dark mode</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Dark mode</span>
                         <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
-                            <button id="dark-mode-toggle" class="text-gray-700 text-lg">
+                            <button id="dark-mode-toggle" class="text-gray-700 dark:text-gray-400 text-sm">
                             <i class="fas fa-toggle-on"></i>
                             </button>
                     </span>
@@ -185,8 +185,8 @@
                         @csrf
 
                         <button type="submit"
-                            class="group flex w-full items-center gap-3 rounded-base p-3
-                            text-lg font-semibold
+                            class="group flex w-full items-center gap-3 rounded-base p-2
+                            text-sm font-semibold
                             bg-red-100 hover:bg-red-50
                             transition-colors rounded-full">
 

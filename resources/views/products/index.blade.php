@@ -212,7 +212,7 @@
                         @endif
                         </td>
                         <td class="p-2 align-top text-xs" >
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}</a>
+                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 dark:text-gray-400 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}</a>
 
                             <div class=" md:block text-xs text-gray-500 mt-1">
                                 <span class="inline-flex items-center mr-4">

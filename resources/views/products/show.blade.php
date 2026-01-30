@@ -75,21 +75,20 @@
                 });
             </script>
                             <li>
-                                <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group" disabled>
-                                   
+                                <span class="flex items-center text-gray-700 dark:text-gray-400 dark:bg-gray-700 p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 ">{{ $product->name }}</span>
 
-                                    <span class="flex-1 min-w-0 text-left text-gray-700">{{ $product->name }} 
-                                        
+                                <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group dark:text-gray-400 dark:bg-gray-700 " disabled>
+                                    <span class="flex-1 min-w-0 text-left text-sm text-gray-700 dark:text-gray-400 ">
                                         <p class=" text-gray-500">
                                             @if($product->discount)
-                                            <span class="text-gray-600 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                                            <span class="text-red-600 line-through text-xs">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
+                                            <span class="text-gray-600 dark:text-gray-400 text-sm">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
+                                            <span class="text-red-600 dark:text-gray-400 line-through text-xs">{{ $product->user->currency ?? 'Rp' }}{{ number_format($product->price, 0, ',', '.') }}</span>
                                             
                                             @else
-                                                <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                                                <span class="text-gray-600 dark:text-gray-400 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                                             @endif
                                         </p>
-                                        <p class="text-gray-600 text-xs">{{ $product->created_at->diffForHumans() }}</p>
+                                        <p class="text-gray-600 dark:text-gray-400 text-xs">{{ $product->created_at->diffForHumans() }}</p>
                                     </span> 
 
                                     <span class="flex-1 min-w-0 text-right text-gray-700">
@@ -104,7 +103,7 @@
                                 </div>
                             </li>
 
-        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft border border-default rounded-base">
+        <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft bg-gray-50 dark:border-red rounded-base dark:text-gray-400 dark:bg-gray-700 ">
             <div class="mb-2">
               
                 <p class="text-xs font-semibold mb-2 mt-2">Description</p>
@@ -140,7 +139,7 @@
                     @if($product->user)
                         <ul class="my-6 space-y-3">
                             <li>
-                                <a class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                <a href="{{ url('profile/' . $product->user->username) }}" class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group dark:text-gray-400 dark:bg-gray-700 ">
                                     @if($product->user->profile_photo_path)
                                         <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-16 w-16 rounded-full">
                                     @else
@@ -149,12 +148,12 @@
 
                                     <span class="flex-1 min-w-0 text-left text-gray-700">
                                         <form action="{{ url('profile/' . $product->user->username) }}" hx-get="{{ url('profile/' . $product->user->username) }}" hx-target="#app-content" hx-push-url="true">
-                                            <button class="text-gray-700 py-1  text-smrounded py-1 mt-2">
+                                            <button class="text-gray-700 dark:text-gray-400  py-1  text-sm rounded py-1 mt-2">
                                                 {{ $product->user->name ?? 'Unknown' }}
                                             </button>
                                         </form>  
                                         
-                                        <div class="flex justify-between min-w-0 text-xs text-gray-600">
+                                        <div class="flex justify-between min-w-0 text-xs text-gray-600 dark:text-gray-400 ">
                                             <div class="flex items-center gap-1">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z"></path>
@@ -175,33 +174,33 @@
                                             </div>
                                             
                                         </div>
-                                    <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700"> 
-                                       Member since  <span class="text-xs text-gray-500">{{ $product->user->created_at->diffForHumans() }}</span>
+                                    <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400 "> 
+                                       Member since  <span class="text-xs text-gray-500 ">{{ $product->user->created_at->diffForHumans() }}</span>
                                     </span>
                                         </span> 
                                     
                                 </a>
                             </li>
                     @endif
-                            <div class="flex items-center ml-4">
+                            <div class="flex items-center ml-4 dark:text-gray-400">
                                 @if($product->user->phone_number)
-                                    <a href="https://wa.me/{{ $product->user->phone_number }}" class="hover:text-gray-500">
-                                        <button class="fab fa-whatsapp hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    <a href="https://wa.me/{{ $product->user->phone_number }}" class="hover:text-gray-500 dark:hover:text-white dark:text-gray-400">
+                                        <button class="fab fa-whatsapp hover:text-green-500 dark:hover:text-white text-gray-400 dark:text-gray-400 text-md text-2xl mr-2"></button>
                                     </a>
-                                    <a href="tel:{{ $product->user->phone_number }}" class="hover:text-gray-500">
-                                        <button class="fas fa-phone-alt hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                    <a href="tel:{{ $product->user->phone_number }}" class="hover:text-gray-500 ">
+                                        <button class="fas fa-phone-alt hover:text-green-500 dark:hover:text-white text-gray-400 text-md text-2xl mr-2 dark:text-gray-400"></button>
                                     </a>
                                 @else
                                     <a href="#" class="hover:text-gray-500">
-                                        <button onclick='alert("The seller has not entered a phone number.")' class="fab fa-whatsapp hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                        <button onclick='alert("The seller has not entered a phone number.")' class="fab fa-whatsapp hover:text-green-500 dark:hover:text-white text-gray-400 text-md text-2xl mr-2 dark:text-gray-400"></button>
                                     </a>
                                     <a href="#" class="hover:text-gray-500">
-                                        <button onclick='alert("The seller has not entered a phone number.")' class="fas fa-phone-alt hover:text-green-500 dark:text-white text-gray-400 text-md text-2xl mr-2"></button>
+                                        <button onclick='alert("The seller has not entered a phone number.")' class="fas fa-phone-alt hover:text-green-500  dark:hover:text-white text-gray-400 text-md text-2xl mr-2 dark:text-gray-400"></button>
                                     </a>
                                 @endif
 
                                 <a href="mailto:{{ $product->user->email }}" class="hover:text-gray-500">
-                                    <button class="fas fa-envelope hover:text-green-500 text-md text-gray-400 dark:text-white text-2xl mr-2"></button>
+                                    <button class="fas fa-envelope hover:text-green-500 dark:hover:text-white text-md text-gray-400 dark:text-gray-400 text-2xl mr-2"></button>
                                 </a>
 
                             <div class="ml-auto flex items-center">
@@ -223,7 +222,7 @@
                     </div>
 
                     <div class=" py-4">
-                        <h3 class="text-lg border-green-200 border-l-4 px-2 border-doubled mb-2">Location</h3>
+                        <h3 class="text-lg border-green-200 border-l-4 px-2 border-doubled mb-2 dark:text-gray-400">Location</h3>
                         <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
                             <div id="map" class="h-full w-full z-0"></div>
                         </div>

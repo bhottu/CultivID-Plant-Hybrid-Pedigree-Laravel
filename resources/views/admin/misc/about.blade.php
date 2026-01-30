@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto my-8 max-w-lg text-sm">
+<div class="container mx-auto my-8 max-w-lg text-sm dark:text-gray-400">
     <div class="bg-white shadow-md rounded p-6">
         <h1 class="text-3xl font-bold mb-4">About Us</h1>
         <!-- <p style="margin-bottom: 15px; line-height: 1.6;">{!! $settings->about_us ?? 'No about us available.' !!}</p> -->
@@ -20,19 +20,19 @@
 
     <!-- Indonesian -->
     <div id="content-id" class="space-y-6">
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             <strong>Cultiv</strong> adalah sebuah komunitas pecinta tanaman yang berfokus pada
             pengumpulan, dokumentasi, dan berbagi informasi seputar tanaman hias, tanaman langka,
             serta berbagai hasil persilangan (hybrid).
         </p>
 
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             Platform ini dibangun untuk menjadi ruang kolaboratif bagi para penghobi, kolektor,
             dan peneliti tanaman agar dapat saling berbagi pengetahuan, pengalaman, dan referensi
             secara terbuka dan bertanggung jawab.
         </p>
 
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             Cultiv tidak hanya berfungsi sebagai katalog tanaman, tetapi juga sebagai wadah komunitas
             yang mendorong edukasi, transparansi data, dan pengembangan pengetahuan di bidang
             hortikultura.
@@ -41,19 +41,19 @@
 
     <!-- English -->
     <div id="content-en" class="space-y-6 hidden">
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             <strong>Cultiv</strong> is a community of plant enthusiasts focused on collecting,
             documenting, and sharing information about ornamental plants, rare plants, and
             various hybrid cultivars.
         </p>
 
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             This platform was created as a collaborative space for hobbyists, collectors,
             and plant researchers to openly and responsibly exchange knowledge, experiences,
             and references.
         </p>
 
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-gray-700 leading-relaxed dark:text-gray-400">
             Cultiv serves not only as a plant catalog, but also as a community hub that promotes
             education, data transparency, and the continuous development of knowledge in the
             field of horticulture.
@@ -66,7 +66,7 @@
         Contact Information
     </h2>
 
-    <ul class="text-gray-700 space-y-2">
+    <ul class="text-gray-700 space-y-2 dark:text-gray-400">
         <li>
             <strong>Email:</strong>
             <a href="mailto:support@cultiv.id" class="text-green-600 hover:underline">
@@ -85,7 +85,7 @@
         </li>
     </ul>
 
-    <p class="text-sm text-gray-500 pt-4">
+    <p class="text-sm text-gray-500 pt-4 dark:text-gray-400">
         We are committed to maintaining a positive, informative, and beneficial community
         environment for all plant enthusiasts.
     </p>

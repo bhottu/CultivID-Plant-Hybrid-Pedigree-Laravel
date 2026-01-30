@@ -130,7 +130,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.22
+                             v1.0.23
                         </div>
 
                     @else
@@ -154,15 +154,26 @@
     </div>
 
 
-<div 
-    id="mobileMenu"
-    class="fixed inset-0 bg-white z-50 hidden flex-col"
->
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b">
-        <span class="text-lg font-semibold text-gray-800">Menu</span>
+<div id="mobileMenu" class="fixed inset-0 bg-white z-50 hidden flex-col">
+    <!-- Header nav bar-->
+    
+    <div class="flex left-0 right-0 h-14  items-center justify-between px-4 py-4 z-40 border-b bg-cus-500">
+        <span class="text-sm font-semibold text-gray-800">
+            @if(!(request()->route() && request()->route()->getName() !== 'home'))
+                <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
+                    @if (isset($settings) && $settings->logo)
+                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                        <div class="text-xxxs pt-2">
+                             v1.0.22
+                        </div>
+                    @else
+                        Cultiv ID
+                    @endif
+                </a>
+                @endif
+        </span>
 
-        <button id="menuClose" class="text-gray-700">
+        <button id="menuClose" class="text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -179,8 +190,8 @@
                     : route('login');
             @endphp
         @guest
-            <a href="#" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+            <a href="{{ route('login') }}" class="flex items-center p-2 text-sm gap-3 dark:text-gray-400 dark:bg-gray-700 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
@@ -191,47 +202,50 @@
             </a>
             
         @else
-            <a href="{{ $profileUrl }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ $profileUrl }}" class="flex dark:text-gray-400 dark:bg-gray-700  items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg> My Profile
             </a>
         @endguest
 
-        <a href="{{ route('admin.settings.about') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+        <a href="{{ route('admin.settings.about') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-     fill="none" stroke="currentColor" stroke-width="1.75"
-     stroke-linecap="round" stroke-linejoin="round"
-     class="w-6 h-6">
-  <circle cx="12" cy="12" r="9"/>
-  <path d="M12 10v5"/>
-  <path d="M12 7h.01"/>
-</svg>
+                fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="w-4 h-4">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 10v5"/>
+            <path d="M12 7h.01"/>
+            </svg>
 
             About Us
         </a>
 
-        <a href="{{ route('admin.settings.contact') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+        <a href="{{ route('admin.settings.contact') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-     fill="none" stroke="currentColor" stroke-width="1.75"
-     stroke-linecap="round" stroke-linejoin="round"
-     class="w-6 h-6">
-  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-</svg>
-Contact Us
+                fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="w-4 h-4">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Contact Us
         </a>
 
-        <a href="{{ route('admin.settings.privacy') }}" class="flex items-center p-3 text-lg gap-3 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-     fill="none" stroke="currentColor" stroke-width="1.75"
-     stroke-linecap="round" stroke-linejoin="round"
-     class="w-6 h-6">
-  <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"/>
-  <path d="M9 12l2 2 4-4"/>
-</svg>
-  Privacy Policy
+        <a href="{{ route('admin.settings.privacy') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="w-4 h-4">
+            <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"/>
+            <path d="M9 12l2 2 4-4"/>
+            </svg>
+            Privacy Policy
         </a>
+
+        
+
     </div>
 </div>
 

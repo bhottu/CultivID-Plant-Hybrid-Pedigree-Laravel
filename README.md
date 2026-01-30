@@ -1,4 +1,4 @@
-v1.0.22
+v1.0.23
 
 New migration
 database/migrations/2026_01_26_015201_create_user_transactions_table.php ✅
