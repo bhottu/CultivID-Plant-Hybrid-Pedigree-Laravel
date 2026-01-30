@@ -73,16 +73,27 @@
                    <td class="italic text-xs"> 
                     @if($plantSubmission->plant_id)
                            <span class="italic"> {{ $plantSubmission->plant_id }}</span>
+                           @if($plantSubmission->plant_id_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                         @else
                             <span class="italic text-gray-400">No data</span> 
                         @endif
                    </td>
                 </tr>
                 <tr>
-                    <td class="pr-2">Parent <i class='fas fa-venus text-red-600'></td>
+                    <td class="pr-2">Seed parent <i class='fas fa-venus text-red-600'></td>
                     <td class="italic text-xs"> 
                         @if($plantSubmission->induk_betina)
-                            {{ $plantSubmission->induk_betina }}
+                            {{ $plantSubmission->induk_betina }} 
+
+                            @if($plantSubmission->induk_betina_var == 0)
+                                <span class=" text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                         @else
                             <span class="italic text-gray-400">No data, </span>
                             
@@ -98,10 +109,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="pr-2">Parent <i class='fas fa-mars text-blue-600'></td>
+                    <td class="pr-2">Pollen parent <i class='fas fa-mars text-blue-600'></td>
                     <td class="italic text-xs">
                         @if($plantSubmission->induk_jantan)
                             {{ $plantSubmission->induk_jantan }}
+
+                            @if($plantSubmission->induk_jantan_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                         @else
                             <span class="italic text-gray-400">No data, </span> 
                             @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
@@ -205,7 +222,7 @@
                             // Cek apakah induk_betina adalah ID yang valid (ada di DB)
                             $betinaExists = \App\Models\PlantSubmission::where("plant_id", $node['induk_betina'])->exists();
                             if($betinaExists) {
-                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_betina']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_betina'].'</a></span>';
+                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_betina']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_betina'].' </a></span>';
                             } else {
                                 echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <span class="text-xs text-gray-700 ml-1 italic">'.$node['induk_betina'].'</span></span>';
                             }

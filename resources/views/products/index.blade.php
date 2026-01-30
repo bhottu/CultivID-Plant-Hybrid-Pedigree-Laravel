@@ -181,8 +181,8 @@
                     <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 ">
                         <th class="p-2 border-l ">Photo</th>
                         <th class="p-2 border-l-4 border-double w-1/4">Plant ID</th>
-                        <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-venus text-red-600'></i></th>
-                        <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-mars text-blue-600'></i></th>
+                        <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>
+                        <th class="p-2 border-l-4 border-double">p. Parent <i class='fas fa-mars text-blue-600'></i></th>
                     </tr>
                 </thead>
                 <tbody id="plants-tbody">
@@ -212,7 +212,16 @@
                         @endif
                         </td>
                         <td class="p-2 align-top text-xs" >
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 dark:text-gray-400 hover:underline italic">{{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}</a>
+                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 dark:text-gray-400 hover:underline italic">
+                                {{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}
+
+                                 
+                            </a>
+                            @if($item->plant_id_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                                 @endif
 
                             <div class=" md:block text-xs text-gray-500 mt-1">
                                 <span class="inline-flex items-center mr-4">
@@ -233,9 +242,26 @@
                             </div>
 
                         </td>
-                        <td class="p-2"><span class="rounded text-xs bg-red-200 text-red-900 italic">{{ $item->induk_betina }} </span></td>
+                        <td class="p-2"><span class="rounded text-xs text-gray-800 italic">
+                            {{ $item->induk_betina }} 
+                        </span>
+                            @if($item->induk_betina_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
+                        </td>
                         
-                        <td class="p-2"><span class="rounded text-xs bg-blue-200 text-blue-900 italic"> {{ $item->induk_jantan }}</span></td>
+                        <td class="p-2">
+                            <span class="rounded text-xs text-gray-800 italic"> 
+                            {{ $item->induk_jantan }}
+                            </span>
+                            @if($item->induk_jantan_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
+                        </td>
                     </tr>
                     @endif
                     @endforeach

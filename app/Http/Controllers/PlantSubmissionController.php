@@ -149,6 +149,15 @@ class PlantSubmissionController extends Controller
 
         $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
 
+        // =====================================================
+        // VARIEGATED FLAGS (checkbox logic)
+        // 0 = true (checked), 1 = false (unchecked)
+        // =====================================================
+        $data['plant_id_var']     = (int) $request->input('plant_id_var', 1);
+        $data['induk_jantan_var'] = (int) $request->input('induk_jantan_var', 1);
+        $data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
+
+
         // ✅ AUTO CAPITAL (SETELAH $data ADA)
         foreach (['induk_jantan', 'induk_betina'] as $field) {
             if (!empty($data[$field])) {
@@ -245,6 +254,15 @@ class PlantSubmissionController extends Controller
             'penyilang',
             'keterangan'
         ]);
+
+        // =====================================================
+        // VARIEGATED FLAGS (checkbox logic)
+        // =====================================================
+       $data['plant_id_var']     = (int) $request->input('plant_id_var', 1);
+$data['induk_jantan_var'] = (int) $request->input('induk_jantan_var', 1);
+$data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
+
+
 
         // Convert empty string → null
         foreach (['induk_jantan','induk_betina','penyilang','keterangan'] as $field) {

@@ -161,7 +161,7 @@
 
 </div>
 
-        <table class="min-w-full mt-2 text-xs table-fixed">
+        <table class="min-w-full mt-2 text-xs dark:bg-gray-800 dark:text-gray-400 table-fixed">
             <colgroup>
                     <col style="width:10%">
                     <col style="width:40%">
@@ -173,8 +173,8 @@
                 <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300">
                     <th class="p-2 border-l">Photo</th>
                     <th class="p-2 border-l-4 border-double">ID</th>
-                    <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-venus text-red-600'></i></th>
-                    <th class="p-2 border-l-4 border-double">Parent <i class='fas fa-mars text-blue-600'></i></th>
+                    <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>
+                    <th class="p-2 border-l-4 border-double">P. Parent <i class='fas fa-mars text-blue-600'></i></th>
                     {{-- Kolom Status hanya untuk admin atau uploader (per baris) --}}
                     @php
                         $showStatusHeader = false;
@@ -245,8 +245,13 @@
 
 
                     <td class="p-2"  onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
-                        <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-700 hover:text-blue-700" title="Lihat Detil">
-                            <span class="text-gray-800 hover:underline italic">{{ $item->plant_id }}</span>
+                        <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-700 dark:text-gray-400 hover:text-blue-700" title="Lihat Detil">
+                            <span class="text-gray-800 dark:text-gray-400 hover:underline italic">{{ $item->plant_id }}</span>
+                            @if($item->plant_id_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                         </a>
                             <div class=" md:block text-xs text-gray-500 mt-1">
                                 <span class="inline-flex items-center mr-4">
@@ -269,7 +274,12 @@
                             $betina = App\Models\PlantSubmission::where('plant_id', $item->induk_betina)->first();
                         @endphp
                         @if($item->induk_betina && $betina)
-                         <span class="rounded text-xs bg-red-200 text-red-900 italic">  {{ $item->induk_betina }} </span>
+                         <span class="rounded text-xs text-gray-800 dark:text-gray-400 italic">  {{ $item->induk_betina }} </span>
+                         @if($item->induk_betina_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                         @else
                             <span class="italic text-gray-400 my-1"> 
                             @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
@@ -287,7 +297,12 @@
                             $jantan = App\Models\PlantSubmission::where('plant_id', $item->induk_jantan)->first();
                         @endphp
                         @if($item->induk_jantan && $jantan)
-                            <span class="rounded text-xs bg-blue-200 text-red-blue italic"> {{ $item->induk_jantan }} </span>
+                            <span class="rounded text-xs text-gray-800 dark:text-gray-400 italic"> {{ $item->induk_jantan }} </span>
+                            @if($item->induk_jantan_var == 0)
+                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
+                                    Variegated
+                                </span>
+                            @endif
                             @else
                                 <span class="italic text-gray-400 my-1"> 
                                 @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))

@@ -11,7 +11,20 @@ class PlantSubmission extends Model
         return 'plant_id';
     }
     protected $fillable = [
-        'plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'uploader_id', 'keterangan', 'image', 'status_review', 'reviewed_by', 'reviewed_at', 'uploader_approval'
+        'plant_id', 
+        'plant_id_var',
+        'induk_jantan', 
+        'induk_jantan_var',
+        'induk_betina', 
+        'induk_betina_var',
+        'penyilang', 
+        'uploader_id', 
+        'keterangan', 
+        'image', 
+        'status_review', 
+        'reviewed_by', 
+        'reviewed_at', 
+        'uploader_approval'
     ];
 
     public function uploader()
