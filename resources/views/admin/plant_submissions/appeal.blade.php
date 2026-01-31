@@ -15,7 +15,17 @@
         </div>
         <div>
             <label class="block text-gray-800 font-semibold">Keterangan</label>
-            <textarea name="keterangan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200" required>{{ old('keterangan') }}</textarea>
+            <textarea
+    name="keterangan"
+    rows="5"
+    required
+    class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200"
+>{{ old('keterangan', 
+"Isi keterangan di sini.
+Jelaskan asal-usul hybrid.
+Sebutkan induk betina & jantan.
+Tambahkan ciri khusus (mis. variegated).") }}</textarea>
+
             <div class="text-xs text-gray-500 mt-1">Berikan keterangan selengkap-lengkapnya kenapa ini adalah hybrid anda.</div>
             @error('keterangan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>

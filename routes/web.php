@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     // Banding Plant Submission (hanya untuk user login)
     Route::get('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'create'])->name('plant-submissions.appeal.create');
     Route::post('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'store'])->name('plant-submissions.appeal.store');
+    Route::put('/plant-submissions/appeals/{plantSubmission}',[PlantSubmissionAppealController::class, 'update'])->name('plant-submissions.appeals.update');
 
      // DUITKU ROUTES (AUTHENTICATED)
     Route::post('/buy-coffee', [UserTransactionController::class, 'buyCoffee'])
