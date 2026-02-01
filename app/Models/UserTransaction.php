@@ -11,6 +11,7 @@ class UserTransaction extends Model
     protected $fillable = [
         'user_id',
         'user_id_receiver',
+        'external_id',
         'type',
         'amount',
         'user_share',

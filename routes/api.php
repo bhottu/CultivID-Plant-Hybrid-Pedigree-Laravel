@@ -18,11 +18,12 @@ Route::middleware('auth:sanctum')->group( function () {
 });
 
 // routes/api.php
-Route::post('/xendit/callback', [UserTransactionController::class, 'callback'])
-    ->withoutMiddleware([
-        'auth:sanctum',
-        \App\Http\Middleware\VerifyCsrfToken::class,
-    ]);
+//Route::post('/xendit/callback', [UserTransactionController::class, 'callback'])
+   // ->withoutMiddleware([
+  //      'auth:sanctum',
+  //      \App\Http\Middleware\VerifyCsrfToken::class,
+  //  ]);
+Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
 
 
 
