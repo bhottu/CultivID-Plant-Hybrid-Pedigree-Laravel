@@ -301,29 +301,22 @@
             {{-- Buy Me a Coffee Section --}}
             <div class="border rounded p-4 mt-4 bg-yellow-50">
                 <h3 class="mb-2 bg-red-50">☕ Buy Me a Coffee</h3>
-
-                <form action="{{ route('buy.coffee') }}" method="POST">
+            @if(auth()->check())
+               <form action="{{ route('transactions.buy') }}" method="POST">
                     @csrf
-
-                    <input type="hidden" name="to_user_id"
-                        value="{{ $plantSubmission->uploader_id }}">
-
-                    <div class="flex gap-2 mb-2 text-sm">
-                        <label><input type="radio" name="amount" value="5000" checked> Rp 5,000</label>
-                        <label><input type="radio" name="amount" value="10000"> Rp 10,000</label>
-                        <label><input type="radio" name="amount" value="20000"> Rp 20,000</label>
-                    </div>
-
-                    <input type="number"
-                        name="custom_amount"
-                        min="5000"
-                        placeholder="Enter amount (min Rp 5,000)"
-                        class="border rounded w-full p-2 mb-2">
-
-                    <button class="bg-yellow-500 text-white px-4 py-2 rounded">
+                    <input type="text" name="amount" value="25000">
+ <input type="text" name="plant_id" value="{{ $plantSubmission->id }}">
+                    <button
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold"
+                    >
                         ☕ Buy Me a Coffee
                     </button>
                 </form>
+            @else
+                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold" onclick="alert('Silakan login terlebih dahulu!')">☕ Buy Me a Coffee</button>
+            @endif
+
             </div>
 
             

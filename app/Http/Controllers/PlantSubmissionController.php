@@ -73,12 +73,13 @@ class PlantSubmissionController extends Controller
         });
 
         }
-        elseif ($status === 'appeal') {
+       elseif ($status === 'appeal') {
 
             $query->whereIn(
                 'id',
                 PlantSubmissionAppeal::select('plant_submission_id')
-            );
+            )
+            ->where('status_review', '!=', 'approved');
 
         }
         elseif (in_array($status, ['approved','pending','rejected'])) {
@@ -113,9 +114,14 @@ class PlantSubmissionController extends Controller
                                 ->orWhereNull('induk_betina')
                                 ->orWhere('induk_betina','');
                             })->count(),
-            'appeal'   => $user->is_admin
-                            ? PlantSubmissionAppeal::count()
-                            : PlantSubmissionAppeal::where('user_id',$user->id)->count(),
+            'appeal' => $user->is_admin
+                        ? PlantSubmissionAppeal::whereHas('submission', function ($q) {
+                        $q->where('status_review', '!=', 'approved');
+                        })->count()
+                        : PlantSubmissionAppeal::where('user_id', $user->id)
+                        ->whereHas('submission', function ($q) {
+                        $q->where('status_review', '!=', 'approved');})->count(),
+
         ];
 
         return view('plant_submissions.index', compact('submissions','status','counts'));

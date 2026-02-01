@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\ApiAuthController;
 use App\Http\Controllers\API\ApiProductController;
 use Laravel\Sanctum\Sanctum;
+use App\Http\Controllers\UserTransactionController;
+
 
 Route::middleware('auth:sanctum')->group( function () {
    
@@ -14,6 +16,15 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::put('products/{id}', [ApiProductController::class, 'update']);
     Route::delete('products/{id}', [ApiProductController::class, 'destroy']);
 });
+
+// routes/api.php
+Route::post('/xendit/callback', [UserTransactionController::class, 'callback'])
+    ->withoutMiddleware([
+        'auth:sanctum',
+        \App\Http\Middleware\VerifyCsrfToken::class,
+    ]);
+
+
 
   Route::post('login', [ApiAuthController::class, 'login'])->name('api.login');
   Route::post('register', [ApiAuthController::class, 'register']);

@@ -133,29 +133,29 @@
 
         {{-- Appeal --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
-   class="relative flex items-center gap-2 px-4 py-2 rounded-full
-   {{ $activeStatus === 'appeal'
-        ? 'bg-gray-200 text-indigo-800 ring-2 ring-indigo-400'
-        : 'bg-gray-100 text-indigo-600 hover:bg-indigo-100'
-   }}
-   transition text-xs font-medium shadow-sm">
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full
+            {{ $activeStatus === 'appeal'
+                    ? 'bg-gray-200 text-indigo-800 ring-2 ring-indigo-400'
+                    : 'bg-gray-100 text-indigo-600 hover:bg-indigo-100'
+            }}
+            transition text-xs font-medium shadow-sm">
 
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M12 3v18"/>
-        <path d="M5 7h14"/>
-        <path d="M7 7l-3 6h6l-3-6z"/>
-        <path d="M17 7l-3 6h6l-3-6z"/>
-    </svg>
-    Appeal
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 3v18"/>
+                    <path d="M5 7h14"/>
+                    <path d="M7 7l-3 6h6l-3-6z"/>
+                    <path d="M17 7l-3 6h6l-3-6z"/>
+                </svg>
+                Appeal
 
-     @if(($counts['appeal'] ?? 0) > 0)
-        <span class="min-w-[16px] h-4 px-1
-        flex items-center justify-center rounded-full bg-indigo-500 text-white
-        text-[10px] font-semibold leading-none">
-        {{ $counts['appeal'] ?? 0 }}
-        </span>
-    @endif
-</a>
+                @if(($counts['appeal'] ?? 0) > 0)
+                    <span class="min-w-[16px] h-4 px-1
+                    flex items-center justify-center rounded-full bg-gray-800 text-white
+                    text-[10px] font-semibold leading-none">
+                    {{ $counts['appeal'] ?? 0 }}
+                    </span>
+                @endif
+        </a>
 
 
 

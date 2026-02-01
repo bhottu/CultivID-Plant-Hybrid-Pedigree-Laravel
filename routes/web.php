@@ -79,20 +79,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'store'])->name('plant-submissions.appeal.store');
     Route::put('/plant-submissions/appeals/{plantSubmission}',[PlantSubmissionAppealController::class, 'update'])->name('plant-submissions.appeals.update');
 
-     // DUITKU ROUTES (AUTHENTICATED)
-    Route::post('/buy-coffee', [UserTransactionController::class, 'buyCoffee'])
-        ->name('buy.coffee');
 
-    Route::get('/transactions/coffee-success', [UserTransactionController::class, 'coffeeSuccess'])
-        ->name('transactions.coffeeSuccess');
 
 });
 
-    // DUITKU CALLBACK (PUBLIC)
-        Route::post(
-            '/duitku/callback',
-            [UserTransactionController::class, 'duitkuCallback']
-        )->name('duitku.callback');
+Route::post('/buy-me-a-coffee', [UserTransactionController::class, 'buy'])->name('transactions.buy');
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+// pindah ke api Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
+
 
 // Public detail plant submission (setelah semua route plant-submissions yang spesifik)
 Route::get('plant-submissions/{plantSubmission}', [PlantSubmissionPublicController::class, 'show'])->name('plant-submissions.show');
