@@ -23,4 +23,9 @@ class UserTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'user_id_receiver');
+    }
 }

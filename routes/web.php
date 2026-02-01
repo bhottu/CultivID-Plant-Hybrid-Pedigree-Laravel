@@ -164,6 +164,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/items/{product}', [ProductController::class, 'adminShow'])->name('admin.items.show');
     Route::delete('/admin/items/{product}', [ProductController::class, 'adminDestroy'])->name('admin.items.destroy');
 
+    Route::get('/admin/payment', [UserTransactionController::class, 'adminPayment'])->name('admin.payment.index');
+    Route::delete('/admin/payment/{transaction}',[UserTransactionController::class, 'destroy'])->name('admin.payment.destroy');
+    Route::get('/admin/payment/{transaction}/edit',[UserTransactionController::class, 'edit'])->name('admin.payment.edit');
+    Route::put('/admin/payment/{transaction}',[UserTransactionController::class, 'update'])->name('admin.payment.update');
+
+
     Route::get('/admin/list-currencies', [CurrencyController::class, 'index'])->name('currencies.index');
     Route::post('/admin/store-currency', [CurrencyController::class, 'store'])->name('currencies.store');
     Route::get('/admin/edit-currency/{currency}', [CurrencyController::class, 'edit'])->name('currencies.edit');
@@ -176,7 +182,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/users', [ProfileController::class, 'index'])->name('admin.users.index');
     Route::get('/admin/users/{id}', [ProfileController::class, 'adminShowUsers'])->name('admin.users.show');
     Route::delete('/admin/users/{id}', [ProfileController::class, 'adminDestroy'])->name('admin.users.destroy');
-    
+
     Route::get('admin/google-settings', [SettingController::class, 'googleSettings'])->name('google.settings');
     Route::post('admin/google-settings', [SettingController::class, 'updateGoogleSettings'])->name('google.settings.update');
     
