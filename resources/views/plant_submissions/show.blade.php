@@ -298,24 +298,101 @@
             </div>
         @endif
 
-            {{-- Buy Me a Coffee Section --}}
-            <div class="border rounded p-4 mt-4 bg-yellow-50">
-                <h3 class="mb-2 bg-red-50">☕ Buy Me a Coffee</h3>
-            @if(auth()->check())
-               <form action="{{ route('transactions.buy') }}" method="POST">
-                    @csrf
-                    <input type="text" name="amount" value="25000">
- <input type="text" name="plant_id" value="{{ $plantSubmission->id }}">
-                    <button
-                        type="submit"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold"
-                    >
-                        ☕ Buy Me a Coffee
-                    </button>
-                </form>
-            @else
-                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold" onclick="alert('Silakan login terlebih dahulu!')">☕ Buy Me a Coffee</button>
-            @endif
+           
+
+
+            <div class="border rounded p-4 mt-4 bg-yellow-50 text-sm">
+                
+                    <h3 class="mb-2 bg-red-50">☕ Buy Me a Coffee</h3>
+
+                     {{-- Buy Me a Coffee Section --}}
+                    @php
+                        $count = $plantSubmission->uploader->plantSubmissions->count();
+                        $userName = $plantSubmission->uploader->name;
+                        $contributorLevel = '';
+
+                        if ($count > 0 && $count <= 10) {
+                            $contributorLevel = 'A good start'; // biasa saja
+                        } elseif ($count <= 50) {
+                            $contributorLevel = 'Cool'; // keren
+                        } elseif ($count <= 100) {
+                            $contributorLevel = 'Amazing'; // luar biasa
+                        } else {
+                            $contributorLevel = 'One of the top contributors'; // top kontributor
+                        }
+                    @endphp
+
+                    <div class="mb-3">
+                        @if($contributorLevel)
+                            {{ $contributorLevel }}, <span class="font-semibold bg-red-200">{{ $userName }}</span> has contributed <span class="font-semibold bg-red-200">{{ $count }}</span> plants.
+                        @else
+                            <span class="font-semibold bg-red-200">{{ $userName }}</span> has contributed <span class="font-semibold bg-red-200">{{ $count }}</span> plants.
+                        @endif
+                        If you have benefited from their contributions, support them by sending a cup of coffee as an appreciation ☕
+                    </div>
+
+
+                    @if(auth()->check())
+                <form action="{{ route('transactions.buy') }}" id="buyCoffeeForm"  method="POST">
+                            @csrf
+
+                                    {{-- Radio buttons --}}
+                                <div class="mb-2">
+                                    <label class="mr-4">
+                                        <input type="radio" name="amount_option" value="5000" checked> Rp 5.000
+                                    </label>
+                                    <label class="mr-4">
+                                        <input type="radio" name="amount_option" value="10000"> Rp 10.000
+                                    </label>
+                                    <label class="mr-4">
+                                        <input type="radio" name="amount_option" value="25000"> Rp 25.000
+                                    </label>
+                                
+                                </div>
+                            <input type="text" class="border border-gray-300 rounded p-2 bg-gray-100" name="amount"  id="custom_amount"  placeholder="Enter amount" value="">
+                            <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
+
+                            <button
+                                type="submit"
+                                class="bg-green-600 hover:bg-green-700 text-white px-2 py-2 rounded"
+                            >
+                                Send
+                            </button>
+                        </form>
+
+                        
+                <script>
+                    const radios = document.querySelectorAll('input[name="amount_option"]');
+                    const amountInput = document.getElementById('custom_amount');
+                    const form = document.getElementById('buyCoffeeForm');
+                    
+
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            if (radio.value !== 'custom' && radio.checked) {
+                                amountInput.value = radio.value; // otomatis set value radio
+                            }
+                        });
+                    });
+
+                     form.addEventListener('submit', (e) => {
+                        // Hapus semua titik dan koma sebelum submit
+                        amountInput.value = amountInput.value.replace(/[\.,]/g, '');
+                    });
+
+                    // Opsional: format tampilan saat mengetik agar lebih enak dibaca
+                    amountInput.addEventListener('input', () => {
+                        let numericValue = amountInput.value.replace(/[\.,]/g, '');
+                        if (numericValue) {
+                            // menambahkan titik ribuan sementara
+                            amountInput.value = Number(numericValue).toLocaleString('id-ID');
+                        }
+                    });
+                </script>
+                
+                @else
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-2 py-2 rounded" onclick="alert('Silakan login terlebih dahulu!')">☕ Buy Me a Coffee</button>
+                @endif
 
             </div>
 
