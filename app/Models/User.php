@@ -31,6 +31,7 @@ class User extends Authenticatable
         'phone_number',
         'latitude',
         'longitude',
+        'balance',
     ];
 
     protected static function boot()
