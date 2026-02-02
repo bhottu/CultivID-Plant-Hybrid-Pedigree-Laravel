@@ -339,17 +339,17 @@
                                     {{-- Radio buttons --}}
                                 <div class="mb-2">
                                     <label class="mr-4">
-                                        <input type="radio" name="amount_option" value="5000" checked> Rp 5.000
+                                        <input type="radio" name="amount_option" value="5000"> Rp 5.000
                                     </label>
                                     <label class="mr-4">
-                                        <input type="radio" name="amount_option" value="10000"> Rp 10.000
+                                        <input type="radio" name="amount_option" value="10000" checked> Rp 10.000
                                     </label>
                                     <label class="mr-4">
                                         <input type="radio" name="amount_option" value="25000"> Rp 25.000
                                     </label>
                                 
                                 </div>
-                            <input type="text" class="border border-gray-300 rounded p-2 bg-gray-100" name="amount"  id="custom_amount"  placeholder="Enter amount" value="">
+                            <input type="text" class="border border-gray-300 rounded p-2 bg-gray-100" name="amount"  id="custom_amount"  placeholder="Enter amount" value="10000">
                             <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
 
                             <button
