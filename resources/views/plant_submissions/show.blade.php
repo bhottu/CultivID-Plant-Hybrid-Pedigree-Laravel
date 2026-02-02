@@ -322,7 +322,7 @@
                         }
                     @endphp
 
-                    <div class="mb-3">
+                    <div class="mb-3 text-gray-500">
                         @if($contributorLevel)
                             {{ $contributorLevel }}, <span class="font-semibold bg-red-200">{{ $userName }}</span> has contributed <span class="font-semibold bg-red-200">{{ $count }}</span> plants.
                         @else
@@ -354,6 +354,7 @@
 
                             <button
                                 type="submit"
+                                 id="sendBtn"
                                 class="bg-green-600 hover:bg-green-700 text-white px-2 py-2 rounded"
                             >
                                 Send
@@ -365,7 +366,22 @@
                     const radios = document.querySelectorAll('input[name="amount_option"]');
                     const amountInput = document.getElementById('custom_amount');
                     const form = document.getElementById('buyCoffeeForm');
-                    
+                    const sendBtn = document.getElementById('sendBtn');
+
+                      sendBtn.addEventListener('click', function(e) {
+                            e.preventDefault(); // cegah submit default
+
+                            const amount = amountInput.value.replace(/[\.,]/g, ''); // ambil nominal bersih
+                            const userName = "{{ $plantSubmission->uploader->name }}";
+
+                            // Popup konfirmasi Yes/No
+                            const confirmed = confirm(`Do you want to send Rp ${amount} to ${userName}?`);
+
+                            if (confirmed) {
+                                form.submit(); // submit form hanya jika user klik "OK"
+                            }
+                            // Jika user klik "Cancel", tidak terjadi apa-apa
+                        });
 
                     radios.forEach(radio => {
                         radio.addEventListener('change', () => {
