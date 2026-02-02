@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('profile/withdraw', [ProfileController::class, 'edit'])->name('profile.edit');
+    
 
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('products', [ProductController::class, 'store'])->name('products.store');
