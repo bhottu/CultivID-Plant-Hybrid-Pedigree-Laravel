@@ -23,6 +23,8 @@ use App\Http\Controllers\PlantSubmissionAppealController;
 use App\Http\Controllers\PlantSubmissionPublicController;
 use App\Http\Controllers\PlantSubmissionController;
 use App\Http\Controllers\UserTransactionController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\Admin\WithdrawalController;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -55,7 +57,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    
+ // Halaman wallet utama
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    // Halaman withdraw
+    Route::get('/wallet/withdraw', [WalletController::class, 'withdrawForm'])->name('wallet.withdraw');
+    Route::post('/wallet/withdraw', [WalletController::class, 'submitWithdrawal'])->name('wallet.withdraw.submit');
+
 
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('products', [ProductController::class, 'store'])->name('products.store');
@@ -198,6 +205,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/misc/faq', function () {
         return view('admin.misc.faq');
     })->name('admin.misc.faq');
+
+    Route::get('admin/withdrawals', [WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
+    Route::post('admin/withdrawals/{withdrawal}/update', [WithdrawalController::class, 'update'])->name('admin.withdrawals.update');
 
 });
 

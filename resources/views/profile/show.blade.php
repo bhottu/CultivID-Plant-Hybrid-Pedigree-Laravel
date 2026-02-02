@@ -52,7 +52,7 @@
            
             <ul class="my-6 space-y-3">
                 <li>
-                    <a class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                    <a href="{{ route('wallet.index') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700 dark:text-gray-400" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -61,8 +61,8 @@
                                 d="M16 12h.01" />
                         </svg>
 
-                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Wallet <span class="flex-1 text-left whitespace-nowrap text-xxxs italic">(under development)</span></span> 
-                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">Rp {{ $user->balance }}</span>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Wallet</span>  
+                        <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">Rp {{ number_format($user->balance, 0, ',', '.') }}</span>
                     </a>
                 </li>
                 <li>

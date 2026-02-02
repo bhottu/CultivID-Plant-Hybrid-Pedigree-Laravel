@@ -110,6 +110,21 @@
                         </div>
 
                         <li>
+                            <a href="{{ route('admin.payment.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="PlantDB">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                                <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Transactions</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.withdrawals.index') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="PlantDB">
+                            <i class="fa-solid fa-money-bill"></i>
+                                <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Withdrawals</span>
+                            </a>
+                        </li>
+                        
+
+                        <li>
                             <a href="{{ route('admin.discuss') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Community">
                             <i class="fas fa-comments"></i>
                                 <span :class="{'sidebar-text': true}" class="ml-2" x-show="open">Community</span>
