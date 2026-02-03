@@ -160,11 +160,24 @@
 
 <section class="w-full mx-auto max-w-lg">
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5125455064675938"
+     crossorigin="anonymous"></script>
+<!-- cultiv horizontal 1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5125455064675938"
+     data-ad-slot="7745914332"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
     {{-- New Hybrids --}}
     <div class="container mx-auto max-w-lg p-4 bg-white border-t  mt-8">
     <div class="flex items-center justify-between mb-2">
     <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
-        <span class="block text-sm text-gray-800">NEW PLANTS & HYBRIDS</span>
+        <span class="block text-sm text-gray-800">Latest Plants & Hybrids</span>
         <span class="block text-xs text-gray-400 italic">cultivar registration & history</span>
     </h1>
 </div>

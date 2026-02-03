@@ -53,7 +53,9 @@
         .dark .text-blue-500 {
             color: #1890ff;
         }
-        
+        .bg-cus-500 {
+                background-color: #365b6d;
+        }
     
     </style>
 </head>
@@ -63,8 +65,8 @@
 
     <div class="flex min-h-screen bg-white-800">
         <!-- Sidebar -->
-        <div x-data="{ open: false }" x-bind:class="{'sidebar-open': open}" class="relative flex">
-            <div :class="{'w-64': open, 'w-16': !open}" class="bg-gray-800 text-white flex flex-col transition-width duration-300">
+        <div x-data="{ open: true }" x-bind:class="{'sidebar-open': open}" class="relative flex">
+            <div :class="{'w-64': open, 'w-16': !open}" class="bg-cuss-500 text-white flex flex-col transition-width duration-300">
                 <!-- Toggle Button -->
                 <button @click="open = !open" class="absolute top-4 left-4 text-white-600 dark:text-gray-300 z-10 flex items-center space-x-2 p-2  dark:bg-gray-700 rounded-lg" title="Open Menu">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
@@ -74,7 +76,7 @@
                 </button>
 
 
-                <nav class="flex-1 px-2 py-4 bg-gray-800">
+                <nav class="flex-1 px-2 py-4 bg-cus-500">
                     <ul class="space-y-2 pt-10">
                         <li>
                             <a href="{{ route('admin.home') }}" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700" title="Home">

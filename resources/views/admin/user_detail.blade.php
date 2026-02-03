@@ -10,20 +10,32 @@
              
                 <tbody class="divide-y divide-gray-200">
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Name</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->name }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">User ID</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->id }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Email</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->email }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Name</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->name }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Phone Number</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->phone_number ?? 'Not Set' }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Balance</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">Rp {{ number_format($user->balance,0,",",".") }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Role</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Email</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Phone Number</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->phone_number ?? 'Not Set' }}</td>
+                    </tr>
+                     <tr>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Location</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->latitude }}, {{ $user->longitude }} </td>
+                    </tr>
+                    <tr>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Role</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">
                             @if($user->is_admin)
                                 <span class="bg-green-100 text-green-800 py-1 px-2 rounded-md text-xs font-medium">Admin</span>
                             @else
@@ -32,20 +44,20 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Currency</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->currency ?? 'Not Set' }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Currency</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $user->currency ?? 'Not Set' }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Total Posts</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $totalPosts }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Total Posts</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $totalPosts }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Total Products</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $totalProducts }}</td>
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Total Products</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">{{ $totalProducts }}</td>
                     </tr>
                     <tr>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">Profile Photo</td>
-                        <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
+                        <td class="px-3 py-2 text-sm font-medium text-gray-900 border-b border-gray-200">Profile Photo</td>
+                        <td class="px-3 py-2 text-sm text-gray-500 border-b border-gray-200">
                             @if($user->profile_photo_path)
                                 <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="Profile Photo" class="w-24 h-24 object-cover rounded-full border border-gray-300">
                             @else
@@ -61,12 +73,12 @@
             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirmDelete();" class="inline">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium">
+                <button type="submit" class="bg-red-600 mt-3 text-white hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium">
                     Delete User
                 </button>
             </form>
         @else
-            <button type="button" disabled class="bg-gray-300 text-gray-500 px-4 py-2 rounded-md text-sm font-medium cursor-not-allowed">
+            <button type="button" disabled class="bg-gray-300 mt-3 text-gray-500 px-4 py-2 rounded-md text-sm font-medium cursor-not-allowed">
                 Delete User
             </button>
         @endif

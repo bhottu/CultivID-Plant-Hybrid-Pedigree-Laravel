@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6">
+<div class="max-w-7xl mx-auto py-6 text-sm">
 
     <h1 class="text-2xl font-bold mb-6">
         💳 Data Transaksi (Buy Me a Coffee)
@@ -11,15 +11,15 @@
         <table class="min-w-full border border-gray-200">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2 border">ID</th>
-                    <th class="px-4 py-2 border">Pengirim</th>
-                    <th class="px-4 py-2 border">Penerima</th>
-                    <th class="px-4 py-2 border">Amount</th>
-                    <th class="px-4 py-2 border">User Share</th>
-                    <th class="px-4 py-2 border">Admin Share</th>
-                    <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Tanggal</th>
-                    <th class="px-4 py-2 border">Aksi</th>
+                    <th class="px-2 py-1 border">ID</th>
+                    <th class="px-2 py-1 border">Pengirim</th>
+                    <th class="px-2 py-1 border">Penerima</th>
+                    <th class="px-2 py-1 border">Amount</th>
+                    <th class="px-2 py-1 border">User Share</th>
+                    <th class="px-2 py-1 border">Admin Share</th>
+                    <th class="px-2 py-1 border">Status</th>
+                    <th class="px-2 py-1 border">Tanggal</th>
+                    <th class="px-2 py-1 border">Aksi</th>
                 </tr>
             </thead>
 

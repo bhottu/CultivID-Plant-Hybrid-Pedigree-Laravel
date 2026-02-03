@@ -37,8 +37,8 @@
                     <tbody class="divide-y divide-gray-200">
                         @foreach($users as $user)
                             <tr>
-                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->id }}</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">{{ $user->name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->id }} </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900 border-b border-gray-200">{{ $user->name }} <br><span class="text-xs text-gray-400">Rp {{ number_format($user->balance, 0, ',', '.') }}</span></td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
                                     @if($user->is_admin)

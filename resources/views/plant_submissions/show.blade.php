@@ -68,9 +68,9 @@
     <div class="p-4 rounded border border-gray-200 shadow text-sm w-full">
         
             <table class="table-auto text-sm mb-4 text-xs w-full">
-                <tr>
-                    <td class="pr-2 text-xs">ID</td>
-                   <td class="italic text-xs"> 
+                <tr class="border-b border-gray-50">
+                    <td class="pr-2 text-xs">Plant ID</td>
+                   <td class="italic text-xs text-right"> 
                     @if($plantSubmission->plant_id)
                            <span class="italic"> {{ $plantSubmission->plant_id }}</span>
                            @if($plantSubmission->plant_id_var == 0)
@@ -83,9 +83,9 @@
                         @endif
                    </td>
                 </tr>
-                <tr>
-                    <td class="pr-2">Seed parent <i class='fas fa-venus text-red-600'></td>
-                    <td class="italic text-xs"> 
+                <tr class="border-b border-gray-50">
+                    <td class="pr-2">Seed parent <i class='fas fa-venus text-red-600'></i></td>
+                    <td class="italic text-xs text-right"> 
                         @if($plantSubmission->induk_betina)
                             {{ $plantSubmission->induk_betina }} 
 
@@ -108,9 +108,9 @@
                         @endif
                     </td>
                 </tr>
-                <tr>
-                    <td class="pr-2">Pollen parent <i class='fas fa-mars text-blue-600'></td>
-                    <td class="italic text-xs">
+                <tr class="border-b border-gray-50">
+                    <td class="pr-2">Pollen parent <i class='fas fa-mars text-blue-600'></i></td>
+                    <td class="italic text-xs text-right">
                         @if($plantSubmission->induk_jantan)
                             {{ $plantSubmission->induk_jantan }}
 
@@ -132,9 +132,9 @@
                         @endif
                     </td>
                 </tr>
-                <tr>
+                <tr class="border-b border-gray-50">
                     <td class="pr-2">Breeder </td>
-                    <td class="italic text-xs"> 
+                    <td class="italic text-xs text-right"> 
                         @if($plantSubmission->penyilang)
                             {{ $plantSubmission->penyilang }}
                         @else
@@ -152,15 +152,15 @@
                 </tr>
                 
                 @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $plantSubmission->uploader_id))
-                <tr>
+                <tr class="border-b border-gray-50">
                     <td class="pr-2">Status</td>
-                    <td>
+                    <td class="text-right">
                        <span class="px-1 text-gray-700 font-semibold rounded text-xxs 
                        {{ 
                         $plantSubmission->status_review == 'approved' ? 'bg-green-200 text-green-900' : 
                         ($plantSubmission->status_review == 'rejected' ? 'bg-red-200 text-red-900' : 
                         ($plantSubmission->status_review == 'banding' ? 'bg-yellow-200 text-yellow-900' : 'bg-gray-200 text-gray-900')) 
-                        }}">
+                        }} text-right">
                            {{ ucfirst($plantSubmission->status_review) }}
                         </span>
                     </td>
@@ -207,53 +207,116 @@
     </div>
     
 
-     {{-- Silsilah Tanaman (Pedigree) --}}
-    @if(isset($pedigree) && $pedigree)
-    <div class="mt-2">
-        <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
-        <div class="bg-gray-50 p-4 rounded shadow text-sm">
-            @php
-                function renderPedigree($node) {
-                    if(!$node) return;
-                    // Tampilkan satu level saja: induk dan anak
-                    if($node['induk_betina'] || $node['induk_jantan']) {
-                        echo '<div class="flex flex-row items-center justify-center gap-2 mb-1">';
-                        if($node['induk_betina']) {
-                            // Cek apakah induk_betina adalah ID yang valid (ada di DB)
-                            $betinaExists = \App\Models\PlantSubmission::where("plant_id", $node['induk_betina'])->exists();
-                            if($betinaExists) {
-                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_betina']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_betina'].' </a></span>';
-                            } else {
-                                echo '<span class="flex items-center"><i class="fas fa-venus text-pink-400"></i> <span class="text-xs text-gray-700 ml-1 italic">'.$node['induk_betina'].'</span></span>';
-                            }
-                        }
-                        if($node['induk_betina'] && $node['induk_jantan']) {
-                            echo '<span class="mx-1 text-gray-500">&times;</span>';
-                        }
-                        if($node['induk_jantan']) {
-                            $jantanExists = \App\Models\PlantSubmission::where("plant_id", $node['induk_jantan'])->exists();
-                            if($jantanExists) {
-                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <a href="'.route('plant-submissions.show', ['plantSubmission' => $node['induk_jantan']]).'" class="text-xs text-blue-600 underline ml-1 italic">'.$node['induk_jantan'].'</a></span>';
-                            } else {
-                                echo '<span class="flex items-center"><i class="fas fa-mars text-blue-400"></i> <span class="text-xs text-gray-700 ml-1 italic">'.$node['induk_jantan'].'</span></span>';
-                            }
-                        }
-                        echo '</div>';
-                        // Panah ke bawah
-                        echo '<div class="flex flex-row justify-center items-center h-4 mb-1">';
-                        echo '<span class="block text-gray-500 text-lg mx-2">&#8595;</span>';
-                        echo '</div>';
-                    }
-                    // Anak (ID)
-                    echo '<div class="flex flex-col items-center mb-2">';
-                    echo '<span class="text-green-900 text-lg text-sm italic">'.$node['plant_id'].'</span>';
-                    echo '</div>';
-                }
-                renderPedigree($pedigree);
-            @endphp
-        </div>
+     
+     
+{{-- ===================== --}}
+{{-- PEDIGREE TABLE --}}
+{{-- ===================== --}}
+@if(isset($pedigree) && $pedigree)
+
+@php
+    function plantLink($plantId, $gender = null) {
+        if (!$plantId) {
+            return '<span class="text-gray-400 italic">—</span>';
+        }
+
+        $icon = '';
+        if ($gender === 'f') {
+        $icon = "<i class='fas fa-venus text-red-600 mr-1'></i>";
+        }
+
+        if ($gender === 'm') {
+            $icon = "<i class='fas fa-mars text-blue-600 mr-1'></i>";
+        }
+
+        $exists = \App\Models\PlantSubmission::where('plant_id', $plantId)->exists();
+
+        if ($exists) {
+            return '<a href="'.route('plant-submissions.show', $plantId).'"
+                       class="text-gray-600 text-xs hover:underline italic">'
+                        .$icon.' '.$plantId.
+                   '</a>';
+        }
+
+        return '<span class="text-gray-500 italic">'.$icon.' '.$plantId.'</span>';
+    }
+@endphp
+
+<div class="mt-4">
+    <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
+
+    <div class="overflow-x-auto">
+        <table class="border-collapse border border-gray-300 text-sm text-center w-full">
+
+            {{-- TABLE HEAD --}}
+            <thead class="bg-yellow-50 text-xs text-gray-400">
+                <tr>
+                    <th class="border px-4 py-2">Offspring</th>
+                    <th class="border px-4 py-2">Parent</th>
+                    <th class="border px-4 py-2">Grandparents</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{-- ROW 1 --}}
+                <tr>
+                    {{-- CHILD --}}
+                    <td rowspan="4"
+                        class="border bg-gray-50  px-4 py-6 text-green-900">
+                        {!! plantLink($pedigree['plant_id']) !!}
+                    </td>
+
+                    {{-- PARENT BETINA --}}
+                    <td rowspan="2"
+                        class="border px-4 py-4 bg-red-50 ">
+                        {!! plantLink($pedigree['betina_node']['plant_id'] ?? null, 'f') !!}
+                    </td>
+
+                    {{-- GRANDPARENT BETINA (ATAS) --}}
+                    <td class="border bg-red-50  px-4 py-3">
+                        {!! plantLink($pedigree['betina_node']['betina_node']['plant_id'] ?? null, 'f') !!}
+                    </td>
+                </tr>
+
+                {{-- ROW 2 --}}
+                <tr>
+                    {{-- GRANDPARENT JANTAN (BAWAH) --}}
+                    <td class="border bg-blue-50  bg-blue-50  px-4 py-3">
+                        {!! plantLink($pedigree['betina_node']['jantan_node']['plant_id'] ?? null, 'm') !!}
+                    </td>
+                </tr>
+
+                {{-- ROW 3 --}}
+                <tr>
+                    {{-- PARENT JANTAN --}}
+                    <td rowspan="2"
+                        class="border bg-blue-50  px-4 py-4 bg-blue-50 ">
+                        {!! plantLink($pedigree['jantan_node']['plant_id'] ?? null, 'm') !!}
+                    </td>
+
+                    {{-- GRANDPARENT BETINA (ATAS) --}}
+                    <td class="border bg-red-50  px-4 py-3">
+                        {!! plantLink($pedigree['jantan_node']['betina_node']['plant_id'] ?? null, 'f') !!}
+                    </td>
+                </tr>
+
+                {{-- ROW 4 --}}
+                <tr>
+                    {{-- GRANDPARENT JANTAN (BAWAH) --}}
+                    <td class="border bg-blue-50 px-4 py-3">
+                        {!! plantLink($pedigree['jantan_node']['jantan_node']['plant_id'] ?? null, 'm') !!}
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
     </div>
-    @endif
+</div>
+@endif
+
+
+
+
 
     
 

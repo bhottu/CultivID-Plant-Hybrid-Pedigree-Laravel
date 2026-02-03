@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-4 text-sm">
     <h1 class="text-2xl font-bold mb-4">Withdrawal Requests</h1>
 
     @if(session('success'))
@@ -26,7 +26,21 @@
                     <td class="border px-2 py-1">{{ $withdrawal->id }}</td>
                     <td class="border px-2 py-1">{{ $withdrawal->user->name }}</td>
                     <td class="border px-2 py-1">Rp {{ number_format($withdrawal->amount,0,",",".") }}</td>
-                    <td class="border px-2 py-1">{{ ucfirst($withdrawal->status) }}</td>
+                    <td class="border px-2 py-1 text-center">
+                        <span
+                            class="px-2 py-1 rounded text-xs
+                            @if($withdrawal->status === 'approved')
+                                bg-green-600 text-gray-200 
+                            @elseif($withdrawal->status === 'pending')
+                                bg-gray-200 text-gray 
+                            @elseif($withdrawal->status === 'failed')
+                                bg-red-600 text-white 
+                            @endif
+                            "
+                        >
+                            {{ ucfirst($withdrawal->status) }}
+                        </span>
+                    </td>
                     <td class="border px-2 py-1">{{ $withdrawal->note ?? '-' }}</td>
                     <td class="border px-2 py-1">{{ $withdrawal->created_at }}</td>
                     <td class="border px-2 py-1">
@@ -37,8 +51,18 @@
                                 <option value="approved" @if($withdrawal->status==='approved') selected @endif>Approved</option>
                                 <option value="failed" @if($withdrawal->status==='failed') selected @endif>Failed</option>
                             </select>
-                            <input type="text" name="note" value="{{ $withdrawal->note }}" placeholder="Note" class="border rounded px-1">
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded">Update</button>
+                            
+                            <button
+                                type="submit"
+                                class="px-2 py-1 rounded text-white
+                                    {{ $withdrawal->status === 'approved'
+                                        ? 'bg-gray-200 cursor-not-allowed'
+                                        : 'bg-blue-600 hover:bg-blue-700' }}"
+                                {{ $withdrawal->status === 'approved' ? 'disabled' : '' }}
+                            >
+                                Update
+                            </button>
+
                         </form>
                     </td>
                 </tr>

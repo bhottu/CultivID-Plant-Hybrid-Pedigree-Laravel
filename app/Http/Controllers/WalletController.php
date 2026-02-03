@@ -60,6 +60,6 @@ class WalletController extends Controller
             'note' => $request->note,
         ]);
 
-        return redirect()->route('wallet.index')->with('success', 'Withdrawal request submitted.');
+        return redirect()->route('wallet.index')->with('success', 'Withdrawal request submitted, we will process it within 1 business day.');
     }
 }

@@ -27,7 +27,32 @@ class PlantSubmissionPublicController extends Controller
                 ]
             ];
         };
-        $pedigree = $getPedigree($plantSubmission->plant_id);
+       // $pedigree = $getPedigree($plantSubmission->plant_id);
+        $pedigree = $this->buildPedigree($plantSubmission, 0, 3);
         return view('plant_submissions.show', compact('plantSubmission', 'pedigree'));
     }
+
+    private function buildPedigree($plant, $level = 0, $maxLevel = 3)
+    {
+        if (!$plant || $level >= $maxLevel) {
+            return null;
+        }
+
+        $betina = !empty($plant->induk_betina)
+            ? PlantSubmission::where('plant_id', trim($plant->induk_betina))->first()
+            : null;
+
+        $jantan = !empty($plant->induk_jantan)
+            ? PlantSubmission::where('plant_id', trim($plant->induk_jantan))->first()
+            : null;
+
+        return [
+            'plant_id'     => $plant->plant_id,
+            'induk_betina' => $plant->induk_betina,
+            'induk_jantan' => $plant->induk_jantan,
+            'betina_node'  => $betina ? $this->buildPedigree($betina, $level + 1, $maxLevel) : null,
+            'jantan_node'  => $jantan ? $this->buildPedigree($jantan, $level + 1, $maxLevel) : null,
+        ];
+    }
+
 }

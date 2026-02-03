@@ -109,11 +109,16 @@ class PlantSubmissionController extends Controller
             'pending'  => (clone $base)->where('status_review','pending')->count(),
             'rejected' => (clone $base)->where('status_review','rejected')->count(),
             'revision' => (clone $base)->where(function ($q) {
-                                $q->whereNull('induk_jantan')
-                                ->orWhere('induk_jantan','')
-                                ->orWhereNull('induk_betina')
-                                ->orWhere('induk_betina','');
-                            })->count(),
+                        $q->where(function ($qq) {
+                            $qq->whereNull('induk_jantan')
+                            ->orWhere('induk_jantan', '');
+                        })
+                        ->where(function ($qq) {
+                            $qq->whereNull('induk_betina')
+                            ->orWhere('induk_betina', '');
+                        });
+                     })->count(),
+
             'appeal' => $user->is_admin
                         ? PlantSubmissionAppeal::whereHas('submission', function ($q) {
                         $q->where('status_review', '!=', 'approved');
@@ -186,11 +191,14 @@ class PlantSubmissionController extends Controller
         if (!empty($data['induk_jantan']) && !PlantSubmission::where('plant_id', $data['induk_jantan'])->exists()) {
             PlantSubmission::create([
                 'plant_id' => $data['induk_jantan'],
-                'induk_jantan' => '',
-                'induk_betina' => '',
-                'penyilang' => '',
+                'plant_id_var' => 1,
+                'induk_jantan' => null,
+                'induk_jantan_var' => 1,
+                'induk_betina' => null,
+                'induk_betina_var' => 1,
+                'penyilang' => null,
                 'uploader_id' => Auth::id(),
-                'keterangan' => '',
+                'keterangan' => null,
                 'image' => null,
                 'status_review' => 'approved',
             ]);
@@ -199,11 +207,14 @@ class PlantSubmissionController extends Controller
         if (!empty($data['induk_betina']) && !PlantSubmission::where('plant_id', $data['induk_betina'])->exists()) {
             PlantSubmission::create([
                 'plant_id' => $data['induk_betina'],
-                'induk_jantan' => '',
-                'induk_betina' => '',
-                'penyilang' => '',
+                'plant_id_var' => 1,
+                'induk_jantan' => null,
+                'induk_jantan_var' => 1,
+                'induk_betina' => null,
+                'induk_betina_var' => 1,
+                'penyilang' => null,
                 'uploader_id' => Auth::id(),
-                'keterangan' => '',
+                'keterangan' => null,
                 'image' => null,
                 'status_review' => 'approved',
             ]);
@@ -231,12 +242,12 @@ class PlantSubmissionController extends Controller
 
     // Edit submission (hanya uploader atau member lain dengan approval uploader)
     public function edit(PlantSubmission $plantSubmission)
-    {
-    $this->authorize('update', $plantSubmission);
-    $parentSubmissions = \App\Models\PlantSubmission::select('plant_id', 'induk_jantan', 'induk_betina')->get();
-    $users = \App\Models\User::select('name')->get();
-    return view('plant_submissions.edit', compact('plantSubmission', 'parentSubmissions', 'users'));
-    }
+        {
+            $this->authorize('update', $plantSubmission);
+            $parentSubmissions = \App\Models\PlantSubmission::select('plant_id', 'induk_jantan', 'induk_betina')->get();
+            $users = \App\Models\User::select('name')->get();
+            return view('plant_submissions.edit', compact('plantSubmission', 'parentSubmissions', 'users'));
+        }
 
     public function update(Request $request, PlantSubmission $plantSubmission)
     {
@@ -315,6 +326,37 @@ $data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
         if (auth()->id() !== $plantSubmission->uploader_id) {
             $data['uploader_approval'] = false;
         }
+
+        foreach (['induk_jantan','induk_betina'] as $f) {
+            if ($data[$f] === '') {
+                $data[$f] = null;
+            }
+        }
+
+        // =========================
+// AUTO CREATE PARENT (UPDATE)
+// =========================
+foreach (['induk_jantan', 'induk_betina'] as $parentField) {
+    if (
+        !empty($data[$parentField]) &&
+        !PlantSubmission::where('plant_id', $data[$parentField])->exists()
+    ) {
+        PlantSubmission::create([
+            'plant_id' => $data[$parentField],
+            'plant_id_var' => 1,
+            'induk_jantan' => null,
+            'induk_jantan_var' => 1,
+            'induk_betina' => null,
+            'induk_betina_var' => 1,
+            'penyilang' => null,
+            'uploader_id' => Auth::id(),
+            'keterangan' => null,
+            'image' => null,
+            'status_review' => 'approved',
+        ]);
+    }
+}
+
 
         $plantSubmission->update($data);
 

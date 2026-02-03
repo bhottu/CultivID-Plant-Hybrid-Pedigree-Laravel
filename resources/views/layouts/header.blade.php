@@ -1,5 +1,5 @@
 <header>
-    <nav class="bg-gray-800 p-6 border-b border-gray-200 dark:border-gray-700 shadow">
+    <nav class="bg-cus-500 p-3 border-b border-gray-200 dark:border-gray-700 shadow">
         <div class="container mx-auto flex justify-between items-center">
             <a class="text-2xl font-bold text-white" href="{{ route('admin.home') }}">
                 Dashboard
@@ -12,7 +12,7 @@
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('register') }}">Register</a></li>
                         @else
                             <li><button id="dark-mode-toggle" class="text-gray-800 text-white"><i class="fas fa-toggle-on"></i></button></li>
-                            <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('profile', ['user' => Auth::user()->id]) }}">{{ Auth::user()->name }}</a></li>
+                            <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('profile', ['user' => Auth::user()->username]) }}">{{ Auth::user()->name }}</a></li>
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('products.index') }}">Home</a></li>
                             <li>
                                 <button id="search-toggle" class="hover:text-blue-500 text-gray-800 text-white">
