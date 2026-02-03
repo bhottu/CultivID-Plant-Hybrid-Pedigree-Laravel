@@ -160,12 +160,12 @@
 
 <section class="w-full mx-auto max-w-lg">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5125455064675938"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}"
      crossorigin="anonymous"></script>
 <!-- cultiv horizontal 1 -->
 <ins class="adsbygoogle"
      style="display:block"
-     data-ad-client="ca-pub-5125455064675938"
+     data-ad-client="{{ $adsense->publisher_id }}"
      data-ad-slot="7745914332"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
