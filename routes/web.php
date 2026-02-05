@@ -25,6 +25,7 @@ use App\Http\Controllers\PlantSubmissionController;
 use App\Http\Controllers\UserTransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\Admin\WithdrawalController;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -51,7 +52,16 @@ Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile'
 
 Route::get('/discuss/@{username}', [HomeController::class, 'postsByUsername'])->name('posts.by.username');
 
+Route::get('/mail-preview', function () {
+    // Pastikan ada minimal satu user di database agar tidak error
+    $user = App\Models\User::first();
+    
+    if (!$user) {
+        return "Belum ada user di database. Silakan register satu user dulu.";
+    }
 
+    return (new ResetPassword('token-dummy'))->toMail($user);
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -93,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/buy-me-a-coffee', [UserTransactionController::class, 'buy'])->name('transactions.buy');
-Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+// Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 // pindah ke api Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
 
 
