@@ -139,6 +139,49 @@
                 </a>
                 @endif
                 
+                <button id="installApp" class="hidden hover:bg-blue-700 ml-auto text-white px-2 py-2 rounded-lg text-xs font-medium transition">
+                    Install App
+                </button>
+
+                    <div id="installModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+                        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-sm font-bold">Install Cultiv.ID</h3>
+                                <button onclick="closeInstallModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                            </div>
+                            
+                            <div class="space-y-4 text-gray-600">
+                                <p class="text-sm">Ikuti langkah berikut untuk menambahkan aplikasi ke layar utama Anda:</p>
+                                
+                                <div id="iosInstructions" class="hidden space-y-3">
+                                    <div class="flex items-start gap-3">
+                                        <span class="bg-gray-100 p-2 rounded-full">1</span>
+                                        <p>Tekan tombol Share di bagian bawah browser.</p>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="bg-gray-100 p-2 rounded-full">2</span>
+                                        <p>Scroll ke bawah dan pilih 'Add to Home Screen'.</p>
+                                    </div>
+                                </div>
+
+                                <div id="androidInstructions" class="space-y-3">
+                                    <div class="flex items-start gap-3">
+                                        <span class="bg-gray-100 p-2 rounded-full">1</span>
+                                        <p>Klik tombol Install yang muncul di browser.</p>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="bg-gray-100 p-2 rounded-full">2</span>
+                                        <p>Atau klik titik tiga (menu) dan pilih 'Install App'.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onclick="closeInstallModal()" class="w-full mt-6 bg-gray-900 text-white py-3 rounded-xl font-semibold">
+                                Ok
+                            </button>
+                        </div>
+                    </div>
+
   <div class="relative">
         <button 
             id="menuToggle"
@@ -446,6 +489,54 @@
         mobileMenu.classList.remove('flex');
         document.body.classList.remove('overflow-hidden');
     });
+
+    
+    // installApp
+    let deferredPrompt;
+    const installBtn = document.getElementById('installApp');
+    const installModal = document.getElementById('installModal');
+
+    // 1. Deteksi PWA Install Prompt (Android/Chrome)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Tampilkan tombol jika browser mendukung instalasi otomatis
+        installBtn.classList.remove('hidden');
+    });
+
+    // 2. Deteksi jika user pakai iOS (Safari tidak support beforeinstallprompt)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+    if (isIOS && !isStandalone) {
+        installBtn.classList.remove('hidden');
+    }
+
+    // 3. Aksi klik tombol
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Jika didukung browser (Android/Chrome), jalankan prompt asli
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        } else {
+            // Jika iOS atau manual, tampilkan Modal tata cara
+            showInstallModal();
+        }
+    });
+
+    function showInstallModal() {
+        installModal.classList.remove('hidden');
+        if (isIOS) {
+            document.getElementById('iosInstructions').classList.remove('hidden');
+            document.getElementById('androidInstructions').classList.add('hidden');
+        }
+    }
+
+    function closeInstallModal() {
+        installModal.classList.add('hidden');
+    }
 </script>
 
 
