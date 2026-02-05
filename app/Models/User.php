@@ -32,6 +32,8 @@ class User extends Authenticatable
         'latitude',
         'longitude',
         'balance',
+        'provider', 
+        'provider_id',
     ];
 
     protected static function boot()

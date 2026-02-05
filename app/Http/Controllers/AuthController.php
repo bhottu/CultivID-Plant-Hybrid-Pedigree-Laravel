@@ -136,24 +136,45 @@ class AuthController extends Controller
 
     public function handleGoogleCallback()
 {
-    $googleUser = Socialite::driver('google')->user();
+    try {
+        $googleUser = Socialite::driver('google')->stateless()->user();
 
-    $user = User::where('email', $googleUser->getEmail())->first();
+        // 1. WAJIB: Gunakan withTrashed() karena model Anda pakai SoftDeletes
+        $user = User::withTrashed()->where('email', $googleUser->getEmail())->first();
 
-    if (!$user) {
-        $user = User::create([
-            'name'        => $googleUser->getName(),
-            'email'       => $googleUser->getEmail(),
-            'username'    => User::generateUsername($googleUser->getName()),
-            'password'    => Hash::make(Str::random(32)), // random & aman
-            'provider'    => 'google',
-            'provider_id' => $googleUser->getId(),
-        ]);
+        if ($user) {
+            // 2. Jika user ketemu tapi sedang di-soft delete (banned/hapus), restore akunnya
+            if ($user->trashed()) {
+                $user->restore();
+            }
+
+            // 3. Update data provider jika belum terhubung
+            $user->update([
+                'provider'    => 'google',
+                'provider_id' => $googleUser->getId(),
+            ]);
+        } else {
+            // 4. Jika benar-benar user baru, buat akun
+            $user = User::create([
+                'name'        => $googleUser->getName(),
+                'email'       => $googleUser->getEmail(),
+                'username'    => User::generateUsername($googleUser->getName()),
+                'password'    => Hash::make(Str::random(32)),
+                'provider'    => 'google',
+                'provider_id' => $googleUser->getId(),
+                'email_verified_at' => now(),
+            ]);
+        }
+
+        Auth::login($user, true);
+        return redirect()->route('home');
+
+    } catch (\Exception $e) {
+        // DEBUG: Jika masih gagal, aktifkan baris di bawah untuk melihat pesan error aslinya
+        // return dd($e->getMessage()); 
+        
+        return redirect('/login')->with('error', 'Gagal login: ' . $e->getMessage());
     }
-
-    Auth::login($user, true);
-
-    return redirect()->route('home');
 }
 
 }
