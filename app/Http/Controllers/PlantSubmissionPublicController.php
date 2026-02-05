@@ -93,7 +93,8 @@ private function renderPedigreePdf(PlantSubmission $plantSubmission, string $mod
     // =============================
     // GENERATE QR TEMP FILE
     // =============================
-    $tmpDir = public_path('tmp');
+    // $tmpDir = public_path('tmp');
+    $tmpDir = storage_path('app/tmp/pedigree');
     File::ensureDirectoryExists($tmpDir);
 
     $qrPath = $tmpDir.'/qr-'.$plantSubmission->id.'.png';
