@@ -160,18 +160,21 @@
 
 <section class="w-full mx-auto max-w-lg">
 
+@if(!empty($adsense->publisher_id) && $adsense->publisher_id != '1')
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}"
-     crossorigin="anonymous"></script>
-<!-- cultiv horizontal 1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="{{ $adsense->publisher_id }}"
-     data-ad-slot="7745914332"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+            crossorigin="anonymous"></script>
+            
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="{{ $adsense->publisher_id }}"
+         data-ad-slot="7745914332"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+         
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+@endif
 
     {{-- New Hybrids --}}
     <div class="container mx-auto max-w-lg p-4 bg-white border-t  mt-8">
