@@ -24,7 +24,9 @@ class PlantSubmission extends Model
         'status_review', 
         'reviewed_by', 
         'reviewed_at', 
-        'uploader_approval'
+        'uploader_approval',
+        'certificate_number',
+        'certificate_issued_at'
     ];
 
     public function uploader()
@@ -36,4 +38,8 @@ class PlantSubmission extends Model
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
+
+    protected $casts = [
+    'certificate_issued_at' => 'datetime',
+    ];
 }

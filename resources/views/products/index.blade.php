@@ -195,7 +195,7 @@
                         <th class="p-2 border-l ">Photo</th>
                         <th class="p-2 border-l-4 border-double w-1/4">Plant ID</th>
                         <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>
-                        <th class="p-2 border-l-4 border-double">p. Parent <i class='fas fa-mars text-blue-600'></i></th>
+                        <th class="p-2 border-l-4 border-double">P. Parent <i class='fas fa-mars text-blue-600'></i></th>
                     </tr>
                 </thead>
                 <tbody id="plants-tbody">

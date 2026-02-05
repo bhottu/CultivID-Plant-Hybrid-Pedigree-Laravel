@@ -209,6 +209,20 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('admin/withdrawals', [WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
     Route::post('admin/withdrawals/{withdrawal}/update', [WithdrawalController::class, 'update'])->name('admin.withdrawals.update');
 
+    Route::get(
+    '/plant-submissions/pedigree/{plantSubmission}',
+    [\App\Http\Controllers\PlantSubmissionPublicController::class, 'downloadPedigreePdf']
+)->name('plant-submissions.pedigree.pdf');
+
+Route::get(
+    'plant-submissions/pedigree-preview/{plantSubmission}',
+    [PlantSubmissionPublicController::class, 'previewPedigree']
+)->name('plant-submissions.pedigree.preview');
+
+});
+
+Route::get('/check-gd', function () {
+    return extension_loaded('gd') ? 'GD OK' : 'GD NOT FOUND';
 });
 
 // Public About Us page (moved Company & Shop content here)

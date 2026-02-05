@@ -212,109 +212,286 @@
 {{-- ===================== --}}
 {{-- PEDIGREE TABLE --}}
 {{-- ===================== --}}
-@if(isset($pedigree) && $pedigree)
+@auth
+    @if(isset($pedigree) && $pedigree)
+    @php
+        /**
+        * Render link tanaman + gender icon + variegated indicator
+        */
+        function plantLink($plantId, $gender = null, $isVar = null) {
+            if (!$plantId) {
+                return '<span class="text-gray-400 italic">—</span>';
+            }
 
-@php
-    function plantLink($plantId, $gender = null) {
-        if (!$plantId) {
-            return '<span class="text-gray-400 italic">—</span>';
+            // Gender icon
+            $icon = '';
+            if ($gender === 'f') {
+                $icon = "<i class='fas fa-venus text-red-600 mr-1'></i>";
+            } elseif ($gender === 'm') {
+                $icon = "<i class='fas fa-mars text-blue-600 mr-1'></i>";
+            }
+
+            // Variegated indicator (PUTIH)
+            $varIcon = '';
+            if ($isVar === 0) {
+                $varIcon = "
+                    <span
+                        title='Variegated'
+                        class='inline-block w-4 h-4 rounded-full bg-white border border-gray-400 ml-1 align-middle'>
+                    </span>
+                ";
+            }
+
+            // Check exists
+            $exists = \App\Models\PlantSubmission::where('plant_id', $plantId)->exists();
+
+            if ($exists) {
+                return '
+                    <a href="'.route('plant-submissions.show', $plantId).'"
+                    class="text-gray-700 text-xs hover:underline italic inline-flex items-center justify-center gap-1">
+                        '.$icon.'
+                        <span>'.$plantId.'</span>
+                        '.$varIcon.'
+                    </a>
+                ';
+            }
+
+            return '
+                <span class="text-gray-500 italic inline-flex items-center gap-1">
+                    '.$icon.'
+                    <span>'.$plantId.'</span>
+                    '.$varIcon.'
+                </span>
+            ';
         }
+    @endphp
 
-        $icon = '';
-        if ($gender === 'f') {
-        $icon = "<i class='fas fa-venus text-red-600 mr-1'></i>";
-        }
+    <div class="mt-4">
+        <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
 
-        if ($gender === 'm') {
-            $icon = "<i class='fas fa-mars text-blue-600 mr-1'></i>";
-        }
+        <div class="overflow-x-auto">
+            <table class="border-collapse border border-gray-300 text-sm text-center w-full">
 
-        $exists = \App\Models\PlantSubmission::where('plant_id', $plantId)->exists();
+                {{-- TABLE HEAD --}}
+                <thead class="bg-yellow-50 text-xs text-gray-400">
+                    <tr>
+                        <th class="border px-4 py-2">Offspring</th>
+                        <th class="border px-4 py-2">Parent</th>
+                        <th class="border px-4 py-2">Grandparents</th>
+                    </tr>
+                </thead>
 
-        if ($exists) {
-            return '<a href="'.route('plant-submissions.show', $plantId).'"
-                       class="text-gray-600 text-xs hover:underline italic">'
-                        .$icon.' '.$plantId.
-                   '</a>';
-        }
+                <tbody>
+                    {{-- ROW 1 --}}
+                    <tr>
+                        {{-- OFFSPRING --}}
+                        <td rowspan="4" class="border bg-gray-50 px-4 py-6">
+                            {!! plantLink(
+                                $pedigree['plant_id'],
+                                null
+                            {{--, $pedigree['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
 
-        return '<span class="text-gray-500 italic">'.$icon.' '.$plantId.'</span>';
-    }
-@endphp
+                        {{-- PARENT BETINA --}}
+                        <td rowspan="2" class="border px-4 py-4 bg-red-50">
+                            {!! plantLink(
+                                $pedigree['betina_node']['plant_id'] ?? null,
+                                'f'
+                                {{--, $pedigree['betina_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
 
+                        {{-- GRANDPARENT BETINA --}}
+                        <td class="border bg-red-50 px-4 py-3">
+                            {!! plantLink(
+                                $pedigree['betina_node']['betina_node']['plant_id'] ?? null,
+                                'f'
+                                {{--, $pedigree['betina_node']['betina_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
+                    </tr>
+
+                    {{-- ROW 2 --}}
+                    <tr>
+                        {{-- GRANDPARENT JANTAN --}}
+                        <td class="border bg-blue-50 px-4 py-3">
+                            {!! plantLink(
+                                $pedigree['betina_node']['jantan_node']['plant_id'] ?? null,
+                                'm'
+                                {{--, $pedigree['betina_node']['jantan_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
+                    </tr>
+
+                    {{-- ROW 3 --}}
+                    <tr>
+                        {{-- PARENT JANTAN --}}
+                        <td rowspan="2" class="border bg-blue-50 px-4 py-4">
+                            {!! plantLink(
+                                $pedigree['jantan_node']['plant_id'] ?? null,
+                                'm'
+                                {{--, $pedigree['jantan_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
+
+                        {{-- GRANDPARENT BETINA --}}
+                        <td class="border bg-red-50 px-4 py-3">
+                            {!! plantLink(
+                                $pedigree['jantan_node']['betina_node']['plant_id'] ?? null,
+                                'f'
+                                {{--, $pedigree['jantan_node']['betina_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
+                    </tr>
+
+                    {{-- ROW 4 --}}
+                    <tr>
+                        {{-- GRANDPARENT JANTAN --}}
+                        <td class="border bg-blue-50 px-4 py-3">
+                            {!! plantLink(
+                                $pedigree['jantan_node']['jantan_node']['plant_id'] ?? null,
+                                'm'
+                                {{--, $pedigree['jantan_node']['jantan_node']['plant_id_var'] ?? null --}}
+                            ) !!}
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            {{-- LEGEND 
+            <div class="mt-2 text-xs text-gray-500 flex items-center gap-2">
+                <span class="inline-block w-3 h-3 rounded-full bg-white border border-gray-400"></span>
+                <span>Variegated</span>
+            </div> --}}
+        </div>
+    </div>
+
+<div class="flex gap-2 mt-4">
+
+    @if(auth()->user()?->is_admin)
+        {{-- DOWNLOAD --}}
+        <a href="{{ route('plant-submissions.pedigree.pdf', $plantSubmission) }}"
+           class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700">
+            
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-4 h-4"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+
+            <span>Download Certificate of Pedigree</span>
+        </a>
+
+        {{-- PREVIEW --}}
+        <a href="{{ route('plant-submissions.pedigree.preview', $plantSubmission) }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
+            <svg width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="#16a34a" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Preview
+        </a>
+    @else
+       <div class="flex ">
+            {{-- PREVIEW (ALLOWED) --}}
+            <button type="button"
+                onclick="openPedigreePreview()"
+                class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
+                
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download Certificate of Pedigree
+            </button>
+
+        </div>
+
+    <!-- PREVIEW MODAL -->
+    <div id="pedigreePreviewModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60">
+
+        <div class="bg-white w-full h-full max-w-none rounded-none p-0 relative">
+
+            <!-- Close button -->
+            <button onclick="closePedigreePreview()"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+                ✕
+            </button>
+
+            <div class="h-full w-full flex flex-col">
+                <div class="p-4 border-b">
+                    <h3 class="text-base font-semibold">
+                        Pedigree Certificate Sample
+                    </h3>
+                </div>
+
+                <div class="flex-1 overflow-auto p-4">
+                    <!-- Dummy PNG -->
+                    <img id="pedigreePreviewImage"
+                    data-src="{{ asset('ped.jpg') }}"
+                    alt="Pedigree Preview"
+                    class="w-full max-w-full max-h-[80vh] object-contain rounded border">
+
+
+                    <p class="mt-3 text-xs text-gray-500">
+                        This feature will be available soon. Currently, it is only accessible to administrators.
+                        Would you like to claim this certificate? Please contact us at
+                        <a href="https://web.whatsapp.com/send?phone=6288901309732&text=Hello%2C%20I%20would%20like%20to%20claim%20my%20pedigree%20certificate of {{ $plantSubmission->plant_id }}.%20Could%20you%20please%20assist%20me%3F"
+                        class="text-blue-600 underline">
+                        +62 889 0130 9732
+                        </a>
+                        or support@cultiv.id.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @endif
+
+</div>
+
+
+
+
+    @endif
+@endauth
+
+@guest
 <div class="mt-4">
-    <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
+        <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
+    <div class="p-3 rounded bg-gray-50 text-center">
+        <p class="text-sm text-gray-500 italic">
+            Please <a href="{{ route('login') }}" class="inline-block mt-2 text-xs text-green-700 hover:underline bg-red-200">Login</a> to view the pedigree
+        </p>
 
-    <div class="overflow-x-auto">
-        <table class="border-collapse border border-gray-300 text-sm text-center w-full">
-
-            {{-- TABLE HEAD --}}
-            <thead class="bg-yellow-50 text-xs text-gray-400">
-                <tr>
-                    <th class="border px-4 py-2">Offspring</th>
-                    <th class="border px-4 py-2">Parent</th>
-                    <th class="border px-4 py-2">Grandparents</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {{-- ROW 1 --}}
-                <tr>
-                    {{-- CHILD --}}
-                    <td rowspan="4"
-                        class="border bg-gray-50  px-4 py-6 text-green-900">
-                        {!! plantLink($pedigree['plant_id']) !!}
-                    </td>
-
-                    {{-- PARENT BETINA --}}
-                    <td rowspan="2"
-                        class="border px-4 py-4 bg-red-50 ">
-                        {!! plantLink($pedigree['betina_node']['plant_id'] ?? null, 'f') !!}
-                    </td>
-
-                    {{-- GRANDPARENT BETINA (ATAS) --}}
-                    <td class="border bg-red-50  px-4 py-3">
-                        {!! plantLink($pedigree['betina_node']['betina_node']['plant_id'] ?? null, 'f') !!}
-                    </td>
-                </tr>
-
-                {{-- ROW 2 --}}
-                <tr>
-                    {{-- GRANDPARENT JANTAN (BAWAH) --}}
-                    <td class="border bg-blue-50  bg-blue-50  px-4 py-3">
-                        {!! plantLink($pedigree['betina_node']['jantan_node']['plant_id'] ?? null, 'm') !!}
-                    </td>
-                </tr>
-
-                {{-- ROW 3 --}}
-                <tr>
-                    {{-- PARENT JANTAN --}}
-                    <td rowspan="2"
-                        class="border bg-blue-50  px-4 py-4 bg-blue-50 ">
-                        {!! plantLink($pedigree['jantan_node']['plant_id'] ?? null, 'm') !!}
-                    </td>
-
-                    {{-- GRANDPARENT BETINA (ATAS) --}}
-                    <td class="border bg-red-50  px-4 py-3">
-                        {!! plantLink($pedigree['jantan_node']['betina_node']['plant_id'] ?? null, 'f') !!}
-                    </td>
-                </tr>
-
-                {{-- ROW 4 --}}
-                <tr>
-                    {{-- GRANDPARENT JANTAN (BAWAH) --}}
-                    <td class="border bg-blue-50 px-4 py-3">
-                        {!! plantLink($pedigree['jantan_node']['jantan_node']['plant_id'] ?? null, 'm') !!}
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
+       
     </div>
 </div>
-@endif
-
-
+@endguest
 
 
 
@@ -542,4 +719,29 @@
             document.getElementById('modalImage').src = baseUrl + images[currentIndex];
         }
     </script>
+
+    <script>
+        function openPedigreePreview() {
+            document.getElementById('pedigreePreviewModal').classList.remove('hidden');
+            document.getElementById('pedigreePreviewModal').classList.add('flex');
+        }
+
+        function closePedigreePreview() {
+            document.getElementById('pedigreePreviewModal').classList.add('hidden');
+            document.getElementById('pedigreePreviewModal').classList.remove('flex');
+        }
+
+        function openPedigreePreview() {
+            const img = document.getElementById('pedigreePreviewImage');
+
+            if (!img.src) {
+                img.src = img.dataset.src; // baru load sekarang
+            }
+
+            img.classList.remove('hidden');
+            document.getElementById('pedigreePreviewModal').classList.remove('hidden');
+            document.getElementById('pedigreePreviewModal').classList.add('flex');
+        }
+    </script>
+
 @endsection
