@@ -355,8 +355,8 @@
                         <i class="fas fa-seedling"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800 dark:text-white">Add Hybrids</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Share your plant hybrids</p>
+                        <h3 class="font-semibold text-gray-800 dark:text-white">Add Plant or Hybrid</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Start building your pedigree</p>
                     </div>
                 </a>
 

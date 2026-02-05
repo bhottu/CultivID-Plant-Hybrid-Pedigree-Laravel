@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container mx-auto max-w-lg px-4 my-4">
+<div class="container mx-auto max-w-lg px-4 my-4 text-sm">
     @if(isset($user))
         <h1 class="text-2xl font-bold text-gray-800">
             {{ $user->name }}'s Products
@@ -45,16 +45,16 @@
 
                 <div class="p-4">
                     <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:text-gray-500">
-                        <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
+                        <h2 class="text-md font-semibold">{{ $product->name }}</h2>
                     </a>
                     <div class="flex items-center mb-2">
                  
                         @if($product->discount)
-                            <span class="text-gray-600 mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span>
-                            <span class="text-red-600 text-sm line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 mr-2 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span>
+                            <span class="text-red-600 text-xs line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                             
                         @else
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 text-sm ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @endif
                   
                      </div>
@@ -69,20 +69,22 @@
 
                         </a>
                         <div class="ml-2">
-                            <span class="font-semibold"><a href="{{ url('profile/' . $product->user->username) }}" class="hover:text-gray-500">
+                            <span class="font-semibold"><a href="{{ url('profile/' . $product->user->username) }}" class="hover:text-gray-500 text-md">
                             {{ $product->user->name ?? 'Unknown' }}</a></span>
                             <div class="text-gray-500 text-xs">{{ $product->created_at->diffForHumans() }}</div>
                         </div>
                     </div>
 
-                    <p class="text-gray-800">{{ Str::limit($product->description, 50, '...') }} </p>
+                    <p class="text-gray-800 text-xs ">{{ Str::limit($product->description, 50, '...') }}  
+                        @if ($product->category)
+                        <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-xs text-gray-700 px-1 py-1 rounded text-sm hover:bg-gray-300">
+                            #{{ $product->category->name }}
+                        </a>
+                        @endif
+                    </p>
                     </span>
 
-                    @if ($product->category)
-                    <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-xs text-gray-700 px-2 py-1 rounded-md text-sm hover:bg-gray-300">
-                        #{{ $product->category->name }}
-                    </a>
-                    @endif
+                    
                     
                 </div>
             </div>
