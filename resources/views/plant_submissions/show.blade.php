@@ -402,7 +402,7 @@
             {{-- Jika sudah bayar --}}
             <a href="{{ route('plant-submissions.pedigree.pdf', $plantSubmission) }}"
                class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700">
-                ⬇ Download Certificate
+                ⬇ Download Your Certificate
             </a>
             <a href="{{ route('plant-submissions.pedigree.preview', $plantSubmission) }}"
            target="_blank"
@@ -411,11 +411,7 @@
         </a>
         @else
             {{-- Jika belum bayar --}}
-            <button type="button"
-                    onclick="openPedigreePreview()"
-                    class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
-                🔒 Preview Pedigree
-            </button>
+            
 
             <form action="{{ route('certificate.buy') }}" method="POST">
                 @csrf
