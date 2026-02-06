@@ -368,111 +368,83 @@
         </div>
     </div>
 
+@php
+    $user = auth()->user();
+    // Mengikuti logika controller: pemilik adalah uploader_id
+    $isOwner = $user && $user->id === $plantSubmission->uploader_id; 
+    $isAdmin = $user && $user->is_admin;
+    
+    // Query pengecekan transaksi sesuai kriteria di controller Anda
+    $hasPaidCertificate = $user && \App\Models\UserTransaction::where('user_id', $user->id)
+            ->where('plant_id', $plantSubmission->id)
+            ->where('type', 'certificate')
+            ->where('status', 'completed')
+            ->exists();
+@endphp
+
 <div class="flex gap-2 mt-4">
 
-    @if(auth()->user()?->is_admin)
-        {{-- DOWNLOAD --}}
+    @if($isAdmin)
+        {{-- ================= 1. ADMIN (Sesuai Goal 1) ================= --}}
         <a href="{{ route('plant-submissions.pedigree.pdf', $plantSubmission) }}"
            class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700">
-            
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="w-4 h-4"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-
-            <span>Download Certificate of Pedigree</span>
+            ⬇ Download Certificate
         </a>
-
-        {{-- PREVIEW --}}
         <a href="{{ route('plant-submissions.pedigree.preview', $plantSubmission) }}"
            target="_blank"
            class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
-            <svg width="16" height="16" viewBox="0 0 24 24"
-                 fill="none" stroke="#16a34a" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-                <circle cx="12" cy="12" r="3"/>
-            </svg>
-            Preview
+            👁 Preview
         </a>
-    @else
-       <div class="flex ">
-            {{-- PREVIEW (ALLOWED) --}}
+
+    @elseif($isOwner)
+        {{-- ================= 2. PEMILIK / UPLOADER (Sesuai Goal 2) ================= --}}
+        @if($hasPaidCertificate)
+            {{-- Jika sudah bayar --}}
+            <a href="{{ route('plant-submissions.pedigree.pdf', $plantSubmission) }}"
+               class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-green-600 text-white rounded hover:bg-green-700">
+                ⬇ Download Certificate
+            </a>
+            <a href="{{ route('plant-submissions.pedigree.preview', $plantSubmission) }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
+            👁 Preview
+        </a>
+        @else
+            {{-- Jika belum bayar --}}
             <button type="button"
-                onclick="openPedigreePreview()"
-                class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
-                
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Download Certificate of Pedigree
+                    onclick="openPedigreePreview()"
+                    class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-200 rounded hover:bg-gray-300">
+                🔒 Preview Pedigree
             </button>
 
-        </div>
+            <form action="{{ route('certificate.buy') }}" method="POST">
+                @csrf
+                {{-- Mengirim plant_id sesuai validasi di UserTransactionController@buyCertificate --}}
+                <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
+                <button type="submit"
+                        class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">
+                    💳 Buy Certificate
+                </button>
+            </form>
+        @endif
 
-    <!-- PREVIEW MODAL -->
-    <div id="pedigreePreviewModal"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60">
-
-        <div class="bg-white w-full h-full max-w-none rounded-none p-0 relative">
-
-            <!-- Close button -->
-            <button onclick="closePedigreePreview()"
-                    class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
-                ✕
-            </button>
-
-            <div class="h-full w-full flex flex-col">
-                <div class="p-4 border-b">
-                    <h3 class="text-base font-semibold">
-                        Pedigree Certificate Sample
-                    </h3>
-                </div>
-
-                <div class="flex-1 overflow-auto p-4">
-                    <!-- Dummy PNG -->
-                    <img id="pedigreePreviewImage"
-                    data-src="{{ asset('ped.jpg') }}"
-                    alt="Pedigree Preview"
-                    class="w-full max-w-full max-h-[80vh] object-contain rounded border">
-
-
-                    <p class="mt-3 text-xs text-gray-500">
-                        This feature will be available soon. Currently, it is only accessible to administrators.
-                        Would you like to claim this certificate? Please contact us at
-                        <a href="https://web.whatsapp.com/send?phone=6288901309732&text=Hello%2C%20I%20would%20like%20to%20claim%20my%20pedigree%20certificate of {{ $plantSubmission->plant_id }}.%20Could%20you%20please%20assist%20me%3F"
-                        class="text-blue-600 underline">
-                        +62 889 0130 9732
-                        </a>
-                        or support@cultiv.id.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
+    @else
+        {{-- ================= 3. BUKAN PEMILIK (Sesuai Goal 3) ================= --}}
+       <button type="button"
+    onclick="Swal.fire({
+        title: 'Exclusive Access',
+        text: 'The certificate can only be purchased and accessed by the owner of this plant. If this is your plant, please appeal.',
+        icon: 'info',
+        confirmButtonColor: '#059669', // Warna hijau agar senada dengan tema Cultiv
+        confirmButtonText: 'I Understand'
+    })"
+    class="inline-flex items-center gap-2 px-3 py-2 text-xs bg-gray-300 text-gray-500 rounded">
+    🔒 Buy Certificate
+</button>
     @endif
 
 </div>
+
 
 
 
@@ -743,5 +715,25 @@
             document.getElementById('pedigreePreviewModal').classList.add('flex');
         }
     </script>
+<script>
+    // Cek apakah ada session error dari Controller
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Akses Ditolak',
+            text: "{{ session('error') }}",
+            confirmButtonColor: '#059669', // Warna hijau emerald
+        });
+    @endif
 
+    // Cek juga jika ada session success (setelah bayar)
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#059669',
+        });
+    @endif
+</script>
 @endsection

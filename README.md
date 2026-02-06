@@ -1,5 +1,4 @@
-composer require barryvdh/laravel-dompdf
-php artisan make:migration add_certificate_number_to_plant_submissions
 
-
- 
+database\migrations\2026_02_06_063852_add_certificate_fields_to_user_transactions.php
+database\migrations\2026_02_06_070336_alter_type_on_user_transactions_table.php
+database\migrations\2026_02_06_071256_add_plant_id_to_user_transactions_table.php

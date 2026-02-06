@@ -12,12 +12,14 @@ class UserTransaction extends Model
         'user_id',
         'user_id_receiver',
         'external_id',
+        'plant_id',
         'type',
         'amount',
         'user_share',
         'admin_share',
         'status',
         'payment_gateway',
+        'is_platform_only',
     ];
 
     public function user()

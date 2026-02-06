@@ -98,6 +98,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('plant-submissions/{plantSubmission}/appeal', [PlantSubmissionAppealController::class, 'store'])->name('plant-submissions.appeal.store');
     Route::put('/plant-submissions/appeals/{plantSubmission}',[PlantSubmissionAppealController::class, 'update'])->name('plant-submissions.appeals.update');
 
+  Route::get(
+    '/plant-submissions/pedigree/{plantSubmission}',
+    [\App\Http\Controllers\PlantSubmissionPublicController::class, 'downloadPedigreePdf']
+)->name('plant-submissions.pedigree.pdf');
+
+Route::get(
+    'plant-submissions/pedigree-preview/{plantSubmission}',
+    [PlantSubmissionPublicController::class, 'previewPedigree']
+)->name('plant-submissions.pedigree.preview');
+
+Route::post('/certificate/buy', [UserTransactionController::class, 'buyCertificate'])
+    ->name('certificate.buy');
+
+    Route::get('/payment/certificate/return', 
+    [PaymentController::class, 'certificateReturn']
+)->name('payment.certificate.return');
 
 
 });
@@ -219,15 +235,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('admin/withdrawals', [WithdrawalController::class, 'index'])->name('admin.withdrawals.index');
     Route::post('admin/withdrawals/{withdrawal}/update', [WithdrawalController::class, 'update'])->name('admin.withdrawals.update');
 
-    Route::get(
-    '/plant-submissions/pedigree/{plantSubmission}',
-    [\App\Http\Controllers\PlantSubmissionPublicController::class, 'downloadPedigreePdf']
-)->name('plant-submissions.pedigree.pdf');
-
-Route::get(
-    'plant-submissions/pedigree-preview/{plantSubmission}',
-    [PlantSubmissionPublicController::class, 'previewPedigree']
-)->name('plant-submissions.pedigree.preview');
+  
 
 });
 

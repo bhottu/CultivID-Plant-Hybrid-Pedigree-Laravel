@@ -65,12 +65,51 @@ class PlantSubmissionPublicController extends Controller
 
  public function previewPedigree(PlantSubmission $plantSubmission)
 {
+    $this->authorizeAccess($plantSubmission);
     return $this->renderPedigreePdf($plantSubmission, 'stream');
 }
 
 public function downloadPedigreePdf(PlantSubmission $plantSubmission)
 {
+    $this->authorizeAccess($plantSubmission);
     return $this->renderPedigreePdf($plantSubmission, 'download');
+}
+
+private function authorizeAccess(PlantSubmission $plantSubmission)
+{
+    $user = auth()->user();
+
+    // 1. Jika tidak login, langsung tolak
+    if (!$user) {
+        return redirect()->back()->with('error', 'Please log in first.')->send();
+    }
+
+    // 2. Jika Admin, izinkan lewat
+    if ($user->is_admin) {
+        return true;
+    }
+
+    // 3. Cek apakah ini pemilik tanaman
+    // (Gunakan uploader_id sesuai dengan logika buy di UserTransactionController Anda)
+    $isOwner = $user->id === $plantSubmission->uploader_id;
+
+   if (!$isOwner) {
+        // Alihkan kembali dengan pesan error
+        return redirect()->back()->with('error', 'The certificate can only be purchased and accessed by the owner of this plant. If this is your plant, please appeal.')->send();
+    }
+
+    // 4. Jika pemilik, cek apakah sudah bayar
+    $hasPaid = \App\Models\UserTransaction::where('user_id', $user->id)
+        ->where('plant_id', $plantSubmission->id)
+        ->where('type', 'certificate')
+        ->where('status', 'completed')
+        ->exists();
+
+   if (!$hasPaid) {
+        return redirect()->back()->with('error', 'You have not made payment for this certificate.')->send();
+    }
+
+    return true;
 }
 
 /**
