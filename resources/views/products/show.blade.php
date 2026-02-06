@@ -133,7 +133,7 @@
 
             </div>
        
-        <div class="w-full bg-gray-100 border-2 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer">
+        <div class="w-full bg-gray-100 border-2 mt-3 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer">
             <div class="bg-white p-3 rounded-full shadow-sm mb-4">
                 <i class="fas fa-ads text-2xl text-gray-400"></i>
             </div>

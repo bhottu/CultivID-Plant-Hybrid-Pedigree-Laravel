@@ -176,12 +176,12 @@
                                 @if($plantSubmission->keterangan)
                                     @php
                                         $words = explode(' ', $plantSubmission->keterangan);
-                                        $isLong = count($words) > 2;
+                                        $isLong = count($words) > 5;
                                     @endphp
 
                                     {{-- Teks Pendek (4 Kata) --}}
                                     <span x-show="!expanded">
-                                        {{ \Illuminate\Support\Str::words($plantSubmission->keterangan, 2, '') }}
+                                        {{ \Illuminate\Support\Str::words($plantSubmission->keterangan, 5, '') }}
                                     </span>
 
                                     {{-- Teks Lengkap (Akan muncul saat expanded true) --}}
@@ -245,7 +245,27 @@
     </div>
     
 
-     
+     <div class="w-full bg-gray-100 mt-3 border border-dashed border-gray-400 rounded-lg h-24 flex items-center justify-between px-6 hover:bg-gray-200 transition-all cursor-pointer">
+    
+            <div class="flex items-center gap-4">
+                {{-- Icon lebih kecil --}}
+                <div class="rounded-full">
+                    <i class="fas fa-ad text-xl"></i>
+                </div>
+                
+                {{-- Teks rata kiri agar lebih hemat ruang --}}
+                <div class="text-left">
+                    <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+                    <p class="text-sm text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
+                </div>
+            </div>
+
+            {{-- Tombol disesuaikan ukurannya (lebih kecil/compact) --}}
+            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." 
+            class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition whitespace-nowrap">
+                CONTACT US
+            </a>
+        </div>
      
 {{-- ===================== --}}
 {{-- PEDIGREE TABLE --}}
@@ -305,27 +325,7 @@
     @endphp
 
 
-        <div class="w-full bg-gray-100 mt-3 border border-dashed border-gray-400 rounded-lg h-24 flex items-center justify-between px-6 hover:bg-gray-200 transition-all cursor-pointer">
-    
-            <div class="flex items-center gap-4">
-                {{-- Icon lebih kecil --}}
-                <div class="rounded-full">
-                    <i class="fas fa-ad text-xl"></i>
-                </div>
-                
-                {{-- Teks rata kiri agar lebih hemat ruang --}}
-                <div class="text-left">
-                    <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
-                    <p class="text-sm text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
-                </div>
-            </div>
-
-            {{-- Tombol disesuaikan ukurannya (lebih kecil/compact) --}}
-            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." 
-            class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition whitespace-nowrap">
-                CONTACT US
-            </a>
-        </div>
+        
 
 
     <div class="mt-4">
