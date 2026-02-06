@@ -74,8 +74,8 @@
                     },
                 });
             </script>
-                            <li>
-                                <span class="flex items-center text-gray-700 dark:text-gray-400 dark:bg-gray-700 p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 ">{{ $product->name }}</span>
+                            
+                                <span class="flex items-center text-gray-700 dark:text-gray-400 dark:bg-gray-700 p-3 gap-2 text-lg font-semibold text-heading rounded-base bg-gray-50 ">{{ $product->name }}</span>
 
                                 <div class="flex items-center p-3 gap-3 text-lg font-semibold text-heading rounded-base bg-gray-50 group dark:text-gray-400 dark:bg-gray-700 " disabled>
                                     <span class="flex-1 min-w-0 text-left text-sm text-gray-700 dark:text-gray-400 ">
@@ -101,7 +101,7 @@
 
                                         
                                 </div>
-                            </li>
+                           
 
         <div class="w-full max-w-lg p-4 mt-3 sm:p-6 bg-neutral-primary-soft bg-gray-50 dark:border-red rounded-base dark:text-gray-400 dark:bg-gray-700 ">
             <div class="mb-2">
@@ -133,7 +133,16 @@
 
             </div>
        
-        
+        <div class="w-full bg-gray-100 border-2 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer">
+            <div class="bg-white p-3 rounded-full shadow-sm mb-4">
+                <i class="fas fa-ads text-2xl text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-700">Place Your Ad Here</h3>
+            <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>
+            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20product%20page." class="mt-4 px-6 py-2 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition">
+                CONTACT US
+            </a>
+        </div>
 
             <div class="w-full mt-3 max-w-lg bg-neutral-primary-soft ">
                     @if($product->user)

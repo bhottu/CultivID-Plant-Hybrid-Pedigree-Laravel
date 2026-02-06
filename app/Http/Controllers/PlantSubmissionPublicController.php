@@ -127,8 +127,8 @@ private function renderPedigreePdf(PlantSubmission $plantSubmission, string $mod
     // =============================
     $pedigree = $this->buildPedigree($plantSubmission, 0, 4);
 
-    $detailUrl = route('plant-submissions.show', $plantSubmission->plant_id);
-
+   // $detailUrl = route('search', $plantSubmission->certificate_number);
+$detailUrl = route('search', ['query' => $plantSubmission->certificate_number]);
     // =============================
     // GENERATE QR TEMP FILE
     // =============================

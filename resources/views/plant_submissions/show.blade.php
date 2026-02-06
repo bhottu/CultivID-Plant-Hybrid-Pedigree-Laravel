@@ -166,12 +166,50 @@
                     </td>
                 </tr>
                 @endif
+
+                <tr class="border-b border-gray-50">
+                    <td colspan="2" class="py-2">
+                        <div class="flex flex-col" x-data="{ expanded: false }">
+                            <span class="pr-2">Description</span>
+                            
+                            <div class="italic text-xs mt-1 leading-relaxed">
+                                @if($plantSubmission->keterangan)
+                                    @php
+                                        $words = explode(' ', $plantSubmission->keterangan);
+                                        $isLong = count($words) > 2;
+                                    @endphp
+
+                                    {{-- Teks Pendek (4 Kata) --}}
+                                    <span x-show="!expanded">
+                                        {{ \Illuminate\Support\Str::words($plantSubmission->keterangan, 2, '') }}
+                                    </span>
+
+                                    {{-- Teks Lengkap (Akan muncul saat expanded true) --}}
+                                    <span x-show="expanded" x-cloak>
+                                        {{ $plantSubmission->keterangan }}
+                                    </span>
+
+                                    @if($isLong)
+                                        <button 
+                                            @click="expanded = !expanded" 
+                                            class="text-blue-500 hover:text-blue-700 font-bold ml-1 focus:outline-none"
+                                            x-text="expanded ? 'Show Less' : '... Read More'">
+                                        </button>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
             </table>
            
             <div class="mt-4 text-xs rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
                 <div class="flex items-start justify-between gap-4">
                     <div class="flex items-start gap-3">
-                        <svg class="mt-0.5 h-5 w-5 text-yellow-500"
+                        <svg class="mt-0.5 h-8 w-8 text-yellow-500"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="1.5"
@@ -265,6 +303,30 @@
             ';
         }
     @endphp
+
+
+        <div class="w-full bg-gray-100 mt-3 border border-dashed border-gray-400 rounded-lg h-24 flex items-center justify-between px-6 hover:bg-gray-200 transition-all cursor-pointer">
+    
+            <div class="flex items-center gap-4">
+                {{-- Icon lebih kecil --}}
+                <div class="rounded-full">
+                    <i class="fas fa-ad text-xl"></i>
+                </div>
+                
+                {{-- Teks rata kiri agar lebih hemat ruang --}}
+                <div class="text-left">
+                    <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+                    <p class="text-sm text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
+                </div>
+            </div>
+
+            {{-- Tombol disesuaikan ukurannya (lebih kecil/compact) --}}
+            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." 
+            class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition whitespace-nowrap">
+                CONTACT US
+            </a>
+        </div>
+
 
     <div class="mt-4">
         <h2 class="text-md text-green-900 mb-2">Pedigree</h2>
@@ -609,8 +671,20 @@
 
             
 
+        <div class="w-full bg-gray-100 mt-3 border-2 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer text-sm">
+            <div class="rounded-full mb-4">
+                <i class="fas fa-ad text-2xl text-gray-800"></i>
+            </div>
+            <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+            <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>
+            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition mt-2">
+                CONTACT US
+            </a>
+        </div>
 
 </div>
+
+
     <!-- Modal Popout Foto -->
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div class="relative">

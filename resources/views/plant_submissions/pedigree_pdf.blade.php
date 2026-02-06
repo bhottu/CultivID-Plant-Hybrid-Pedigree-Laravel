@@ -33,6 +33,8 @@
         .header img {
             height: 70px;
             margin-bottom: 10px;
+            border-radius: 12px;
+            
         }
 
         .title {
@@ -43,15 +45,16 @@
         }
 
         .subtitle {
-            font-size: 16px;
+            font-size: 18px;
             color: #4b5563;
             font-style: italic;
             text-decoration: underline;
+            letter-spacing: 2px;
         }
 
         .info {
             margin: 20px 0;
-           
+           font-size: 13px;
         }
 
         .info table {
@@ -63,7 +66,7 @@
         }
 
         .pedigree {
-            margin-top: 25px;
+            margin-top: 15px;
             border-collapse: collapse;
             width: 100%;
             text-align: center;
@@ -77,27 +80,30 @@
         .pedigree th {
             background: #c3fed0;
             font-size: 11px;
-            color: #6b7280;
+            color: #1b1a1a;
         }
 
         .child {
             background: #ffffff;
             font-weight: bold;
             font-style: italic;
+            font-size: 13px;
         }
 
         .female {
             background: #ffffff;
             font-style: italic;
+            font-size: 13px;
         }
 
         .male {
             background: #ffffff;
             font-style: italic;
+            font-size: 13px;
         }
 
         .footer {
-            margin-top: 35px;
+            margin-top: 25px;
             display: table;
             width: 100%;
         }

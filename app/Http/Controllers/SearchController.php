@@ -18,21 +18,22 @@ class SearchController extends Controller
 
         $products = Product::where('name', 'LIKE', "%{$query}%")
             ->orWhere('description', 'LIKE', "%{$query}%")
-            ->paginate(10);
+            ->paginate(20);
 
         $users = User::where('name', 'LIKE', "%{$query}%")
             ->orWhere('email', 'LIKE', "%{$query}%")
-            ->paginate(10);
+            ->paginate(20);
 
         $posts = Post::where('caption', 'LIKE', "%{$query}%")
-            ->paginate(10);
+            ->paginate(20);
 
         $plantSubmissions = PlantSubmission::where('plant_id', 'LIKE', "%{$query}%")
+            ->orWhere('certificate_number', 'LIKE', "%{$query}%")
             ->orWhere('induk_jantan', 'LIKE', "%{$query}%")
             ->orWhere('induk_betina', 'LIKE', "%{$query}%")
             ->orWhere('penyilang', 'LIKE', "%{$query}%")
             ->orWhere('keterangan', 'LIKE', "%{$query}%")
-            ->paginate(10);
+            ->paginate(20);
 
         if (request()->header('HX-Request')) {
             return view('partials.search-results', compact('products', 'users', 'posts', 'plantSubmissions', 'query'));

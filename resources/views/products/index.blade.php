@@ -21,7 +21,7 @@
     {{-- Search Bar --}}
     <div class="search-bar mb-2 shadow-lg mx-auto max-w-3xl rounded-lg">
         <form action="{{ route('search') }}" method="GET" class="flex items-center justify-center gap-2">
-            <input type="text" name="query" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type here.." required>
+            <input type="text" name="query" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search here.." required>
             <button type="submit" class="bg-gray-800 border hover:bg-gray-700 text-white px-6 py-2 rounded-r-md font-medium transition duration-200">
                 Search
             </button>
