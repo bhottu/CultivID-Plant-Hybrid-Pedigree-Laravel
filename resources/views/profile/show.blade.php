@@ -244,57 +244,115 @@
 
         </div>
 
-        <!-- Plant Submissions Section -->
-    @if($plantSubmissions && !$plantSubmissions->isEmpty())
-    <div class="mt-6">
-        <h2 class="text-lg font-bold mb-4">Plant Submissions</h2>
-        <div id="plant-submission-list-on-profile" class="grid grid-cols-2 gap-3">
-            @include('partials.plant_submissions', ['plantSubmissions' => $plantSubmissions])
-        </div>
-        @if ($plantSubmissions->hasMorePages())
-        <div class="flex justify-center mt-4">
-            <button id="load-more-plant-submission-profile" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">Load More</button>
-        </div>
+    <div class="mt-6 px-2">
+    <div class="flex border-b border-gray-200">
+        <button onclick="switchTab(event, 'tab-plants')" class="tab-btn active-tab px-4 py-2 font-bold text-sm text-blue-600 border-b-2 border-blue-600 transition">
+            Plants
+        </button>
+        <button onclick="switchTab(event, 'tab-posts')" class="tab-btn px-4 py-2 font-medium text-sm text-gray-500 hover:text-blue-600 transition">
+            Posts
+        </button>
+        <button onclick="switchTab(event, 'tab-products')" class="tab-btn px-4 py-2 font-medium text-sm text-gray-500 hover:text-blue-600 transition">
+            Products
+        </button>
+    </div>
+</div>
+
+<div id="tab-container" class="mt-4">
+    
+    <div id="tab-plants" class="tab-content">
+        @if($plantSubmissions && !$plantSubmissions->isEmpty())
+            <div id="plant-submission-list-on-profile" class="flex flex-col gap-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                @include('partials.plant_submissions', ['plantSubmissions' => $plantSubmissions])
+            </div>
+            @if ($plantSubmissions->hasMorePages())
+            <div class="flex justify-center mt-4 pb-6">
+                <button id="load-more-plant-submission-profile" class="bg-gray-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-xs">
+                    Load More Plants
+                </button>
+            </div>
+            @endif
+        @else
+            <p class="text-center text-gray-400 py-10 text-xs">No plant submissions yet.</p>
         @endif
     </div>
-    @endif
 
-    <!-- Posts Section -->
-    @if(!$user->posts->isEmpty())
-    <div class="mt-8 mb-6">
-        <h2 class="text-lg font-bold mb-4">Posts</h2>
-        <div id="post-list-on-profile" class="space-y-4">
-            @include('partials.posts', ['posts' => $posts])
-        </div>
-        @if ($posts->hasMorePages())
-        <div class="flex justify-center mt-4">
-            <button id="load-more-post-profile" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">Load More</button>
-        </div>
+    <div id="tab-posts" class="tab-content hidden">
+        @if(!$user->posts->isEmpty())
+            <div id="post-list-on-profile" class="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                @include('partials.posts', ['posts' => $posts])
+            </div>
+            @if ($posts->hasMorePages())
+            <div class="flex justify-center mt-4 pb-6">
+                <button id="load-more-post-profile" class="bg-gray-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-xs">Load More Posts</button>
+            </div>
+            @endif
+        @else
+            <p class="text-center text-gray-400 py-10 text-xs">No posts yet.</p>
         @endif
     </div>
-    @endif
-    
-    @endif
-@endauth
+
+    <div id="tab-products" class="tab-content hidden">
+        @if(!$user->products->isEmpty())
+            <div id="product-list-on-profile" class="grid grid-cols-2 gap-3 px-1">
+                @include('partials.products', ['products' => $products])
+            </div>
+            @if ($products->hasMorePages())
+            <div class="flex justify-center mt-6 pb-10">
+                <button id="load-more-product-profile" class="bg-gray-800 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-xs transition">
+                    Load More Products
+                </button>
+            </div>
+            @endif
+        @else
+            <p class="text-center text-gray-400 py-10 text-xs">No products yet.</p>
+        @endif
+    </div>
+</div>
+        
+        @endif
+    @endauth
 
 
     </div>
 
     
+<script>
+function switchTab(event, tabId) {
+    // 1. Sembunyikan semua konten tab
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.add('hidden'));
+
+    // 2. Hapus status aktif dari semua tombol tab
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'font-bold');
+        btn.classList.add('text-gray-500', 'font-medium');
+    });
+
+    // 3. Tampilkan tab yang dipilih
+    document.getElementById(tabId).classList.remove('hidden');
+
+    // 4. Set tombol yang diklik menjadi aktif
+    event.currentTarget.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'font-bold');
+    event.currentTarget.classList.remove('text-gray-500', 'font-medium');
+}
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let currentPage = 1;
-    const userId = {{ $user->id }};
+    // Gunakan variabel terpisah untuk setiap fitur
+    let postPage = 1;
+    let plantPage = 1;
+    const userId = "{{ $user->username }}";
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
+    // 1. Logic untuk Load More Posts
     const loadMorePostButton = document.getElementById('load-more-post-profile');
     if (loadMorePostButton) {
         loadMorePostButton.addEventListener('click', function() {
-            currentPage++;
-            const nextPageUrl = `/discuss/${userId}/load?page=${currentPage}`;
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            postPage++; // Gunakan postPage
+            const nextPageUrl = `/discuss/${userId}/load?page=${postPage}`;
 
             fetch(nextPageUrl, {
                 headers: {
@@ -305,22 +363,26 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 const postList = document.getElementById('post-list-on-profile');
-                postList.insertAdjacentHTML('beforeend', data.html);
-                if (!data.nextPageUrl) {
-                    loadMorePostButton.style.display = 'none';
+                // Pastikan data.html tidak undefined
+                if (data.html) {
+                    postList.insertAdjacentHTML('beforeend', data.html);
+                }
+                
+                // Cek ketersediaan halaman berikutnya dari response controller
+                if (!data.hasMorePages) { 
+                    loadMorePostButton.parentElement.remove(); // Hapus container tombol
                 }
             })
             .catch(error => console.error('Error loading more posts:', error));
         });
     }
 
+    // 2. Logic untuk Load More Plant Submissions
     const loadMorePlantButton = document.getElementById('load-more-plant-submission-profile');
     if (loadMorePlantButton) {
         loadMorePlantButton.addEventListener('click', function() {
-            currentPage++;
-            const nextPageUrl = `/profile/${userId}/plant-submissions/load?page=${currentPage}`;
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            plantPage++; // Gunakan plantPage
+            const nextPageUrl = `/profile/${userId}/plant-submissions/load?page=${plantPage}`;
 
             fetch(nextPageUrl, {
                 headers: {
@@ -331,15 +393,63 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 const submissionList = document.getElementById('plant-submission-list-on-profile');
-                submissionList.insertAdjacentHTML('beforeend', data.html);
-                if (!data.nextPageUrl) {
-                    loadMorePlantButton.style.display = 'none';
+                
+                if (data.html) {
+                    submissionList.insertAdjacentHTML('beforeend', data.html);
+                }
+
+                // Jika controller mengirim nextPageUrl null atau false
+                if (!data.hasMorePages) {
+                    loadMorePlantButton.parentElement.remove();
                 }
             })
             .catch(error => console.error('Error loading more plant submissions:', error));
         });
     }
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const username = "{{ $user->username }}";
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Helper Function untuk Fetch
+    function setupLoadMore(buttonId, listId, urlBase, currentPage) {
+        const btn = document.getElementById(buttonId);
+        const list = document.getElementById(listId);
+        let page = currentPage;
+
+        if (btn) {
+            btn.addEventListener('click', function() {
+                page++;
+                console.log(`Loading ${urlBase} page: ${page}`);
+
+                fetch(`${urlBase}?page=${page}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.html && data.html.trim() !== "") {
+                        list.insertAdjacentHTML('beforeend', data.html);
+                    }
+                    if (!data.hasMorePages) {
+                        btn.parentElement.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    page--;
+                });
+            });
+        }
+    }
+
+    // Eksekusi untuk masing-masing bagian
+    setupLoadMore('load-more-post-profile', 'post-list-on-profile', `/discuss/${username}/load`, 1);
+    setupLoadMore('load-more-plant-submission-profile', 'plant-submission-list-on-profile', `/profile/${username}/plant-submissions/load`, 1);
+    setupLoadMore('load-more-product-profile', 'product-list-on-profile', `/profile/${username}/products/load`, 1);
+});
+
 </script>
 
 

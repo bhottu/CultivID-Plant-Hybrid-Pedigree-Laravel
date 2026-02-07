@@ -1,67 +1,68 @@
 
    
 @foreach($plantSubmissions as $item)
-            <div class="bg-gray-50 p-4 h-auto border-b border-double  border-green-200">
-                @php
-                    $images = [];
-                    if ($item->image) {
-                        $decoded = json_decode($item->image, true);
-                        if (is_array($decoded)) {
-                            $images = $decoded;
-                        } else {
-                            $images = [$item->image];
-                        }
-                    }
-                    $first = count($images) ? $images[0] : null;
+    @php
+        $images = [];
+        if ($item->image) {
+            $decoded = json_decode($item->image, true);
+            if (is_array($decoded)) {
+                $images = $decoded;
+            } else {
+                $images = [$item->image];
+            }
+        }
+        $first = count($images) ? $images[0] : null;
 
-                    $status = $item->status_review;
-                    $badgeClass = match($status) {
-                        'approved' => 'bg-green-100 text-green-700',
-                        'rejected' => 'bg-red-100 text-red-700',
-                        'banding'  => 'bg-yellow-100 text-yellow-700',
-                        default    => 'bg-gray-200 text-gray-700',
-                    };
-                @endphp
+        $status = $item->status_review;
+        $badgeClass = match($status) {
+            'approved' => 'bg-green-100 text-green-700',
+            'rejected' => 'bg-red-100 text-red-700',
+            'banding'  => 'bg-yellow-100 text-yellow-700',
+            default    => 'bg-gray-200 text-gray-700',
+        };
+    @endphp
 
-                <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="block mb-3">
-                    <div class="relative w-full h-48 rounded overflow-hidden border border-gray-300 hover:shadow-lg transition">
-
-                        @if($first)
-                            <!-- IMAGE -->
-                            <img src="{{ asset('storage/'.$first) }}"
-                                alt="Foto Tanaman"
-                                class="w-full h-full object-cover">
-                        @else
-                            <!-- NO IMAGE -->
-                            <div class="w-full h-full flex items-center justify-center
-                                        bg-gray-100 text-xs text-gray-500 text-center">
-                                No Image
-                            </div>
-                        @endif
-
-                        <!-- BADGE (SELALU MUNCUL) -->
-                        <span class="absolute bottom-2 right-2 px-2 py-1 rounded text-xs font-semibold {{ $badgeClass }}">
-                            {{ ucfirst($status) }}
-                        </span>
-
+    {{-- Container utama menggunakan flex agar gambar dan teks sejajar --}}
+    <div class="flex items-center bg-white p-2 border-b border-gray-100 hover:bg-gray-50 transition-all w-full text-left">
+        
+        <div class="flex-shrink-0 mr-4" style="width: 56px; height: 56px;">
+            <div class="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 shadow-sm" >
+                @if($first)
+                    <img onclick="showImageModal('{{ $first ? asset('storage/'.$first) : '' }}')" src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman"  style="width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important;">
+                @else
+                    <div class="w-full h-full flex items-center justify-center bg-gray-100 text-xxxs text-gray-400">
+                        No Image
                     </div>
-                </a>
-
-                
-
-                
-                <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="text-mf text-blue-600 hover:text-blue-800 hover:underline  block mb-2 italic">
-                    {{ \Illuminate\Support\Str::limit($item->plant_id, 20) }}
-                </a>
-                <p class="text-xs text-gray-700 mb-1 italic">
-                    <span class="mr-2"><i class='fas fa-venus text-red-600'></i></span>
-                    {{ \Illuminate\Support\Str::limit($item->induk_betina, 20) }}
-                </p>
-                <p class="text-xs text-gray-700 mb-1 italic">
-                    <span class="mr-2"><i class='fas fa-mars text-blue-600'></i></span>{{ \Illuminate\Support\Str::limit($item->induk_jantan, 20) }}
-                </p>
-                
+                @endif
             </div>
+        </div>
+
+        <div class="flex-grow min-w-0 text-left" onclick="{{ route('plant-submissions.show', $item->plant_id) }}">
+            <a href="{{ route('plant-submissions.show', $item->plant_id) }}" class="block">
+                <h4 class="text-xs font-bold text-gray-600 hover:underline italic truncate leading-tight">
+                    {{ \Illuminate\Support\Str::limit($item->plant_id, 35) }}
+                </h4>
+            </a>
+            
+            <div class="mt-1 space-y-0.5">
+                <p class="text-xs text-gray-600 flex items-center italic truncate">
+                    <span class="w-4"><i class="fas fa-venus text-red-500"></i></span>
+                    {{ \Illuminate\Support\Str::limit($item->induk_betina, 30) }}
+                </p>
+                <p class="text-xs text-gray-600 flex items-center italic truncate">
+                    <span class="w-4"><i class="fas fa-mars text-blue-500"></i></span>
+                    {{ \Illuminate\Support\Str::limit($item->induk_jantan, 30) }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex-shrink-0 ml-auto pl-2">
+            <span class="px-2 py-1 rounded-md text-xs {{ $badgeClass }}  tracking-tighter">
+                {{ $status }}
+            </span>
+        </div>
+
+    </div>
 @endforeach
         
         <tbody style="display: none;">

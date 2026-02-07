@@ -134,8 +134,8 @@
             </div>
        
         <div class="w-full bg-gray-100 border-2 mt-3 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer">
-            <div class="bg-white p-3 rounded-full shadow-sm mb-4">
-                <i class="fas fa-ads text-2xl text-gray-400"></i>
+            <div class="p-3 rounded-full shadow-sm mb-4">
+                <i class="fas fa-ad text-2xl text-gray-800"></i>
             </div>
             <h3 class="text-lg font-bold text-gray-700">Place Your Ad Here</h3>
             <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>

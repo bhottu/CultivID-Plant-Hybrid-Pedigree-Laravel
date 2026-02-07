@@ -37,7 +37,7 @@
             </div>
 
             <p class="text-gray-800">{{ Str::limit($product->description, 50, '...') }} <span class="inline-block bg-blue-200 text-blue-800 rounded-300 px-3 py-1 text-xs font-semibold mr-2">
-                <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">Read more</a></p>
+                <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">Read more x</a></p>
             </span>
         </div>
     </div>

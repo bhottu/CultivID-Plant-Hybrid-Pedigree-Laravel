@@ -47,7 +47,8 @@ Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
 Route::get('/debug-images', function() { return view('debug-images'); });
 Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
 Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile');
-Route::get('profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
+//Route::get('/profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
+Route::get('/profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlants'])->name('profile.plant-submissions.load');
 Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
 
 Route::get('/discuss/@{username}', [HomeController::class, 'postsByUsername'])->name('posts.by.username');
@@ -145,7 +146,10 @@ Route::post('/products/{product}/soldout', [ProductController::class, 'toggleSol
 
 Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
 
-Route::get('profile/{userId}/products', [ProductController::class, 'loadProducts'])->name('profile.products');
+//Route::get('profile/{userId}/products', [ProductController::class, 'loadProducts'])->name('profile.products');
+// routes/web.php
+Route::get('profile/{username}/products/load', [ProductController::class, 'loadMoreProfileProducts'])
+    ->name('profile.products.load');
 Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('auth');
 Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('auth');
 Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('auth');

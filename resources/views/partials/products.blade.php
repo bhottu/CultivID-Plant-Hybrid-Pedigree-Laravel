@@ -1,55 +1,76 @@
 @foreach ($products as $product)
-    <div class="bg-white rounded-lg mt-4 overflow-hidden shadow-lg">
-                    @if ($product->image_path)
-                    <div class="relative">
-                            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">
-                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
-                                @if ($product->is_sold_out)
-                                    <span class="absolute bottom-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
-                                        Sold Out
-                                    </span>
-                                @else
-                                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
-                                        Available
-                                    </span>
-                                @endif
-                            </a>
-                        </div>
-                    @endif
-
-        <div class="p-4">
-            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">
-                <h2 class="text-xl font-semibold text-gray-800">{{ $product->name }}</h2>
+    {{-- Tambahkan text-left di sini untuk memastikan semua konten di dalam kartu merapat ke kiri --}}
+    <div class="bg-white rounded-md overflow-hidden shadow-sm border border-gray-100 flex flex-col text-left">
+        
+        {{-- 1. Gambar --}}
+        <div class="relative aspect-square w-full bg-gray-50">
+            <a href="{{ route('products.show', $product) }}" class="block w-full h-full">
+                @if ($product->image_path)
+                    <img src="{{ asset('storage/' . $product->image_path) }}" 
+                         alt="{{ $product->name }}" 
+                         class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full flex items-center justify-center text-gray-400 text-[10px] italic center">
+                        No Image
+                    </div>
+                @endif
+                
+                <div class="absolute right-2"> 
+                    <span class="absolute bottom-0 right-0 {{ $product->is_sold_out ? 'bg-red-500' : 'bg-green-500' }} text-white text-xxxs font-bold px-2 py-1 rounded-tl shadow-sm">
+                        {{ $product->is_sold_out ? 'Sold Out' : 'Available' }}
+                    </span>
+                </div>
             </a>
-            <p class="text-gray-600 mb-2">
-                  
-                        @if($product->discount)
-                            <span class="text-red-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                        @else
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
-                        @endif
-                    
-            </p>
+        </div>
 
-            <div class="flex items-center">
-                <a href="{{ url('profile/' . $product->user->id) }}">
-                    @if($product->user->profile_photo_path)
-                        <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-10 w-10 rounded-full">
-                    @else
-                        <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-10 w-10 rounded-full">
-                    @endif
-                </a>
-                <div class="ml-2">
-                    <span class="font-semibold"><a href="{{ url('profile/' . $product->user->id) }}" class="hover:text-gray-500">
-                    {{ $product->user->name ?? 'Unknown' }}</a></span>
-                    <div class="text-gray-500 text-xs">{{ $product->created_at->format('d M Y') }}</div>
+        {{-- 2. Detail Produk (Tambahkan text-left lagi untuk keamanan) --}}
+        <div class="p-3 flex flex-col flex-grow text-left">
+            <a href="{{ route('products.show', $product) }}" class="block mb-1 text-left">
+                <h3 class="text-sm text-gray-800 leading-tight truncate text-left">
+                    {{ $product->name }}
+                </h3>
+            </a>
+
+            <div class="mb-2 text-left">
+                @if($product->discount)
+                    {{-- 1. Harga Setelah Diskon (Utama) --}}
+                    <div class="text-sm font-black text-gray-600 leading-none text-left mb-1">
+                        {{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} 
+                    </div>
+
+                    {{-- 2. Harga Asli & Badge Diskon --}}
+                    <div class="flex items-center gap-1.5 text-left">
+                        <span class="text-xs text-red-500 line-through leading-none mr-2">
+                            {{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}
+                        </span>
+                        
+                        {{-- Badge Diskon --}}
+                        <span class="bg-red-100 text-red-600 text-xs  px-1 rounded">
+                            {{ $product->discount }}%
+                        </span>
+                    </div>
+                @else
+                    {{-- Harga Normal jika tidak ada diskon --}}
+                    <div class="text-sm font-black text-gray-600 leading-none text-left">
+                        {{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}
+                    </div>
+                @endif
+            </div>
+          
+
+            <div class="mt-auto pt-2 border-t border-gray-50 flex items-center justify-start gap-2 w-full text-left">
+                @php
+                    $photo = $product->user->profile_photo_path;
+                @endphp
+                <img src="{{ $photo ? asset('storage/' . $photo) : asset('storage/images/default.png') }}" 
+                     class="h-5 w-5 rounded-full object-cover flex-shrink-0">
+                
+                <div class="min-w-0 text-left">
+                    <p class="text-sm font-semibold text-gray-700 truncate leading-none text-left">
+                        {{ $product->user->name ?? 'Unknown' }}
+                    </p>
                 </div>
             </div>
-
-            <p class="text-gray-800">{{ Str::limit($product->description, 50, '...') }} <span class="inline-block bg-blue-200 text-blue-800 rounded-300 px-3 py-1 text-xs font-semibold mr-2">
-                <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:underline">Read more</a></p>
-            </span>
         </div>
     </div>
 @endforeach

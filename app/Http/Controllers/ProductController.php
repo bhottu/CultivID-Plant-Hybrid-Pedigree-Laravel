@@ -192,22 +192,24 @@ $counts = [
         ]);
     }
     
-    public function loadProducts(Request $request, $userId)
-    {
-        \Log::info('Request AJAX: ' . $request->ajax()); 
+
+
+public function loadMoreProfileProducts(Request $request, $username)
+{
+    $user = User::where('username', $username)->firstOrFail();
     
-        if ($request->ajax()) {
-            $user = User::findOrFail($userId);
-            $products = $user->products()->paginate(8);
-            $view = view('partials.products', ['products' => $products])->render();
-            return response()->json([
-                'html' => $view,
-                'nextPageUrl' => $products->nextPageUrl()
-            ]);
-        }
-    
-        return response()->json(['error' => 'Non-AJAX request'], 400);
+    // Kita set paginate ke 2 untuk testing, pastikan bekerja
+    $products = $user->products()->latest()->paginate(6);
+
+    if ($request->ajax()) {
+        return response()->json([
+            'html' => view('partials.products', compact('products'))->render(),
+            'hasMorePages' => $products->hasMorePages()
+        ]);
     }
+
+    return response()->json(['error' => 'Not Found'], 404);
+}
     
    public function destroy(Product $product)
     {
@@ -308,7 +310,7 @@ $counts = [
 
     public function adminIndex()
     {
-        $products = Product::with('category')->latest()->paginate(10); // Sesuaikan pagination sesuai kebutuhan Anda
+        $products = Product::with('category')->latest()->paginate(9); // Sesuaikan pagination sesuai kebutuhan Anda
         return view('admin.items.index', compact('products'));
     }
 

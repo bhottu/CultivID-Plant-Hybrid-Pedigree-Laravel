@@ -4,14 +4,14 @@
 
 <div class="container mx-auto max-w-lg px-4 my-4 text-sm">
     @if(isset($user))
-        <h1 class="text-2xl font-bold text-gray-800">
+        <h1 class="text-xl font-bold text-gray-800">
             {{ $user->name }}'s Products
         </h1>
         <p class="text-sm text-gray-500">
             All products uploaded by {{ '@' . $user->username }}
         </p>
     @else
-        <h1 class="text-2xl font-bold text-gray-800">
+        <h1 class="text-xl font-bold text-gray-800">
             Market
         </h1>
         <p class="text-sm text-gray-500">
@@ -23,38 +23,42 @@
 
 <div class="container mx-auto max-w-lg px-2 my-2">
     
-    <div id="product-list" class="grid grid-cols-1 gap-4 mt-4">
+    <div id="product-list" class="grid grid-cols-2 gap-4 mt-4">
         @foreach ($products as $product)
             <div class="bg-white rounded-lg overflow-hidden shadow-lg">
                     @if ($product->image_path)
-                    <div class="relative">
-                            <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:underline">
-                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover">
-                                @if ($product->is_sold_out)
-                                    <span class="absolute bottom-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
-                                        Sold Out
-                                    </span>
-                                @else
-                                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl">
-                                        Available
-                                    </span>
-                                @endif
-                            </a>
-                        </div>
+                    <div class="relative aspect-square w-full bg-gray-100"> 
+                        <a href="{{ route('products.show', $product->slug) }}" class="block w-full h-full">
+                            @if ($product->image_path)
+                                <img src="{{ asset('storage/' . $product->image_path) }}" 
+                                    alt="{{ $product->name }}" 
+                                    class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs italic">
+                                    No Image
+                                </div>
+                            @endif
+        
+                        {{-- Badge Status --}}
+                        <span class="absolute bottom-0 right-0 {{ $product->is_sold_out ? 'bg-red-500' : 'bg-green-500' }} text-white text-xxxs font-bold px-2 py-1 rounded-tl shadow-sm">
+                            {{ $product->is_sold_out ? 'Sold Out' : 'Available' }}
+                        </span>
+                    </a>
+        </div>
                     @endif
 
                 <div class="p-4">
                     <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:text-gray-500">
-                        <h2 class="text-md font-semibold">{{ $product->name }}</h2>
+                        <h2 class="text-sm truncate">{{ $product->name }}</h2>
                     </a>
                     <div class="flex items-center mb-2">
                  
                         @if($product->discount)
-                            <span class="text-gray-600 mr-2 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span>
-                            <span class="text-red-600 text-xs line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 mr-2 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span><br>
+                            <span class="text-red-600 text-xxxs line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                             
                         @else
-                            <span class="text-gray-600 text-sm ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @endif
                   
                      </div>
@@ -62,26 +66,21 @@
                     <div class="flex items-center">
                         <a href="{{ url('profile/' . $product->user->id) }}">
                         @if($product->user->profile_photo_path)
-                            <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-10 w-10 rounded-full">
+                            <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-8 w-8 rounded-full">
                         @else
-                            <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-10 w-10 rounded-full">
+                            <img src="/storage/images/default.png" alt="Default Profile Photo" class="h-8 w-8 rounded-full">
                         @endif
 
                         </a>
                         <div class="ml-2">
-                            <span class="font-semibold"><a href="{{ url('profile/' . $product->user->username) }}" class="hover:text-gray-500 text-md">
+                            <span class="font-semibold">
+                                <a href="{{ url('profile/' . $product->user->username) }}" class="hover:text-gray-500 text-xs">
                             {{ $product->user->name ?? 'Unknown' }}</a></span>
-                            <div class="text-gray-500 text-xs">{{ $product->created_at->diffForHumans() }}</div>
+                            <div class="text-gray-500 text-xxxs">{{ $product->created_at->diffForHumans() }}</div>
                         </div>
                     </div>
 
-                    <p class="text-gray-800 text-xs ">{{ Str::limit($product->description, 50, '...') }}  
-                        @if ($product->category)
-                        <a href="{{ route('category.show', $product->category->slug) }}" class="inline-block bg-blue-200 text-xs text-gray-700 px-1 py-1 rounded text-sm hover:bg-gray-300">
-                            #{{ $product->category->name }}
-                        </a>
-                        @endif
-                    </p>
+                    
                     </span>
 
                     
@@ -124,7 +123,7 @@
                 </div>
             </div>
             <p class="product-description text-gray-800">
-                <span class="inline-block bg-blue-200 text-blue-800 rounded-300 px-3 py-1 text-xs font-semibold mr-2">
+                <span class="inline-block bg-blue-200 text-blue-800 rounded-300 px-2 py-1 text-xs mr-2">
                     <a href="#" class="read-more text-blue-500 hover:underline">Read more</a>
                 </span>
             </p>

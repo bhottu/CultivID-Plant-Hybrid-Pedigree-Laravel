@@ -17,7 +17,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::paginate(9);
 
         return view('admin.users', ['users' => $users]);
     }
@@ -61,9 +61,9 @@ class ProfileController extends Controller
 
     public function show(User $user)
     {
-        $posts = $user->posts()->orderBy('created_at', 'desc')->paginate(10);
+        $posts = $user->posts()->orderBy('created_at', 'desc')->paginate(9);
         $shares = $user->shares()->orderBy('created_at', 'desc')->get();
-        $products = $user->products()->paginate(6);
+        $products = $user->products()->paginate(9);
         
         // Show approved plant submissions to all users
         $plantSubmissions = $user->plantSubmissions()
@@ -73,13 +73,31 @@ class ProfileController extends Controller
             ->where('induk_betina', '!=', '')
             ->where('induk_jantan', '!=', '')
             ->orderBy('created_at', 'desc')
-            ->paginate(3);
+            ->paginate(9);
 
         if (request()->header('HX-Request')) {
             return view('partials.profile-content', compact('user', 'shares', 'posts', 'products', 'plantSubmissions'));
         }
 
         return view('profile.show', compact('user', 'shares', 'posts', 'products', 'plantSubmissions'));
+    }
+
+    public function loadMorePlants(User $user)
+    {
+        $plantSubmissions = $user->plantSubmissions()
+            ->where('status_review', 'approved')
+            ->whereNotNull('induk_betina')
+            ->whereNotNull('induk_jantan')
+            ->where('induk_betina', '!=', '')
+            ->where('induk_jantan', '!=', '')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9); // Sesuaikan jumlahnya dengan show()
+
+        // Kembalikan JSON agar dibaca oleh fetch() di JavaScript
+        return response()->json([
+            'html' => view('partials.plant_submissions', compact('plantSubmissions'))->render(),
+            'hasMorePages' => $plantSubmissions->hasMorePages()
+        ]);
     }
 
     public function edit()
@@ -155,7 +173,7 @@ class ProfileController extends Controller
     {
         try {
             $posts = $user->posts()->orderBy('created_at', 'desc')
-                         ->paginate(5, ['*'], 'page', $request->page);
+                         ->paginate(9, ['*'], 'page', $request->page);
 
             if ($request->ajax()) {
                 $view = view('partials.posts', compact('posts'))->render();
@@ -178,7 +196,7 @@ class ProfileController extends Controller
                              ->where('induk_betina', '!=', '')
                              ->where('induk_jantan', '!=', '')
                              ->orderBy('created_at', 'desc')
-                             ->paginate(5, ['*'], 'page', $request->page);
+                             ->paginate(9, ['*'], 'page', $request->page);
 
             if ($request->ajax()) {
                 $view = view('partials.plant_submissions', compact('plantSubmissions'))->render();
