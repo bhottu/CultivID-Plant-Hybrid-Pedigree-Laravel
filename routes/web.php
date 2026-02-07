@@ -43,13 +43,13 @@ Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordF
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
-Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
+Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed')->middleware('auth');
 Route::get('/debug-images', function() { return view('debug-images'); });
 Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
 Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile');
 //Route::get('/profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlantSubmissions'])->name('load.more-plant-submissions-profile');
 Route::get('/profile/{user}/plant-submissions/load', [ProfileController::class, 'loadMorePlants'])->name('profile.plant-submissions.load');
-Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile');
+Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 
 Route::get('/discuss/@{username}', [HomeController::class, 'postsByUsername'])->name('posts.by.username');
 
@@ -133,7 +133,7 @@ Route::get('plants', [PlantController::class, 'index'])->name('plants.index');
 
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
-Route::get('market/', [ProductController::class, 'allproducts'])->name('all.products');
+Route::get('market/', [ProductController::class, 'allproducts'])->name('all.products')->middleware('auth');
 Route::get('/market/@{username}', [ProductController::class, 'productsByUsername'])->name('products.by.username');
 Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])->name('load-more-products');
 Route::get('/market/{slug}', [ProductController::class, 'show'])->name('products.show');
@@ -160,7 +160,7 @@ Route::post('post', [PostController::class, 'store'])->name('post.store');
 Route::post('profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow')->middleware('auth');
 Route::post('profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow')->middleware('auth');
 
-Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+Route::get('post/{id}', [PostController::class, 'show'])->name('post.show')->middleware('auth');
 Route::get('posts/{post}', 'PostController@show')->name('posts.show');
 Route::post('post/{postId}/like', [LikeController::class, 'addLike'])->name('post.like')->middleware('auth');
 Route::post('post/{post}/share', [PostController::class, 'addShare'])->name('post.share')->middleware('auth');
