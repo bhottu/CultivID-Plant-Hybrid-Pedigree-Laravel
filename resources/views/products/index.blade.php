@@ -180,7 +180,7 @@
             <div class="w-full md:w-3/4 bg-white p-4 border-t">
                 <div class="flex items-center justify-between mb-2">
                     <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
-                        <span class="block text-sm md:text-sm text-gray-800 font-bold">Latest Plants & Hybrids</span>
+                        <span class="block text-sm md:text-lg text-gray-800 font-bold">Latest Plants & Hybrids</span>
                         <span class="block text-xs md:text-sm text-gray-400 italic">cultivar registration & history</span>
                     </h1>
                 </div>

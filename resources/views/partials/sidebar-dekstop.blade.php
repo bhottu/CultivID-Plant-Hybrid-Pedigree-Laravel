@@ -3,7 +3,7 @@
                 <div class="sticky top-4">
                     <div class="flex items-center justify-between mb-2">
                     <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
-                        <span class="block text-sm md:text-xl text-gray-800 font-bold">Navigation</span>
+                        <span class="block text-sm md:text-lg text-gray-800 font-bold">Navigation</span>
                         <span class="block text-xs md:text-sm text-gray-400 italic">explore cultivID</span>
                     </h1>
                 </div>
