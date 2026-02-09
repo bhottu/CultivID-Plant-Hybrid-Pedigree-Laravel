@@ -164,7 +164,7 @@
         </div>
         <div>
             <label class="block text-gray-800 font-semibold">Photos</label>
-            <input type="file" name="image" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
+            <input type="file" name="images[]" multiple class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
             @php
                 $images = [];
                 if ($plantSubmission->image) {

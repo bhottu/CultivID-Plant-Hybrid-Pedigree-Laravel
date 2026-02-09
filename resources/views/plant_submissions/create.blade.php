@@ -143,9 +143,12 @@
             @error('keterangan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Photos</label>
-            <input type="file" name="image" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-            @error('image') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
+            <label class="block text-gray-800 font-semibold">Photos (Max 3)</label>
+            <input type="file" name="images[]" multiple 
+                class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
+            
+            @error('images') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
+            @error('images.*') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
     </form>

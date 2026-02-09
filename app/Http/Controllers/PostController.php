@@ -27,21 +27,49 @@ class PostController extends Controller
         return view('post.create', compact('users'));
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image',
+            'image' => 'required|image|max:5120', // Maksimal 5MB sebelum dikompres
             'caption' => 'nullable|string|max:255',
         ]);
 
-        $imagePath = $request->file('image')->store('uploads', 'public');
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            
+            // 1. Buat nama file unik
+            $filename = time() . '_' . uniqid() . '.jpg';
+            
+            // 2. Tentukan folder tujuan (Folder: public/storage/uploads)
+            $destinationPath = public_path('storage/uploads');
 
+            // 3. Pastikan folder 'uploads' sudah ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // 4. Proses Kompresi
+            // Resize lebar ke 1080px (standar sosial media), kualitas 75%
+            $imageResized = \Image::make($file)->resize(1080, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode('jpg', 75);
+
+            // 5. Simpan file fisik
+            $imageResized->save($destinationPath . '/' . $filename);
+
+            // 6. Path untuk disimpan di Database
+            $imagePath = 'uploads/' . $filename;
+        }
+
+        // Buat postingan dengan path gambar yang sudah dikompres
         $post = Auth::user()->posts()->create([
             'image' => $imagePath,
             'caption' => $request->caption,
         ]);
 
-        return redirect()->route('profile', Auth::user());
+        return redirect()->route('posts.by.username', Auth::user()->username)
+                        ->with('success', 'Post created successfully!');
     }
 
     public function addComment(Request $request, Post $post)
@@ -122,21 +150,46 @@ class PostController extends Controller
         return view('post.edit', compact('post', 'users'));
     }
 
-    public function update(Request $request, Post $post)
+   public function update(Request $request, Post $post)
     {
         $request->validate([
             'caption' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120', // Izinkan hingga 5MB sebelum dikompres
         ]);
 
         if ($request->hasFile('image')) {
-            $post->image = $request->file('image')->store('images', 'public');
+            // 1. Hapus Gambar Lama dari Storage
+            if ($post->image && \Storage::disk('public')->exists($post->image)) {
+                \Storage::disk('public')->delete($post->image);
+            }
+
+            // 2. Proses Gambar Baru
+            $file = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.jpg';
+            $destinationPath = public_path('storage/uploads');
+
+            // Pastikan folder ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // 3. Kompresi (Sama dengan fungsi Store)
+            $imageResized = \Image::make($file)->resize(1080, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode('jpg', 75);
+
+            // 4. Simpan ke Fisik & Update Path di Database
+            $imageResized->save($destinationPath . '/' . $filename);
+            $post->image = 'uploads/' . $filename;
         }
 
+        // Update Caption
         $post->caption = $request->caption;
         $post->save();
 
-        return redirect()->route('profile', Auth::user())->with('status', 'Post updated successfully!');
+        return redirect()->route('posts.by.username', Auth::user()->username)
+                        ->with('status', 'Post updated successfully!');
     }
     // End edit update
 
@@ -146,7 +199,8 @@ class PostController extends Controller
     
         $post->delete();
 
-        return redirect()->route('profile', auth()->user());
+        return redirect()->route('posts.by.username', auth()->user()->username)
+                 ->with('delete', 'Post deleted successfully!');
     }
     // End Delete post
 

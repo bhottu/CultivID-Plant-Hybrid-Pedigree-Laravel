@@ -10,13 +10,10 @@
 <div class="w-full h-48 bg-cover bg-no-repeat bg-center flex flex-col justify-center items-center relative" 
     style="background-image: url('{{ asset('/storage/banners/banner.jpg') }}')">
 @endif
-    <div>
-        
-    </div>
+   
 
-
-    {{-- Icon Navigation overlap bawah banner --}}
-    <div class="nav-overlap z-10 p-4 relative mx-auto max-w-lg">
+{{-- Icon Navigation overlap bawah banner --}}
+<div class="nav-overlap z-10 p-4 relative mx-auto ">
     
     {{-- Search Bar --}}
     <div class="search-bar mb-2 shadow-lg mx-auto max-w-3xl rounded-lg">
@@ -29,11 +26,11 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-md p-3 max-w-3xl mx-auto relative">
-    <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
+        <div class="flex items-center gap-3 flex-nowrap overflow-x-auto scrollbar-hide scroll-smooth">
 
         {{-- All --}}
         <a href="{{ route('plant-submissions.index') }}"
-            class="relative flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium shadow-sm transition
+            class="relative flex items-center gap-2 px-4 py-2 rounded-full text-xs md:text-sm font-medium shadow-sm transition
             {{ request()->routeIs('plant-submissions.index')
                     ? 'bg-gray-200 text-gray-800 ring-2 ring-gray-400'
                     : 'bg-green-50 text-gray-600 hover:bg-green-100'
@@ -44,7 +41,7 @@
         {{-- Approved --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'approved']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-green-50 text-green-600 hover:bg-green-100 transition text-xs font-medium shadow-sm">
+           bg-green-50 text-green-600 hover:bg-green-100 transition text-xs md:text-sm font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -66,7 +63,7 @@
         {{-- Pending --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'pending']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xs font-medium shadow-sm">
+           bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition text-xs md:text-sm font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -87,28 +84,28 @@
        {{-- Revision --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'revision']) }}" 
             class="relative flex items-center gap-2 px-4 py-2 rounded-full 
-            bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xs font-medium shadow-sm"> 
+            bg-blue-50 text-blue-600 hover:bg-blue-100 transition text-xs md:text-sm font-medium shadow-sm"> 
  
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> 
-            <path d="M4 20h4l10-10-4-4L4 16v4z"/> <path d="M14 6l4 4"/> 
-        </svg> 
-        Revisions 
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> 
+                <path d="M4 20h4l10-10-4-4L4 16v4z"/> <path d="M14 6l4 4"/> 
+            </svg> 
+            Revisions 
 
-         @auth
-            @if(($counts['revision'] ?? 0) > 0)
-            <span class="min-w-[16px] h-4 px-1 
-            flex items-center justify-center rounded-full bg-blue-600 text-white 
-            text-[10px] font-semibold leading-none">
-            {{ $counts['revision'] ?? 0 }}
-            </span> 
-            @endif
-        @endauth
-    </a>
+            @auth
+                @if(($counts['revision'] ?? 0) > 0)
+                <span class="min-w-[16px] h-4 px-1 
+                flex items-center justify-center rounded-full bg-blue-600 text-white 
+                text-[10px] font-semibold leading-none">
+                {{ $counts['revision'] ?? 0 }}
+                </span> 
+                @endif
+            @endauth
+        </a>
 
         {{-- Reject --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'rejected']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-red-50 text-red-500 hover:bg-red-100 transition text-xs font-medium shadow-sm">
+           bg-red-50 text-red-500 hover:bg-red-100 transition text-xs md:text-sm font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9"/>
@@ -130,7 +127,7 @@
         {{-- Appeal --}}
         <a href="{{ route('plant-submissions.index', ['status' => 'appeal']) }}"
            class="relative flex items-center gap-2 px-4 py-2 rounded-full
-           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xs font-medium shadow-sm">
+           bg-gray-100 text-indigo-600 hover:bg-indigo-100 transition text-xs md:text-sm font-medium shadow-sm">
 
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M12 3v18"/>
@@ -158,143 +155,115 @@
     </div>
 </div>
 
-<section class="w-full mx-auto max-w-lg">
 
-@if(!empty($adsense->publisher_id) && $adsense->publisher_id != '1')
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}"
-            crossorigin="anonymous"></script>
+    @if(!empty($adsense->publisher_id) && $adsense->publisher_id != '1')
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}"
+                crossorigin="anonymous"></script>
+                
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="{{ $adsense->publisher_id }}"
+            data-ad-slot="7745914332"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
             
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ $adsense->publisher_id }}"
-         data-ad-slot="7745914332"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-         
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-@endif
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    @endif
 
-    {{-- New Hybrids --}}
-    <div class="container mx-auto max-w-lg p-4 bg-white border-t  mt-8">
-    <div class="flex items-center justify-between mb-2">
-    <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
-        <span class="block text-sm text-gray-800">Latest Plants & Hybrids</span>
-        <span class="block text-xs text-gray-400 italic">cultivar registration & history</span>
-    </h1>
-</div>
+<section class="w-full mx-auto">
+    <div class="container mx-auto px-4 mt-8">
+        <div class="flex flex-col md:flex-row gap-6 border-b border-gray-200">
+            
+            {{-- KOLOM KIRI (75% / md:col-span-9) --}}
+            <div class="w-full md:w-3/4 bg-white p-4 border-t">
+                <div class="flex items-center justify-between mb-2">
+                    <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
+                        <span class="block text-sm md:text-sm text-gray-800 font-bold">Latest Plants & Hybrids</span>
+                        <span class="block text-xs md:text-sm text-gray-400 italic">cultivar registration & history</span>
+                    </h1>
+                </div>
 
-        <div class="overflow-x-auto">
-            <table id="plants-table" class="min-w-full mt-2 table-fixed">
-                <colgroup>
-                    <col style="width:10%">
-                    <col style="width:50%">
-                    <col style="width:20%">
-                    <col style="width:20%">
-                </colgroup>
-                <thead>
-                    <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 ">
-                        <th class="p-2 border-l ">Photo</th>
-                        <th class="p-2 border-l-4 border-double w-1/4">Plant ID</th>
-                        <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>
-                        <th class="p-2 border-l-4 border-double">P. Parent <i class='fas fa-mars text-blue-600'></i></th>
-                    </tr>
-                </thead>
-                <tbody id="plants-tbody">
-                    @foreach($approvedPlants as $item)
-                        @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
-                    <tr class="border-b hover:bg-gray-100 text-xs" onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
-                        <td class="p-2">
-                              @php
-                            $images = [];
-                            if ($item->image) {
-                                $decoded = json_decode($item->image, true);
-                                if (is_array($decoded)) {
-                                    $images = $decoded;
-                                } else {
-                                    $images = [$item->image];
-                                }
-                            }
-                            $first = count($images) ? $images[0] : null;
-                        @endphp
-                        @if($first)
-                        <img src="{{ asset('storage/'.$first) }}" alt="Foto Tanaman" class="w-12 h-12 object-cover rounded cursor-pointer border border-gray-300 hover:shadow-lg transition">
-                        @else
-                        <div class="w-12 h-12 flex items-center justify-center rounded border border-gray-300 bg-gray-100
-                                    text-[10px] text-xxxs leading-none text-gray-500 text-center whitespace-nowrap">
-                            No Image
-                        </div>
-                        @endif
-                        </td>
-                        <td class="p-2 align-top text-xs" >
-                            <a href="{{ route('plant-submissions.show', $item) }}" class="text-gray-800 dark:text-gray-400 hover:underline italic">
-                                {{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}
-
-                                 
-                            </a>
-                            @if($item->plant_id_var == 0)
-                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
-                                    Variegated
-                                </span>
-                                 @endif
-
-                            <div class=" md:block text-xs text-gray-500 mt-1">
-                                <span class="inline-flex items-center mr-4">
-                                    @if($item->penyilang)
-                                        <span class="italic text-gray-400 text-xs">Breeder : {{ $item->penyilang }}</span>
-                                    @else
-                                        <span class="italic text-gray-400 my-1 text-xxs"> No breeder, 
-                                        @if(Auth::check() && (Auth::user()->is_admin || Auth::id() === $item->uploader_id))
-                                            <a href="{{ route('plant-submissions.edit', $item) }}" class="text-red-400 underline">Add</a>
-                                        @elseif(Auth::check())
-                                            <a href="{{ route('plant-submissions.appeal.create', $item) }}" class="text-red-400 underline"> Appeal</a>
+                <div class="overflow-x-auto">
+                    <table id="plants-table" class="min-w-full mt-2 table-fixed">
+                        <colgroup>
+                            <col style="width:10%">
+                            <col style="width:40%">
+                            <col style="width:25%">
+                            <col style="width:25%">
+                        </colgroup>
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 md:text-sm">
+                                <th class="p-2 border-l">Photo</th>
+                                <th class="p-2 border-l-4 border-double">Plant ID</th>
+                                <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>
+                                <th class="p-2 border-l-4 border-double">P. Parent <i class='fas fa-mars text-blue-600'></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="plants-tbody">
+                            @foreach($approvedPlants as $item)
+                                @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
+                                <tr class="border-b hover:bg-gray-100 text-xs cursor-pointer" onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
+                                    <td class="p-2">
+                                        {{-- Logika Image --}}
+                                        @php
+                                            $images = [];
+                                            if ($item->image) {
+                                                $decoded = json_decode($item->image, true);
+                                                $images = is_array($decoded) ? $decoded : [$item->image];
+                                            }
+                                            $first = count($images) ? $images[0] : null;
+                                        @endphp
+                                        @if($first)
+                                            <img src="{{ asset('storage/'.$first) }}" alt="Foto" class="w-12 h-12 object-cover rounded border border-gray-300">
                                         @else
-                                            <a href="{{ route('login') }}" class="text-red-400 underline"> Appeal</a>
+                                            <div class="w-12 h-12 flex items-center justify-center rounded border border-gray-300 bg-gray-100 text-xxxs text-gray-500">No Image</div>
                                         @endif
-                                        </span>
-                                    @endif                          
-                                </span><br>
-                            </div>
+                                    </td>
+                                    <td class="p-2 align-top">
+                                        <span class="text-gray-800 italic font-medium md:text-sm">{{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}</span>
+                                        @if($item->plant_id_var == 0)
+                                            <span class="block text-[10px] md:text-sm mt-1 text-green-700 font-bold">Variegated</span>
+                                        @endif
+                                        <div class="text-[10px] md:text-sm text-gray-400 mt-1 italic">
+                                            Breeder: {{ $item->penyilang ?? 'Unknown' }}
+                                        </div>
+                                    </td>
+                                    <td class="p-2 italic text-gray-700 text-xs md:text-sm">{{ $item->induk_betina }}</td>
+                                    <td class="p-2 italic text-gray-700 text-xs md:text-sm">{{ $item->induk_jantan }}</td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                        </td>
-                        <td class="p-2"><span class="rounded text-xs text-gray-800 italic">
-                            {{ $item->induk_betina }} 
-                        </span>
-                            @if($item->induk_betina_var == 0)
-                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
-                                    Variegated
-                                </span>
-                            @endif
-                        </td>
-                        
-                        <td class="p-2">
-                            <span class="rounded text-xs text-gray-800 italic"> 
-                            {{ $item->induk_jantan }}
-                            </span>
-                            @if($item->induk_jantan_var == 0)
-                                <span class="text-xs py-0.5 rounded bg-green-100 text-green-700 font-semibold">
-                                    Variegated
-                                </span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                </tbody>
-            </table>
+                {{-- Indikator Load More --}}
+                <div id="load-more" class="text-center py-4">
+                    <div id="loading-spinner" class="hidden">
+                        <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading...
+                    </div>
+                    <div id="no-more" class="hidden text-gray-500 text-xs">No more plants</div>
+                </div>
+
+            </div> 
+            
+            @include('partials.sidebar-dekstop')
+
         </div>
-
-        {{-- Load More Sentinel --}}
-         
-        <div id="load-more" class="text-center py-4">
-            <div id="loading-spinner" class="hidden">
-                <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading more...
-            </div>
-            <div id="no-more" class="hidden text-gray-500">No more plants</div>
-        </div>
-
     </div>
+</section>
+
+{{-- MODAL (Taruh di luar kontainer grid) --}}
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="relative">
+        <button onclick="closeImageModal()" class="absolute -top-10 -right-10 text-white text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="modalImage" src="" class="max-w-md max-h-[80vh] rounded shadow-lg border-4 border-white">
+    </div>
+</div>
 
 
    {{-- Modal popuout foto tanaman --}}
@@ -306,6 +275,7 @@
             <img id="modalImage" src="" class="max-w-xs md:max-w-lg max-h-[80vh] rounded shadow-lg border-4 border-white" alt="Zoom Foto Tanaman">
         </div>
     </div>
+
     <script>
         function showImageModal(src) {
             document.getElementById('modalImage').src = src;
@@ -385,19 +355,6 @@
         });
     </script>
 
-            </a>
-        </div>
-    </div>
-        </div>
-    </div>
-</section>
+           
 
-
-
-<div class="container mx-auto my-8">
-
-    
-
-
-</div>
 @endsection

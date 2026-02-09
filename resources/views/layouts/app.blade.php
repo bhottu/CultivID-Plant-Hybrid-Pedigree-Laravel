@@ -122,18 +122,27 @@
     <div class="min-h-screen flex flex-col">
         <!-- Fixed Header -->
         <header class="fixed top-0 left-0 right-0 h-14 bg-cus-500 border-b border-gray-200 dark:border-gray-700 z-40 flex items-center px-4 ">
-            <div class="flex items-center justify-between w-full mx-auto max-w-lg">
+            <div class="flex items-center justify-between w-full mx-auto">
                 @if(request()->route() && request()->route()->getName() !== 'home')
-                    <button onclick="window.history.back()" class="text-white text-lg mr-2">
+                    <button onclick="window.history.back()" class="text-white text-lg mr-2 md:hidden">
                         <i class="fas fa-arrow-left"></i>
                     </button>
+
+                    <a href="{{ route('home') }}" class="hidden md:block text-2xl font-bold text-white flex items-center gap-2">
+                        @if (isset($settings) && $settings->logo)
+                            <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                        @else
+                            Cultiv ID
+                        @endif
+                    </a>
+
                 @endif
                 @if(!(request()->route() && request()->route()->getName() !== 'home'))
                 <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.40
+                             v1.0.42
                         </div>
 
                     @else
@@ -141,10 +150,31 @@
                     @endif
                 </a>
                 @endif
+
+
+                <div class="ml-auto flex items-center gap-4">
+                    <!-- Search Form (Hidden by default) -->
+                    <div id="search-form" class="hidden bg-cus-500 ml-auto ">
+            
+                        <form action="{{ route('search') }}" method="GET" class="flex gap-2">
+                            <input type="text" name="query" class="w-full  px-2 py-1 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search products..." required>
+                            <button type="submit" class="bg-cus-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md font-medium transition duration-200 border-2 border-white">
+                                Search
+                            </button>
+                            <button type="button" id="search-close" class="bg-cus-500 hover:bg-gray-600 rounded-r-md text-white px-4 py-2 rounded-md font-medium transition duration-200">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
                 
-                <button id="installApp" class="hidden hover:bg-blue-700 ml-auto text-white px-2 py-2 rounded-lg text-xs font-medium transition">
-                    Install App
-                </button>
+                    </div>
+                    <button id="search-toggle" class="hidden md:block hover:text-blue-500 text-gray-800 text-white transition">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    <button id="installApp" class="hidden hover:bg-blue-700  text-white px-2 py-2 rounded-lg text-xs font-medium transition">
+                        Install App
+                    </button>
+                </div>
 
                     <div id="installModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
                         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl">
@@ -210,13 +240,13 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.40
+                             v1.0.42
                         </div>
                     @else
                         Cultiv ID
                     @endif
                 </a>
-                @endif
+            @endif
         </span>
 
         <button id="menuClose" class="text-white">
@@ -301,7 +331,7 @@
         </header>
 
         <!-- Content Area (Scrollable) -->
-        <main id="app-content" class="flex-1 mt-14 mb-20 overflow-y-auto">
+        <main id="app-content" class="min-h-screen mt-14 mb-20">
             @if(request()->header('HX-Request'))
                 @yield('content')
             @else
@@ -310,7 +340,7 @@
         </main>
 
         <!-- Fixed Bottom Navigation -->
-        <nav class="fixed bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 flex justify-around items-end pb-2 px-1 mx-auto max-w-lg">
+        <nav class="fixed md:hidden bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 flex justify-around items-end pb-2 px-1 mx-auto">
             <a href="{{ route('home') }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -542,7 +572,37 @@
     }
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchToggle = document.getElementById('search-toggle');
+        const searchForm = document.getElementById('search-form');
+        const searchClose = document.getElementById('search-close');
 
+        // Toggle search form visibility
+        searchToggle.addEventListener('click', function() {
+            searchForm.classList.toggle('hidden');
+        });
+
+        // Close search form
+        searchClose.addEventListener('click', function() {
+            searchForm.classList.add('hidden');
+        });
+
+        // Close search form when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchToggle.contains(event.target) && !searchForm.contains(event.target)) {
+                searchForm.classList.add('hidden');
+            }
+        });
+
+        // Close search form on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                searchForm.classList.add('hidden');
+            }
+        });
+    });
+</script>
 
 
 </body>

@@ -220,15 +220,38 @@ class PlantSubmissionController extends Controller
             ]);
         }
 
-        // Handle multiple uploaded images (client-side compressed expected)
+       // --- PROSES COMPRESS IMAGE (Sama dengan ProductController) ---
         $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $imagePaths[] = $file->store('plant_images', 'public');
+        
+        // Cek input images[] (Multiple) atau image (Single fallback)
+        $files = $request->file('images') ?? ($request->hasFile('image') ? [$request->file('image')] : []);
+
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                // 1. Buat nama file unik
+                $filename = time() . '_' . uniqid() . '.jpg';
+                
+                // 2. Tentukan path penyimpanan (Folder: public/storage/plant_images)
+                $destinationPath = public_path('storage/plant_images');
+
+                // 3. Pastikan folder tujuan ada
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+
+                // 4. Proses Kompresi (Menggunakan Intervention Image)
+                // Resize ke 800px lebar, tinggi otomatis, kualitas 75%
+                $imageResized = \Image::make($file)->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->encode('jpg', 75);
+
+                // 5. Simpan file ke folder
+                $imageResized->save($destinationPath . '/' . $filename);
+
+                // 6. Masukkan path ke array (untuk disimpan di database)
+                $imagePaths[] = 'plant_images/' . $filename;
             }
-        } elseif ($request->hasFile('image')) {
-            // fallback for single-file uploads
-            $imagePaths[] = $request->file('image')->store('plant_images', 'public');
         }
 
         if (!empty($imagePaths)) {
@@ -275,9 +298,9 @@ class PlantSubmissionController extends Controller
         // =====================================================
         // VARIEGATED FLAGS (checkbox logic)
         // =====================================================
-       $data['plant_id_var']     = (int) $request->input('plant_id_var', 1);
-$data['induk_jantan_var'] = (int) $request->input('induk_jantan_var', 1);
-$data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
+        $data['plant_id_var']     = (int) $request->input('plant_id_var', 1);
+        $data['induk_jantan_var'] = (int) $request->input('induk_jantan_var', 1);
+        $data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
 
 
 
@@ -289,38 +312,56 @@ $data['induk_betina_var'] = (int) $request->input('induk_betina_var', 1);
         }
 
         // =====================================================
-        // ✅ AUTO DELETE GAMBAR LAMA JIKA ADA GAMBAR BARU
-        // =====================================================
-        if ($request->hasFile('images') || $request->hasFile('image')) {
+// ✅ AUTO DELETE & COMPRESS GAMBAR BARU
+// =====================================================
+if ($request->hasFile('images') || $request->hasFile('image')) {
 
-            // ✅ Ambil & hapus gambar lama
-            if ($plantSubmission->image) {
-                $oldImages = json_decode($plantSubmission->image, true);
+    // 1. Ambil & hapus gambar lama dari storage
+    if ($plantSubmission->image) {
+        $oldImages = json_decode($plantSubmission->image, true);
 
-                if (!is_array($oldImages)) {
-                    $oldImages = [$plantSubmission->image];
-                }
-
-                foreach ($oldImages as $oldImage) {
-                    if (Storage::disk('public')->exists($oldImage)) {
-                        Storage::disk('public')->delete($oldImage);
-                    }
-                }
-            }
-
-            // ✅ Simpan gambar baru
-            $imagePaths = [];
-
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $file) {
-                    $imagePaths[] = $file->store('plant_images', 'public');
-                }
-            } else {
-                $imagePaths[] = $request->file('image')->store('plant_images', 'public');
-            }
-
-            $data['image'] = json_encode($imagePaths);
+        // Pastikan formatnya array
+        if (!is_array($oldImages)) {
+            $oldImages = [$plantSubmission->image];
         }
+
+        foreach ($oldImages as $oldImage) {
+            if (\Storage::disk('public')->exists($oldImage)) {
+                \Storage::disk('public')->delete($oldImage);
+            }
+        }
+    }
+
+    // 2. Proses Simpan & Kompres Gambar Baru
+    $imagePaths = [];
+    $files = $request->file('images') ?? [$request->file('image')];
+
+    foreach ($files as $file) {
+        // Buat nama unik
+        $filename = time() . '_' . uniqid() . '.jpg';
+        $destinationPath = public_path('storage/plant_images');
+
+        // Pastikan folder ada
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        // --- KOMPRESI SEPERTI DI PRODUCT CONTROLLER ---
+        $imageResized = \Image::make($file)->resize(800, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })->encode('jpg', 75);
+
+        // Simpan ke folder
+        $imageResized->save($destinationPath . '/' . $filename);
+
+        // Simpan path untuk database
+        $imagePaths[] = 'plant_images/' . $filename;
+    }
+
+    // Masukkan ke array data dalam bentuk JSON
+    $data['image'] = json_encode($imagePaths);
+}
 
         // Jika updater bukan uploader
         if (auth()->id() !== $plantSubmission->uploader_id) {

@@ -16,31 +16,90 @@
                 Share, Discuss & Grow together. 
             </p>
         @endif
+
+
+
+    {{-- Jika Anda menggunakan key 'status' (seperti pada update post tadi) --}}
+    @if(session('status'))
+        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-2 py-2 rounded relative">
+            <strong class="font-bold">Success!</strong>    
+            <span class="block sm:inline">{{ session('status') }}</span>
+        </div>
+    @endif
+
+    @if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-2 py-2 rounded relative" role="alert">
+        <strong class="font-bold">Success!</strong>
+        <span class="block sm:inline">{{ session('success') }}</span>
     </div>
+    @endif
+    @if(session('delete'))
+    <div class="bg-red-100  text-gray-700 px-2 py-2 rounded relative" role="alert">
+        <strong class="font-bold">Success!</strong>
+        <span class="block sm:inline">{{ session('delete') }}</span>
+    </div>
+    @endif
+        
+    </div>
+
+  
     
     @if($posts->count())
         @foreach($posts as $post)
         <div class="container mx-auto max-w-lg px-2 my-2">
             <div class="bg-white dark:bg-gray-800 shadow-md mb-3 rounded-lg">
                 <div class="flex justify-between items-start">
-                    <div class="flex items-center gap-3 p-4">
-                        @if($post->user->profile_photo_path)
-                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full hover:opacity-80 transition">
-                                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="Profile Photo" class="w-10 h-10 rounded-full">
-                            </a>
-                        @else
-                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm hover:opacity-80 transition">
-                                {{ strtoupper(substr($post->user->name, 0, 1)) }}
-                            </a>
-                        @endif
-                        <div>
-                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="font-semibold text-gray-900 dark:text-white hover:text-blue-600">
-                                {{ $post->user->name }}
-                            </a>
-                            <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
-                        </div>
-                    </div>
+    <div class="flex items-center gap-3 p-4">
+        @if($post->user->profile_photo_path)
+            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full hover:opacity-80 transition">
+                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="Profile Photo" class="w-10 h-10 rounded-full">
+            </a>
+        @else
+            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm hover:opacity-80 transition">
+                {{ strtoupper(substr($post->user->name, 0, 1)) }}
+            </a>
+        @endif
+        <div>
+            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="font-semibold text-gray-900 dark:text-white hover:text-blue-600">
+                {{ $post->user->name }}
+            </a>
+            <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
+        </div>
+    </div>
+
+    @auth
+        @if(auth()->id() === $post->user_id)
+        <div class="p-4 relative" x-data="{ open: false }">
+            <button @click="open = !open" @click.away="open = false" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                </svg>
+            </button>
+
+            <div x-show="open" 
+                 x-transition:enter="transition ease-out duration-100"
+                 x-transition:enter-start="transform opacity-0 scale-95"
+                 x-transition:enter-end="transform opacity-100 scale-100"
+                 class="absolute right-4 mt-2 w-36 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md shadow-lg z-50">
+                <div class="py-1">
+                    <a href="{{ route('post.edit', $post->id) }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        Edit
+                    </a>
+                    <form action="{{ route('post.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Hapus postingan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Hapus
+                        </button>
+                    </form>
                 </div>
+            </div>
+        </div>
+        @endif
+    @endauth
+</div>
                 
                  @if($post->image)
                     <div class="relative">
