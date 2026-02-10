@@ -1,7 +1,37 @@
 
 @extends('layouts.app')
 
+@section('title', $post->caption)
+
+@php
+    $photos = json_decode($post->image, true);
+
+    if (!empty($photos) && isset($photos[0])) {
+        $ogImage = asset('storage/' . $photos[0]);
+    } else {
+        $imageDecoded = json_decode($post->image, true);
+        if (is_array($imageDecoded) && isset($imageDecoded[0])) {
+            $ogImage = asset('storage/' . $imageDecoded[0]);
+        } elseif ($post->image) {
+            $ogImage = asset('storage/' . $post->image);
+        } else {
+            $ogImage = asset('images/og-default.jpg');
+        }
+    }
+@endphp
+
+@section('og_image', $ogImage)
+
+@section('og_description',
+    \Illuminate\Support\Str::limit(
+        strip_tags($post->caption ?? ''),
+        155
+    )
+)
+
 @section('content')
+
+
     <div class="container mx-auto max-w-lg p-4">
             @if ($post->image)
                 <img onclick="showImageModal('{{ asset('storage/' . $post->image) }}')" src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->caption }}" class="w-full rounded h-64 object-cover cursor-pointer">

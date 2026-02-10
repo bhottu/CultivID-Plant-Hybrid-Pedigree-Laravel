@@ -2,6 +2,32 @@
 
 @section('title', $product->name)
 
+@php
+    $photos = json_decode($product->photos, true);
+
+    if (!empty($photos) && isset($photos[0])) {
+        $ogImage = asset('storage/' . $photos[0]);
+    } else {
+        $imageDecoded = json_decode($product->image_path, true);
+        if (is_array($imageDecoded) && isset($imageDecoded[0])) {
+            $ogImage = asset('storage/' . $imageDecoded[0]);
+        } elseif ($product->image_path) {
+            $ogImage = asset('storage/' . $product->image_path);
+        } else {
+            $ogImage = asset('images/og-default.jpg');
+        }
+    }
+@endphp
+
+@section('og_image', $ogImage)
+
+@section('og_description',
+    \Illuminate\Support\Str::limit(
+        strip_tags($product->description ?? ''),
+        155
+    )
+)
+
 @section('content')
 
 <div class="container mx-auto max-w-lg text-xs">

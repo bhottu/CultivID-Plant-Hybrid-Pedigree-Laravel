@@ -1,5 +1,33 @@
 @extends('layouts.app')
 
+@section('title', $plantSubmission->plant_id)
+
+@php
+    $photos = json_decode($plantSubmission->photos, true);
+
+    if (!empty($photos) && isset($photos[0])) {
+        $ogImage = asset('storage/' . $photos[0]);
+    } else {
+        $imageDecoded = json_decode($plantSubmission->image, true);
+        if (is_array($imageDecoded) && isset($imageDecoded[0])) {
+            $ogImage = asset('storage/' . $imageDecoded[0]);
+        } elseif ($plantSubmission->image) {
+            $ogImage = asset('storage/' . $plantSubmission->image);
+        } else {
+            $ogImage = asset('images/og-default.jpg');
+        }
+    }
+@endphp
+
+@section('og_image', $ogImage)
+
+@section('og_description',
+    \Illuminate\Support\Str::limit(
+        strip_tags($plantSubmission->keterangan ?? ''),
+        155
+    )
+)
+
 @section('content')
 
 <section class="w-full mx-auto">

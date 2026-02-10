@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Landscaping and horticultural services, Plant Pedigree, Plant Market - @yield('title', 'Cultiv ID')">
-    <title>@yield('title', 'Cultiv ID') </title>
-   <!--  <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
+    <meta name="description" content="@yield('meta_description', 'Cultiv ID adalah platform plant pedigree, registrasi hybrid tanaman, komunitas tanaman dan marketplace tanaman hias.')">
+    {{-- ================= SEO BASIC ================= --}}
+    <title>
+        @hasSection('title')
+            @yield('title') | Cultiv ID
+        @else
+            Cultiv ID – Plant Pedigree, Plant Registry & Plant Market
+        @endif
+    </title>
+
+    {{-- ================= OPEN GRAPH (WA / FB / IG) ================= --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cultiv ID">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: 'Cultiv ID – Plant Pedigree & Registry')">
+    <meta property="og:description" content="@yield('og_description', 'Plant Pedigree, Plant Registry & Plant Market')">
+    <meta property="og:image" content="@yield('og_image', asset('default-og.jpg'))">
+    
     <link rel="stylesheet" href="{{ mix('css/app.css') }}?JanganNgintip={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
     <link rel="manifest" href="/manifest.json">
 
     @if (isset($settings) && $settings->fav_icon)
@@ -26,6 +35,13 @@
     <link rel="android-touch-icon" href="{{ Storage::url($settings->fav_icon) }}">
     <link rel="windows-touch-icon" href="{{ Storage::url($settings->fav_icon) }}">
     @endif
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+  
 
     @if($adsense)
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}" crossorigin="anonymous"></script>
@@ -122,7 +138,7 @@
 <body class="{{ session('dark_mode', 'light') }}" x-data="{ showModal: false }">
     <div class="min-h-screen flex flex-col">
         <!-- Fixed Header -->
-        <header class="fixed top-0 left-0 right-0 h-14 bg-cus-500 border-b border-gray-200 dark:border-gray-700 z-40 flex items-center px-4 ">
+        <header class="fixed top-0 left-0 right-0  h-14 bg-cus-500 border-b border-gray-200 dark:border-gray-700 z-40 flex items-center px-4 ">
             <div class="flex items-center justify-between w-full mx-auto">
                 @if(request()->route() && request()->route()->getName() !== 'home')
                     <button onclick="window.history.back()" class="text-white text-lg mr-2 md:hidden">
@@ -216,115 +232,266 @@
                         </div>
                     </div>
 
-  <div class="relative">
-        <button 
-            id="menuToggle"
-            class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
-            aria-label="Menu"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
-    </div>
+                <div class="relative">
+                    <button 
+                        id="menuToggle"
+                        class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
+                        aria-label="Menu"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
 
 
-<div id="mobileMenu" class="fixed inset-0 bg-white z-50 hidden flex-col">
-    <!-- Header nav bar-->
-    
-    <div class="flex left-0 right-0 h-14  items-center justify-between px-4 py-4 z-40 border-b bg-cus-500">
-        <span class="text-sm font-semibold text-gray-800">
-            @if(!(request()->route() && request()->route()->getName() !== 'home'))
-                <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
-                    @if (isset($settings) && $settings->logo)
-                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
-                        <div class="text-xxxs pt-2">
-                             v1.0.42
+                <div id="mobileMenu" class="fixed inset-0 bg-white z-50 hidden flex-col">
+                    <!-- Header nav bar-->
+                    
+                    <div class="flex left-0 right-0 h-14  items-center justify-between px-4 py-4 z-40 border-b bg-cus-500">
+                        <span class="text-sm font-semibold text-gray-800">
+                            @if(!(request()->route() && request()->route()->getName() !== 'home'))
+                                <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
+                                    @if (isset($settings) && $settings->logo)
+                                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                                        <div class="text-xxxs pt-2">
+                                            v1.0.42
+                                        </div>
+                                    @else
+                                        Cultiv ID
+                                    @endif
+                                </a>
+                            @endif
+                        </span>
+
+                        <button id="menuClose" class="text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+                        @php
+                                $profileUrl = auth()->check()
+                                    ? route('profile', auth()->user()->username)
+                                    : route('login');
+                            @endphp
+                        @guest
+                            <a href="{{ route('login') }}" class="flex items-center p-2 text-sm gap-3 dark:text-gray-400 dark:bg-gray-700 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 17l5-5m0 0l-5-5m5 5H3"/>
+                                </svg>
+                        <span class="flex-1 text-left whitespace-nowrap text-gray-700">Login / Register</span>
+                            </a>
+                            
+                        @else
+
+                        <div class="bg-white p-4 rounded shadow-sm border border-gray-200">
+                                        <p class="flex text-xs text-gray-500 italic text-left">
+                                            <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('plant-submissions.create') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Add Plants & Hybrid</span>  
+                                                        
+                                                    </a>
+                                            </ul>
+                                            <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('products.create') ?? '#' }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Add Product</span>  
+                                                        
+                                                    </a>
+                                            </ul>
+                                            <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('post.create') ?? '#' }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Add Post</span>  
+                                                        
+                                                    </a>
+                                                </ul>
+                                        </p>
+                        </div> 
+
+                        <div class="bg-white p-4 rounded shadow-sm border border-gray-200">     
+                                <ul class="my-6 space-y-3"> 
+                                    <a href="{{ $profileUrl }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg> 
+                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">
+                                            My Profile
+                                        </span>
+                                    </a>
+                                </ul>
+                                <ul class="my-6 space-y-3">
+                                                <a href="{{ route('wallet.index') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11l5 5z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M16 12h.01" />
+                                                    </svg>
+
+                                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My Wallet</span>  
+                                                    
+                                                    <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">
+                                                    
+                                                            Rp {{ number_format(auth()->user()->balance, 0, ',', '.') }}
+                                                        
+                                                    </span>
+                                                    
+                                                </a>
+                                            </ul>
+                                            <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('profile.edit') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.1 2.1 0 013.003 3.003L7.5 18.855 3 21l2.145-4.5L16.862 3.487z"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Edit profile</span>  
+                                                        
+                                                    </a>
+                                                </ul>
+                                                <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('plant-submissions.index') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20V10m0 0c-3 0-6-2-6-5 3 0 6 2 6 5zm0 0c3 0 6-2 6-5-3 0-6 2-6 5z"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My submissions</span>  
+                                                        
+                                                    </a>
+                                                </ul>
+                                                <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('posts.by.username', auth()->user()->username) }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 4h6m-6 4h6m-6 4h6M5 20h14a1 1 0 001-1V7l-5-5H6a1 1 0 00-1 1v16a1 1 0 001 1z"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My posts</span>  
+                                                        
+                                                    </a>
+                                                </ul>
+                                                <ul class="my-6 space-y-3">
+                                                    <a href="{{ route('products.by.username', auth()->user()->username) }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                                        <svg class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">My products</span>  
+                                                        
+                                                    </a>
+                                                </ul>
+                                                <ul class="my-6 space-y-3">
+                                                    <div class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                                                        </svg>
+
+                                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Dark mode</span>
+                                                        <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
+                                                            <button id="dark-mode-toggle" class="text-gray-700 dark:text-gray-400 text-sm">
+                                                            <i class="fas fa-toggle-on"></i>
+                                                            </button>
+                                                    </span>
+                                                    </div>
+                                                </ul>
+                                                <ul class="my-6 space-y-3 rounded-full bg-red-100">
+                                                    <form method="POST" action="{{ route('logout') }}">
+                                                        @csrf
+
+                                                        <button type="submit"
+                                                            class="group flex w-full items-center gap-3 rounded-base p-2
+                                                            text-sm font-semibold
+                                                            bg-red-100 hover:bg-red-50
+                                                            transition-colors rounded-full">
+
+                                                            <!-- Icon -->
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="h-4 w-4 shrink-0 text-gray-700"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                            stroke-width="1.8">
+                                                            <path stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h1a3 3 0 013 3v1" />
+                                                            </svg>
+
+                                                            <!-- Text -->
+                                                            <span class="flex-1 text-left whitespace-nowrap text-gray-700">
+                                                                Logout
+                                                            </span>
+                                                        </button>
+                                                    </form>
+                                                </ul>
                         </div>
-                    @else
-                        Cultiv ID
-                    @endif
-                </a>
-            @endif
-        </span>
 
-        <button id="menuClose" class="text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
+                        @endguest
 
-    <!-- Content -->
-    <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
-         @php
-                $profileUrl = auth()->check()
-                    ? route('profile', auth()->user()->username)
-                    : route('login');
-            @endphp
-        @guest
-            <a href="{{ route('login') }}" class="flex items-center p-2 text-sm gap-3 dark:text-gray-400 dark:bg-gray-700 font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 17l5-5m0 0l-5-5m5 5H3"/>
-                </svg>
-         <span class="flex-1 text-left whitespace-nowrap text-gray-700">Login / Register</span>
-            </a>
-            
-        @else
-            <a href="{{ $profileUrl }}" class="flex dark:text-gray-400 dark:bg-gray-700  items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg> My Profile
-            </a>
-        @endguest
+                        <div class="bg-white p-4 rounded shadow-sm border border-gray-200">   
 
-        <a href="{{ route('admin.settings.about') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.75"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="w-4 h-4">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 10v5"/>
-            <path d="M12 7h.01"/>
-            </svg>
+                            <a href="{{ route('admin.settings.about') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="1.75"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-4 h-4">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="M12 10v5"/>
+                                <path d="M12 7h.01"/>
+                                </svg>
 
-            About Us
-        </a>
+                                About Us
+                            </a>
 
-        <a href="{{ route('admin.settings.contact') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.75"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="w-4 h-4">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-            </svg>
-            Contact Us
-        </a>
+                            <a href="{{ route('admin.settings.contact') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="1.75"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-4 h-4">
+                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                                Contact Us
+                            </a>
 
-        <a href="{{ route('admin.settings.privacy') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.75"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="w-4 h-4">
-            <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"/>
-            <path d="M9 12l2 2 4-4"/>
-            </svg>
-            Privacy Policy
-        </a>
+                            <a href="{{ route('admin.settings.privacy') }}" class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 text-sm gap-3 text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="1.75"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="w-4 h-4">
+                                <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                                </svg>
+                                Privacy Policy
+                            </a>
 
-        
+                        </div>
 
-    </div>
-</div>
+                    </div>
+                </div>
 
 
 
