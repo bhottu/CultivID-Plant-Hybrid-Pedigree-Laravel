@@ -159,7 +159,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.42
+                             v1.0.43
                         </div>
 
                     @else
@@ -257,7 +257,7 @@
                                     @if (isset($settings) && $settings->logo)
                                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                                         <div class="text-xxxs pt-2">
-                                            v1.0.42
+                                            v1.0.43
                                         </div>
                                     @else
                                         Cultiv ID
@@ -327,7 +327,31 @@
                                                         <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Add Post</span>  
                                                         
                                                     </a>
-                                                </ul>
+                                            </ul>
+                                            <ul class="my-6 space-y-3 border-t mt-2">
+                                                <a href="{{ route('all.products') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-red-50 hover:bg-green-50 group" disabled>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                                    </svg>
+
+                                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Market</span>  
+                                                    
+                                                </a>
+                                            </ul>
+                                            <ul class="my-6 space-y-3 border-b">
+                                                <a href="{{ route('index.sosmed') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-blue-50 hover:bg-green-50 group" disabled>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <circle cx="9" cy="7" r="3"/>
+                                                        <circle cx="17" cy="7" r="3"/>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2
+                                                                M13 15h4a4 4 0 014 4v2"/>
+                                                    </svg>
+
+                                                    <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Community</span>  
+                                                    
+                                                </a>
+                                            </ul>
                                         </p>
                         </div> 
 
