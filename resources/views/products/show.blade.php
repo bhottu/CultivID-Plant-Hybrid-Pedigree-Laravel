@@ -33,7 +33,7 @@
 <div class="container mx-auto max-w-lg text-xs">
     <div class="bg-white overflow-hidden  flex flex-wrap">
         <!-- Kolom Kiri -->
-        <div class="w-full p-4">
+        <div class="w-full p-2">
 
            <!-- Slider Container -->
             <div class="swiper-container z-1">
@@ -46,7 +46,7 @@
                             id="post-image-{{ $product->id }}" 
                             src="{{ asset('storage/' . $product->image_path) }}" 
                             alt="{{ $product->name }}" 
-                            class="w-full custom-height object-cover cursor-pointer mb-4 post-image" 
+                            class="w-full custom-height object-cover cursor-pointer mb-2 post-image" 
                             onclick="openImagePopup('{{ asset('storage/' . $product->image_path) }}')"
                             data-image-url="{{ asset('storage/' . $product->image_path) }}"
                             data-post-id="{{ $product->id }}">
@@ -63,7 +63,7 @@
                     @if($product->video_path)
                     <div class="swiper-slide z-0">
                         <video 
-                            class="w-full custom-height object-cover cursor-pointer mb-4"
+                            class="w-full custom-height object-cover cursor-pointer mb-2"
                             controls
                             onclick="openVideoPopup('{{ asset('storage/' . $product->video_path) }}')"
                             data-video-url="{{ asset('storage/' . $product->video_path) }}">
@@ -100,6 +100,30 @@
                     },
                 });
             </script>
+
+                            <div class="flex dark:text-gray-50 dark:bg-gray-700 mb-2 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+
+                                <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Share this product</span>  
+                  
+                                <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">
+                                                    
+                                <button type="button"
+                                    onclick="sharePost()"
+                                    class="w-full text-gray hover:bg-blue-100 border font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline flex items-center justify-center h-full">
+                                    
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3.684 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                                    </svg>
+                                </button>
+                                                        
+                                </span>
+                            </div>
                             
                                 <span class="flex items-center text-gray-700 dark:text-gray-400 dark:bg-gray-700 p-3 gap-2 text-lg font-semibold text-heading rounded-base bg-gray-50 ">{{ $product->name }}</span>
 
@@ -284,6 +308,22 @@
 
     var marker = L.marker([{{ $product->user->latitude }}, {{ $product->user->longitude }}]).addTo(map);
     marker.bindPopup('<b>{{ $product->user->name }}</b>').openPopup();
+
+     // share mobile native 
+        function sharePost() {
+            const shareData = {
+                title: @json($product->name),
+                text: @json(\Illuminate\Support\Str::limit($product->description, 100)),
+                url: @json(url()->current())
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log('Share cancelled', err));
+            } else {
+                openShareFallback();
+            }
+        }
 </script>
 
 @endsection

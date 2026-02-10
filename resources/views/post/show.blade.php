@@ -63,6 +63,19 @@
                 <span class="likes-count-{{ $post->id }}">{{ $post->likes->count() }} </span>
             </button>
 
+            <div class="flex-1">
+                <button type="button"
+                    onclick="sharePost()"
+                    class="w-full text-gray hover:bg-blue-100 border font-bold py-2 px-4 rounded-r-lg focus:outline-none focus:shadow-outline flex items-center justify-center h-full">
+                    
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3.684 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- tombol share ke profil
             <form action="{{ route('post.share', ['post' => $post->id]) }}" method="POST" class="flex-1">
                 @csrf
                 <button type="submit"
@@ -73,6 +86,7 @@
                     
                 </button>
             </form>
+            --}}
         </div>
 
 
@@ -97,7 +111,7 @@
                         </div>
                     @endforeach
                 @else
-                    <p class="text-gray-500 text-sm">Belum ada komentar</p>
+                    <p class="text-gray-500 text-sm">No comments yet</p>
                 @endif
              </div>
     </div>
@@ -151,7 +165,7 @@
                     if (data.success) {
                         const countEl = document.querySelector(`.likes-count-${postId}`);
                         if (countEl) {
-                            countEl.textContent = data.likes_count + ' Like';
+                            countEl.textContent = data.likes_count ;
                         }
                         
                         // Toggle red color for liked state
@@ -250,6 +264,24 @@
                     alert('Error posting comment. Please try again.');
                 });
         }
+
+       // share mobile native 
+        function sharePost() {
+            const shareData = {
+                title: @json($post->caption),
+                text: @json(\Illuminate\Support\Str::limit($post->caption, 100)),
+                url: @json(url()->current())
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log('Share cancelled', err));
+            } else {
+                openShareFallback();
+            }
+        }
+
+
     </script>
 
 </div>

@@ -99,8 +99,34 @@
                                         @endif
                             </div>
                         @endif
+
+
+                            <div class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+
+                                <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Share this plant</span>  
+                  
+                                <span class="text-heading text-xs font-medium px-1.5 py-0.5 text-gray-700 dark:text-gray-400">
+                                                    
+                                <button type="button"
+                                    onclick="sharePost()"
+                                    class="w-full text-gray hover:bg-blue-100 border font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline flex items-center justify-center h-full">
+                                    
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3.684 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                                    </svg>
+                                </button>
+                                                        
+                                </span>
+                            </div>
                     
-                    
+                     
+
                 <div class="p-4 rounded border border-gray-200 shadow text-sm w-full mt-2">
                     
                         <table class="table-auto text-sm mb-4 text-xs w-full">
@@ -811,6 +837,23 @@
             document.getElementById('pedigreePreviewModal').classList.remove('hidden');
             document.getElementById('pedigreePreviewModal').classList.add('flex');
         }
+
+         // share mobile native 
+        function sharePost() {
+            const shareData = {
+                title: @json($plantSubmission->plant_id),
+                text: @json(\Illuminate\Support\Str::limit($plantSubmission->keterangan, 100)),
+                url: @json(url()->current())
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log('Share cancelled', err));
+            } else {
+                openShareFallback();
+            }
+        }
+
     </script>
 <script>
     // Cek apakah ada session error dari Controller
