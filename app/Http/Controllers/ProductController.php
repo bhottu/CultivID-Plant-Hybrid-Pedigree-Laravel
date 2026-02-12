@@ -331,4 +331,6 @@ public function loadMoreProfileProducts(Request $request, $username)
 
         return redirect()->route('admin.items.index')->with('success', 'Product deleted successfully.');
     }
+
+    
 }

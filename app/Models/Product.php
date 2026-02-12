@@ -17,6 +17,13 @@ class Product extends Model
         return 'slug';
     }
 
+public function finalPrice()
+{
+    return $this->discounted_price && $this->discounted_price > 0
+        ? $this->discounted_price
+        : $this->price;
+}
+
 
     public function category()
     {
@@ -35,5 +42,15 @@ class Product extends Model
         }
         return $this->price;
     }
+
+    public function getFinalPriceAttribute()
+{
+    if ($this->discount_price && $this->discount_price > 0) {
+        return $this->discount_price;
+    }
+
+    return $this->price;
+}
+
     
 }

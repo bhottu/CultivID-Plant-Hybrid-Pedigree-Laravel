@@ -26,6 +26,8 @@ use App\Http\Controllers\UserTransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Auth\Notifications\ResetPassword;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -116,8 +118,37 @@ Route::post('/certificate/buy', [UserTransactionController::class, 'buyCertifica
     [PaymentController::class, 'certificateReturn']
 )->name('payment.certificate.return');
 
+   
+Route::post('/cart/add', [CartController::class, 'add'])
+    ->name('cart.add');
+
+Route::get('/cart', [CartController::class, 'index'])
+    ->name('cart.index');
+
+Route::get('/checkout', [CheckoutController::class, 'index'])
+    ->name('checkout');
+
+Route::delete('/cart/item/{id}', [CheckoutController::class, 'remove'])
+    ->name('cart.remove');
+
+Route::post('/checkout/pay', [CheckoutController::class, 'pay'])
+    ->name('checkout.pay');
+
+Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])
+    ->name('checkout.buyNow');
+
+Route::get('/checkout/success', function () {
+    return "Payment Success";
+})->name('checkout.success');
+
+Route::get('/checkout/failed', function () {
+    return "Payment Failed";
+})->name('checkout.failed');
+
 
 });
+
+
 
 Route::post('/buy-me-a-coffee', [UserTransactionController::class, 'buy'])->name('transactions.buy');
 // Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');

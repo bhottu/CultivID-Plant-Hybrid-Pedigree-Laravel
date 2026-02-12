@@ -35,6 +35,12 @@
         <!-- Kolom Kiri -->
         <div class="w-full p-2">
 
+        @if(session('success'))
+            <div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        
            <!-- Slider Container -->
             <div class="swiper-container z-1">
                 
@@ -178,10 +184,44 @@
                         <button type="submit" class="px-4 w-full py-2 bg-green-500 text-white rounded hover:bg-green-600">Mark as Available</button>
                     @endif
                 </form>
+
+                
+
+
                 </div>
             @endif
 
             </div>
+
+              {{-- Tombol Add to Cart & Buy --}}
+<div class="product-card mt-4">
+    <div class="flex gap-3">
+
+        {{-- Add to Cart --}}
+        <form action="{{ route('cart.add') }}" method="POST" class="flex-1">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+            <button type="submit"
+                class="w-full py-2 bg-green-100 text-gray rounded-lg border-2 border-gray-400 hover:bg-green-700 hover:text-white transition">
+                Add to Cart
+            </button>
+        </form>
+
+        {{-- Buy Now --}}
+        <form action="{{ route('checkout.buyNow') }}" method="POST" class="flex-1">
+            @csrf
+            <input type="hidden" name="slug" value="{{ $product->slug }}">
+
+            <button type="submit"
+                class="w-full py-2 bg-red-100 text-gray rounded-lg border-2 border-gray-400 hover:bg-red-700 hover:text-white transition">
+                Buy Now
+            </button>
+        </form>
+
+    </div>
+</div>
+
        
         <div class="w-full bg-gray-100 border-2 mt-3 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer">
             <div class="p-3 rounded-full shadow-sm mb-4">

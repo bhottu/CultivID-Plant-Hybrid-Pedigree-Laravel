@@ -140,7 +140,22 @@
         <!-- Fixed Header -->
         <header class="fixed top-0 left-0 right-0  h-14 bg-cus-500 dark:border-gray-700 z-40 flex items-center px-4 ">
             <div class="flex items-center justify-between w-full mx-auto">
+                
+
                 @if(request()->route() && request()->route()->getName() !== 'home')
+                <div class="relative hidden md:block">
+                    <button 
+                        id="menuToggle"
+                        class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
+                        aria-label="Menu"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
                     <button onclick="window.history.back()" class="text-white text-lg mr-2 md:hidden">
                         <i class="fas fa-arrow-left"></i>
                     </button>
@@ -155,6 +170,8 @@
 
                 @endif
                 @if(!(request()->route() && request()->route()->getName() !== 'home'))
+               
+                
                 <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
@@ -187,6 +204,49 @@
                     <button id="search-toggle" class="hidden md:block hover:text-blue-500 text-gray-800 text-white transition">
                         <i class="fas fa-search"></i>
                     </button>
+
+                    <!-- CART -->
+                        <a href="{{ route('checkout') }}" class="relative inline-flex items-center">
+                            
+                            <!-- ICON CART -->
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                class="h-6 w-6 text-white hover:text-blue-600 transition" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor" 
+                                stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13L5.4 5M16 21a1 1 0 100-2 1 1 0 000 2zM9 21a1 1 0 100-2 1 1 0 000 2z"/>
+                            </svg>
+
+                            <!-- BADGE JUMLAH ITEM 
+                            @php
+                                $cartCount = \App\Models\Cart::where('user_id', auth()->id())
+                                    ->where('status', 'active')
+                                    ->withCount('items')
+                                    ->first();
+                            @endphp
+
+                            @if($cartCount && $cartCount->items_count > 0)
+                                <span class="
+                                    absolute -top-1 -right-1
+                                    min-w-[13px] h-[13px]
+                                    px-1
+                                    bg-red-500 text-white
+                                    text-[10px] font-semibold
+                                    flex items-center justify-center
+                                    rounded-full
+                                    leading-none
+                                ">
+                                    {{ $cartCount->items_count }}
+                                </span>
+                            @endif 
+                            -->
+
+
+                        </a>
+                    
+
 
                     <button id="installApp" class="hidden hover:bg-blue-700  text-white px-2 py-2 rounded-lg text-xs font-medium transition">
                         Install App
@@ -232,19 +292,7 @@
                         </div>
                     </div>
 
-                <div class="relative">
-                    <button 
-                        id="menuToggle"
-                        class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
-                        aria-label="Menu"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
-                </div>
+                
 
 
                 <div id="mobileMenu" class="fixed inset-0 bg-white z-50 hidden flex-col">
