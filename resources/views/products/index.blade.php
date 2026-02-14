@@ -156,22 +156,6 @@
 </div>
 
 
-    @if(!empty($adsense->publisher_id) && $adsense->publisher_id != '1')
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsense->publisher_id }}"
-                crossorigin="anonymous"></script>
-                
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-client="{{ $adsense->publisher_id }}"
-            data-ad-slot="7745914332"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
-            
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    @endif
-
 <section class="w-full mx-auto">
     <div class="container mx-auto px-4 mt-8">
         <div class="flex flex-col md:flex-row gap-6 border-b border-gray-200">
