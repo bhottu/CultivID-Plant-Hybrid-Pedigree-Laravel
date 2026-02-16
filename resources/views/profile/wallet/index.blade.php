@@ -6,7 +6,7 @@
     {{-- Saldo --}}
     <div class="py-6 text-center">
         <span class="text-gray-600">Available to withdraw</span>
-        <h1 class="text-xl font-bold mt-1">Rp{{ number_format($user->balance, 0, ',', '.') }}</h1>
+        <h1 class="text-xl font-bold mt-1">Rp {{ number_format($user->balance, 0, ',', '.') }}</h1>
         <a href="{{ route('wallet.withdraw') }}" class="mt-2 inline-block bg-blue-200 hover:bg-blue-400 text-gray-700 px-4 py-2 rounded">
             Withdraw
         </a>
@@ -37,17 +37,19 @@
             <table class="w-full border mt-2">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="border px-2 py-1">From</th>
+                        <th class="border px-2 py-1">Description</th>
                         <th class="border px-2 py-1">Amount</th>
-                        <th class="border px-2 py-1">Platform fees</th>
+                        <th class="border px-2 py-1">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($transactions as $trx)
                         <tr>
-                            <td class="border px-2 py-1">{{ $trx->user->name }} sent {{ number_format($trx->amount,0,",",".") }}</td>
-                            <td class="border px-2 py-1">{{ number_format($trx->user_share,0,",",".") }} </td>
-                            <td class="border px-2 py-1 "> {{ number_format($trx->admin_share,0,",",".") }}</td>
+                            <td class="border px-2 py-1">
+                                {{ $trx->description ?? 'No Description' }}
+                            </td>
+                            <td class="border px-2 py-1">Rp {{ number_format($trx->amount, 0, ',', '.') }}</td>
+                            <td class="border px-2 py-1">{{ ucfirst($trx->status) }}</td>
                         </tr>
                     @endforeach
                     @if($transactions->isEmpty())

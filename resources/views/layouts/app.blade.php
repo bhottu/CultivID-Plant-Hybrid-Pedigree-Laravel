@@ -176,7 +176,7 @@
                     @if (isset($settings) && $settings->logo)
                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                         <div class="text-xxxs pt-2">
-                             v1.0.43
+                             v1.0.44
                         </div>
 
                     @else
@@ -205,7 +205,7 @@
                         <i class="fas fa-search"></i>
                     </button>
 
-                    <!-- CART -->
+                    {{--  CART 
                         <a href="{{ route('checkout') }}" class="relative inline-flex items-center">
                             
                             <!-- ICON CART -->
@@ -245,7 +245,7 @@
 
 
                         </a>
-                    
+                    --}}
 
 
                     <button id="installApp" class="hidden hover:bg-blue-700  text-white px-2 py-2 rounded-lg text-xs font-medium transition">
@@ -305,7 +305,7 @@
                                     @if (isset($settings) && $settings->logo)
                                         <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
                                         <div class="text-xxxs pt-2">
-                                            v1.0.43
+                                            v1.0.44
                                         </div>
                                     @else
                                         Cultiv ID
@@ -485,7 +485,7 @@
 
                                                         <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Dark mode</span>
                                                         <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
-                                                            <button id="dark-mode-toggle" class="text-gray-700 dark:text-gray-400 text-sm">
+                                                            <button class="dark-mode-toggle text-gray-700 dark:text-gray-400 text-sm">
                                                             <i class="fas fa-toggle-on"></i>
                                                             </button>
                                                     </span>
@@ -633,22 +633,34 @@
     </div>
 
     <script>
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const body = document.body;
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (isDarkMode) {
-            body.classList.add('dark');
-            if (darkModeToggle) darkModeToggle.innerHTML = '<i class="fas fa-toggle-off"></i>';
-        } else {
-            if (darkModeToggle) darkModeToggle.innerHTML = '<i class="fas fa-toggle-on"></i>';
-        }
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', () => {
-                const isDark = body.classList.toggle('dark');
-                localStorage.setItem('darkMode', isDark);
-                darkModeToggle.innerHTML = isDark ? '<i class="fas fa-toggle-off"></i>' : '<i class="fas fa-toggle-on"></i>';
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeToggles = document.querySelectorAll('.dark-mode-toggle');
+            const body = document.body;
+            const isDarkMode = localStorage.getItem('darkMode') === 'dark';
+
+            // Initialize dark mode state on page load
+            if (isDarkMode) {
+                body.classList.add('dark');
+            } else {
+                body.classList.remove('dark');
+            }
+
+            // Add event listener to all toggle buttons
+            darkModeToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const isDark = body.classList.toggle('dark');
+                    const newMode = isDark ? 'dark' : 'light';
+
+                    // Update the localStorage value
+                    localStorage.setItem('darkMode', newMode);
+
+                    // Update the toggle button icon for all toggles
+                    darkModeToggles.forEach(btn => {
+                        btn.innerHTML = isDark ? '<i class="fas fa-toggle-off"></i>' : '<i class="fas fa-toggle-on"></i>';
+                    });
+                });
             });
-        }
+        });
     </script>
 
     <script src="{{ asset('js/app.js') }}"></script>

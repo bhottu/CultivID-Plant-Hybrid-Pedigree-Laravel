@@ -136,7 +136,7 @@
 
                         <span class="flex-1 text-left whitespace-nowrap text-gray-700">Dark mode</span>
                         <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
-                            <button id="dark-mode-toggle" class="text-gray-700 text-lg">
+                            <button class="dark-mode-toggle text-gray-700 text-lg">
                             <i class="fas fa-toggle-on"></i>
                             </button>
                     </span>

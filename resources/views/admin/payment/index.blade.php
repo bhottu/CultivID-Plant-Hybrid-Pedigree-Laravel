@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto py-6 text-sm">
 
     <h1 class="text-2xl font-bold mb-6">
-        💳 Data Transaksi (Buy Me a Coffee)
+        💳 Data Transaksi
     </h1>
 
     <div class="overflow-x-auto bg-white shadow rounded">
@@ -38,7 +38,7 @@
                             </span>
                         </td>
                         <td class="px-3 py-2 border">
-                            Rp {{ number_format($trx->amount, 0, ',', '.') }}
+                            Rp {{ number_format($trx->amount, 0, ',', '.') }} <br><span class="text-xs text-gray-500">Plant {{ $trx->plant_id }}</span>
                         </td>
                         <td class="px-3 py-2 border text-green-600">
                             Rp {{ number_format($trx->user_share, 0, ',', '.') }}

@@ -285,3 +285,6 @@ Route::get('/contact-us', [SettingController::class, 'showContact'])->name('admi
 Route::get('/terms-conditions', [SettingController::class, 'showTerms'])->name('admin.settings.terms');
 Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->name('admin.settings.privacy');
 
+// Route for payment page
+Route::get('/pay-{plantSubmission}', [UserTransactionController::class, 'showPaymentPage'])->name('pay.show');
+

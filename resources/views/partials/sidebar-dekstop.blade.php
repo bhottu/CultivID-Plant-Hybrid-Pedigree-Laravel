@@ -57,7 +57,7 @@
                                             <circle cx="17" cy="7" r="3"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2
-                                                    M13 15h4a4 4 0 014 4v2"/>
+                                                    M13 15h4a4 4 0 014 4v2"></path>
                                         </svg>
 
                                         <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Community</span>  
@@ -71,6 +71,22 @@
                     
                     <div class="bg-white p-4 rounded shadow-sm border border-gray-200 mt-3">
                         <p class="flex text-xs text-gray-500 italic text-left">
+                             @php
+                                $profileUrl = auth()->check()
+                                    ? route('profile', auth()->user()->username)
+                                    : route('login');
+                            @endphp
+                            <ul class="my-6 space-y-3"> 
+                                    <a href="{{ $profileUrl }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg> 
+                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">
+                                            My Profile
+                                        </span>
+                                    </a>
+                                </ul>
                             <ul class="my-6 space-y-3">
                                 <a href="{{ route('wallet.index') }}" class="flex dark:text-gray-50 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50 hover:bg-green-50 group" disabled>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none"
@@ -131,22 +147,7 @@
                                         
                                     </a>
                                 </ul>
-                                <ul class="my-6 space-y-3">
-                                    <div class="flex dark:text-gray-400 dark:bg-gray-700 items-center p-2 gap-2 text-sm font-semibold text-heading rounded-base bg-gray-50  hover:bg-green-50  group">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-400" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                                        </svg>
-
-                                        <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Dark mode</span>
-                                        <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
-                                            <button id="dark-mode-toggle" class="text-gray-700 dark:text-gray-400 text-sm">
-                                            <i class="fas fa-toggle-on"></i>
-                                            </button>
-                                    </span>
-                                    </div>
-                                </ul>
+                               
                                  <ul class="my-6 space-y-3 bg-red-100 rounded-full">
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -274,4 +275,6 @@
                 @endauth
                      
                 </div>
-            </div> 
+            </div>
+            <script src="{{ asset('js/dark-mode.js') }}" defer></script>
+

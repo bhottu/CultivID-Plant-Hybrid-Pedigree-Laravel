@@ -173,7 +173,7 @@
 
                         <span class="flex-1 text-left whitespace-nowrap text-gray-700 dark:text-gray-400">Dark mode</span>
                         <span class="text-heading text-xs font-medium px-1.5 py-0.5"> 
-                            <button id="dark-mode-toggle" class="text-gray-700 dark:text-gray-400 text-sm">
+                            <button class="dark-mode-toggle text-gray-700 dark:text-gray-400 text-sm">
                             <i class="fas fa-toggle-on"></i>
                             </button>
                     </span>
@@ -455,3 +455,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 @endsection
+
+<script src="{{ asset('js/dark-mode.js') }}" defer></script>

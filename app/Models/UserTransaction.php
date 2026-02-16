@@ -31,4 +31,9 @@ class UserTransaction extends Model
     {
         return $this->belongsTo(User::class, 'user_id_receiver');
     }
+
+    public function plant()
+    {
+        return $this->belongsTo(Plant::class, 'plant_id');
+    }
 }

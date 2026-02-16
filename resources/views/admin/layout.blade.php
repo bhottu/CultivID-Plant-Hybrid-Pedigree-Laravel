@@ -203,23 +203,29 @@
 <script>
 
     @stack('scripts')
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkModeToggles = document.querySelectorAll('.dark-mode-toggle');
     const body = document.body;
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         body.classList.add('dark');
-        darkModeToggle.innerHTML = '<i class="fas fa-toggle-off"></i>';
+        darkModeToggles.forEach(toggle => {
+            toggle.innerHTML = '<i class="fas fa-toggle-off"></i>';
+        });
     } else {
-        darkModeToggle.innerHTML = '<i class="fas fa-toggle-on"></i>';
+        darkModeToggles.forEach(toggle => {
+            toggle.innerHTML = '<i class="fas fa-toggle-on"></i>';
+        });
     }
-    darkModeToggle.addEventListener('click', () => {
-        const isDark = body.classList.toggle('dark');
-        localStorage.setItem('darkMode', isDark);
-        if (isDark) {
-            darkModeToggle.innerHTML = '<i class="fas fa-toggle-off"></i>';
-        } else {
-            darkModeToggle.innerHTML = '<i class="fas fa-toggle-on"></i>';
-        }
+    darkModeToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const isDark = body.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+            if (isDark) {
+                toggle.innerHTML = '<i class="fas fa-toggle-off"></i>';
+            } else {
+                toggle.innerHTML = '<i class="fas fa-toggle-on"></i>';
+            }
+        });
     });
 </script>
 

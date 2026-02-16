@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_transactions', function (Blueprint $table) {
-    $table->string('external_id')->unique()->after('id');
-});
+        // The column 'external_id' already exists in the 'user_transactions' table. No changes needed.
+        // $table->string('external_id')->unique()->after('id');
 
     }
 

@@ -196,7 +196,7 @@
     
     <script>
         // Dark mode toggle
-        document.getElementById('dark-mode-toggle')?.addEventListener('click', function() {
+        document.querySelectorAll('.dark-mode-toggle').forEach(toggle => toggle.addEventListener('click', function() {
             fetch('/api/toggle-dark-mode', { method: 'POST' })
                 .then(r => r.json())
                 .then(data => {

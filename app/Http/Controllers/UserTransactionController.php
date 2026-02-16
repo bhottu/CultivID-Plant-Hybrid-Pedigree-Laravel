@@ -160,6 +160,8 @@ class UserTransactionController extends Controller
             abort(403);
         }
 
+        $transaction = UserTransaction::with('plant')->findOrFail($transaction->id);
+
         return view('admin.payment.edit', compact('transaction'));
     }
 
@@ -177,6 +179,15 @@ class UserTransactionController extends Controller
         $amount = (int) $request->amount;
         $userShare  = (int) ($amount * 0.8);
         $adminShare = $amount - $userShare;
+
+        // Check if the transaction is platform-only
+        if ($transaction->is_platform_only == 0) {
+            $userShare = null;
+            $adminShare = null;
+        } else {
+            $userShare  = (int) ($amount * 0.8);
+            $adminShare = $amount - $userShare;
+        }
 
         $transaction->update([
             'amount' => $amount,
@@ -263,4 +274,29 @@ public function certificateReturn(Request $request)
 }
 
 
+/**
+     * Show payment page for plant submission
+     */
+    public function showPaymentPage(PlantSubmission $plantSubmission)
+    {
+        $basePrice = 75000;
+        $uniqueCode = rand(10, 99); // Generate a unique code
+        $uniquePrice = $basePrice + $uniqueCode;
+
+        // Save transaction to database
+        UserTransaction::create([
+            'user_id' => auth()->id(),
+            'plant_id' => $plantSubmission->id,
+            'type' => 'certificate',
+            'amount' => $uniquePrice,
+            'status' => 'pending',
+            'is_platform_only' => 0,
+            'external_id' => uniqid('txn_'), // Generate a unique external ID
+        ]);
+
+        return view('plant_submissions.payment', [
+            'plantSubmission' => $plantSubmission,
+            'uniquePrice' => $uniquePrice,
+        ]);
+    }
 }

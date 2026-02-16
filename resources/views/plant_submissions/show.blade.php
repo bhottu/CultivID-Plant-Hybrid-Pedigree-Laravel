@@ -526,16 +526,23 @@
                                 👁 Preview
                             </a>
                         @else
-                                {{-- Jika belum bayar --}}
+                                {{-- Tombol Jika belum bayar --}}
+                                {{--
                                 <form action="{{ route('certificate.buy') }}" method="POST">
                                     @csrf
-                                    {{-- Mengirim plant_id sesuai validasi di UserTransactionController@buyCertificate --}}
                                     <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
                                     <button type="submit"
                                             class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
                                         💳 Buy Certificate
                                     </button>
                                 </form>
+                                --}}
+                                
+                                {{-- Tombol Buy Now --}}
+                                <button class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onclick="window.location.href='{{ url('/pay-' . $plantSubmission->plant_id) }}'">
+                                    💳 Buy Certificate
+                                </button>
                         @endif
 
                         @else

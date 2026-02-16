@@ -25,7 +25,7 @@
             @endauth
             
             <!-- Dark Mode Toggle -->
-            <button id="dark-mode-toggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-300" title="Toggle Dark Mode">
+            <button class="dark-mode-toggle p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-700 dark:text-gray-300" title="Toggle Dark Mode">
                 <i class="fas fa-moon w-5 h-5"></i>
             </button>
             

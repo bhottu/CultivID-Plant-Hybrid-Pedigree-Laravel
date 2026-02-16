@@ -18,9 +18,11 @@ class WalletController extends Controller
         $balance = $user->balance;
 
         // Transaction history -> hanya yang completed dan tampilkan user yang mengirim
-        $transactions = UserTransaction::with('user') // relasi pengirim
-            ->where('user_id_receiver', $user->id)
-            ->where('status', 'completed')
+        $transactions = UserTransaction::with('user', 'plant') // Load the user relationship
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id) // User is the sender
+                      ->orWhere('user_id_receiver', $user->id); // User is the receiver
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 

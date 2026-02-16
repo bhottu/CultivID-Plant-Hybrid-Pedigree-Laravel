@@ -7,9 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->boolean('is_sold_out')->default(false); // default false
-        });
+        // The column 'is_sold_out' already exists in the 'products' table. No changes needed.
+        // $table->boolean('is_sold_out')->default(false); // default false
     }
 
     public function down(): void

@@ -16,9 +16,7 @@
 
         <!-- AMOUNT -->
         <div class="mb-4">
-            <label class="block text-sm font-semibold mb-1">
-                Nominal (Rp)
-            </label>
+            <label class="block text-sm font-semibold mb-1">Nominal (Rp)</label>
             <input
                 type="number"
                 name="amount"
@@ -27,6 +25,8 @@
                 required
             >
         </div>
+
+         
 
         <!-- STATUS -->
         <div class="mb-4">
@@ -43,6 +43,14 @@
                 <option value="failed"    {{ $transaction->status === 'failed' ? 'selected' : '' }}>Failed</option>
             </select>
         </div>
+
+         <div class="mb-4">
+            Plant ID <label class="block text-sm font-semibold mb-1 bg-gray-100 p-2 rounded">{{ $transaction->plant_id }}</label>
+            User ID <label class="block text-sm font-semibold mb-1 bg-gray-100 p-2 rounded">{{ $transaction->user->name }}</label>
+            Type<label class="block text-sm font-semibold mb-1 bg-gray-100 p-2 rounded"> {{ $transaction->type }}</label>
+            
+        </div>
+
 
         <!-- ACTION -->
         <div class="flex justify-between">
@@ -61,6 +69,7 @@
             </button>
         </div>
 
+       
     </form>
 </div>
 @endsection

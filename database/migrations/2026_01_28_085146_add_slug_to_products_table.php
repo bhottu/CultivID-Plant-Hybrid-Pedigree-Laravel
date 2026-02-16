@@ -7,9 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('slug')->nullable()->after('name')->unique();
-        });
+        // The column 'slug' already exists in the 'products' table. No changes needed.
+        // $table->string('slug')->nullable()->after('name')->unique();
     }
 
     public function down(): void
