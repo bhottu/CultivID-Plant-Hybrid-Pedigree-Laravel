@@ -82,6 +82,12 @@
                         <i class="fab fa-whatsapp text-lg"></i> Confirm Payment
                         
                     </a> 
+                    <a href="javascript:history.back()"
+                    class="block w-full text-center py-3 bg-red-600 hover:bg-red-700 transition text-white font-semibold rounded-lg shadow-sm mt-4">
+                        
+                         <i class="fas fa-arrow-left mr-2"></i> Back
+                        
+                    </a> 
                 </div>
 
 
