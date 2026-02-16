@@ -288,3 +288,5 @@ Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->
 // Route for payment page
 Route::get('/pay-{plantSubmission}', [UserTransactionController::class, 'showPaymentPage'])->name('pay.show');
 
+Route::get('/become-partner', [SettingController::class, 'showBecomePartner'])->name('become.partner');
+

@@ -307,20 +307,21 @@
                             <div class="flex items-center gap-4">
                                 {{-- Icon lebih kecil --}}
                                 <div class="rounded-full">
-                                    <i class="fas fa-ad text-xl"></i>
+                                    <i class="fas fa-ad text-xl"></i> 
+                                    
                                 </div>
                                 
                                 {{-- Teks rata kiri agar lebih hemat ruang --}}
                                 <div class="text-left">
-                                    <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
-                                    <p class="text-sm text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
+                                    <p class="text-xs font-bold text-yellow-600">Premium Ads</p> <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
                                 </div>
                             </div>
 
                             {{-- Tombol disesuaikan ukurannya (lebih kecil/compact) --}}
-                            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." 
+                            <a href="{{ route('become.partner') }}" 
                             class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition whitespace-nowrap">
-                                Contact Us
+                                Become Partner
                             </a>
                         </div>
                         
@@ -537,7 +538,7 @@
                                     </button>
                                 </form>
                                 --}}
-                                
+
                                 {{-- Tombol Buy Now --}}
                                 <button class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                                 onclick="window.location.href='{{ url('/pay-' . $plantSubmission->plant_id) }}'">
@@ -717,12 +718,13 @@
 
             <div class="w-full bg-gray-100 mt-3 border-2 border-dashed border-gray-400 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition-all cursor-pointer text-sm">
             <div class="rounded-full mb-4">
-                <i class="fas fa-ad text-2xl text-gray-800"></i>
+                <i class="fas fa-ad text-2xl text-gray-800"></i> 
+                <p class="text-xs font-bold text-yellow-600">Premium</p>
             </div>
             <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
                 <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>
-                <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20pedigree%20page." class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition mt-2">
-                     Contact Us
+                <a href="{{ route('become.partner') }}" class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition mt-2">
+                     Become Partner
                 </a>
             </div>
 

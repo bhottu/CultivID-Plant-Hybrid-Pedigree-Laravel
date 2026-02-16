@@ -118,4 +118,9 @@ class SettingController extends Controller
         }
         
     }
+
+    public function showBecomePartner()
+    {
+        return view('admin.misc.become-partner');
+    }
 }
