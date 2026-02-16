@@ -84,11 +84,7 @@
                     <a id="waLink" href="#" class="block w-full text-center py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg">
                     <i class="fab fa-whatsapp text-lg"></i> Confirm Payment
                     </a>
-                    <a href="javascript:history.back()"
-                        class="block w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg mt-4">
-                        <i class="fas fa-arrow-left mr-2"></i> 
-                        Back
-                    </a>
+                   
 
             </div>
 
@@ -99,7 +95,11 @@
            
         </div>
 
-       
+                    <a href="javascript:history.back()"
+                        class="block w-full text-center py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg mt-4">
+                        <i class="fas fa-arrow-left mr-2"></i> 
+                        Back
+                    </a>
        
         
     </form>
@@ -127,7 +127,7 @@ document.getElementById('adSlot').addEventListener('change', function() {
         document.getElementById('adImage').src = image;
         document.getElementById('adSlotxe').textContent = slot;
 
-        const message = `Dear cultivID, we would like to apply for an advertisement on the ${slot}.`;
+        const message = `Dear CultivID, I would like to confirm the payment for the *${slot}* banner slot. *(Please do not delete or modify this message.)*`;
         const encodedMessage = encodeURIComponent(message);
 
         document.getElementById('waLink').href =
