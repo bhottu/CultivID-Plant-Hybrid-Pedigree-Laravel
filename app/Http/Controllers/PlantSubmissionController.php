@@ -227,29 +227,28 @@ class PlantSubmissionController extends Controller
         $files = $request->file('images') ?? ($request->hasFile('image') ? [$request->file('image')] : []);
 
         if (!empty($files)) {
+
+            $destinationPath = public_path('storage/plant_images');
+
+            // Pastikan folder ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
             foreach ($files as $file) {
-                // 1. Buat nama file unik
-                $filename = time() . '_' . uniqid() . '.jpg';
-                
-                // 2. Tentukan path penyimpanan (Folder: public/storage/plant_images)
-                $destinationPath = public_path('storage/plant_images');
 
-                // 3. Pastikan folder tujuan ada
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
+                // Nama unik + webp
+                $filename = uniqid() . '_' . time() . '.webp';
 
-                // 4. Proses Kompresi (Menggunakan Intervention Image)
-                // Resize ke 800px lebar, tinggi otomatis, kualitas 75%
-                $imageResized = \Image::make($file)->resize(800, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->encode('jpg', 75);
+                $imageResized = \Image::make($file)
+                    ->resize(800, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    })
+                    ->encode('webp', 75);
 
-                // 5. Simpan file ke folder
                 $imageResized->save($destinationPath . '/' . $filename);
 
-                // 6. Masukkan path ke array (untuk disimpan di database)
                 $imagePaths[] = 'plant_images/' . $filename;
             }
         }
@@ -260,7 +259,7 @@ class PlantSubmissionController extends Controller
         }
 
         PlantSubmission::create($data);
-        return redirect()->route('plant-submissions.index')->with('success', 'Plant added successfully!');
+        return redirect()->route('plant-submissions.index')->with('success', 'Thanks! Your submission is under review. Please check back within 24 hours.');
     }
 
     // Edit submission (hanya uploader atau member lain dengan approval uploader)
@@ -314,13 +313,15 @@ class PlantSubmissionController extends Controller
         // =====================================================
 // ✅ AUTO DELETE & COMPRESS GAMBAR BARU
 // =====================================================
+// =====================================================
+// ✅ AUTO DELETE & COMPRESS GAMBAR BARU (WEBP VERSION)
+// =====================================================
 if ($request->hasFile('images') || $request->hasFile('image')) {
 
-    // 1. Ambil & hapus gambar lama dari storage
+    // 1️⃣ Hapus gambar lama
     if ($plantSubmission->image) {
         $oldImages = json_decode($plantSubmission->image, true);
 
-        // Pastikan formatnya array
         if (!is_array($oldImages)) {
             $oldImages = [$plantSubmission->image];
         }
@@ -332,36 +333,35 @@ if ($request->hasFile('images') || $request->hasFile('image')) {
         }
     }
 
-    // 2. Proses Simpan & Kompres Gambar Baru
+    // 2️⃣ Simpan gambar baru (WebP Optimized)
     $imagePaths = [];
     $files = $request->file('images') ?? [$request->file('image')];
 
+    $destinationPath = public_path('storage/plant_images');
+
+    if (!file_exists($destinationPath)) {
+        mkdir($destinationPath, 0755, true);
+    }
+
     foreach ($files as $file) {
-        // Buat nama unik
-        $filename = time() . '_' . uniqid() . '.jpg';
-        $destinationPath = public_path('storage/plant_images');
 
-        // Pastikan folder ada
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
-        }
+        $filename = uniqid() . '_' . time() . '.webp';
 
-        // --- KOMPRESI SEPERTI DI PRODUCT CONTROLLER ---
-        $imageResized = \Image::make($file)->resize(800, null, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        })->encode('jpg', 75);
+        $imageResized = \Image::make($file)
+            ->resize(800, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })
+            ->encode('webp', 75);
 
-        // Simpan ke folder
         $imageResized->save($destinationPath . '/' . $filename);
 
-        // Simpan path untuk database
         $imagePaths[] = 'plant_images/' . $filename;
     }
 
-    // Masukkan ke array data dalam bentuk JSON
     $data['image'] = json_encode($imagePaths);
 }
+
 
         // Jika updater bukan uploader
         if (auth()->id() !== $plantSubmission->uploader_id) {

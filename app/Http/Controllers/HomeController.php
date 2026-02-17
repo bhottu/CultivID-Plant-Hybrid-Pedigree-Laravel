@@ -15,7 +15,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $posts = Post::with(['user', 'likes'])->withCount(['likes', 'comments'])->orderBy('created_at', 'desc')->paginate(10);
+        $posts = Post::with(['user', 'likes'])
+            ->withCount(['likes', 'comments'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         if (request()->header('HX-Request')) {
             return view('partials.posts-list', ['posts' => $posts]);
@@ -24,15 +27,14 @@ class HomeController extends Controller
         return view('home', ['posts' => $posts]);
     }
 
-
-
     public function postsByUsername($username)
     {
         $user = User::where('username', $username)->firstOrFail();
 
         $posts = Post::where('user_id', $user->id)
+            ->withCount(['likes', 'comments'])
             ->latest()
-            ->paginate(5);
+            ->paginate(10);
 
         return view('home', compact('posts', 'user'));
     }

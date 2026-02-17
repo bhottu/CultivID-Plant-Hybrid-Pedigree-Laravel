@@ -23,6 +23,12 @@
 
 <div class="container mx-auto max-w-lg px-2 my-2">
     
+    @if(session('success'))
+            <div class="bg-green-100 text-green-800 p-2 rounded mb-4">
+                {{ session('success') }}
+            </div>
+    @endif
+
     <div id="product-list" class="grid grid-cols-2 gap-4 mt-4">
         @foreach ($products as $product)
             <div class="bg-white rounded-lg overflow-hidden shadow-lg">

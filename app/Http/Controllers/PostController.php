@@ -69,7 +69,7 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('posts.by.username', Auth::user()->username)
-                        ->with('success', 'Post created successfully!');
+                        ->with('success', 'Your post is now live — thanks for sharing!');
     }
 
     public function addComment(Request $request, Post $post)

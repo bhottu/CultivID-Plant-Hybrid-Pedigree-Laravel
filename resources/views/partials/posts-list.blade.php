@@ -21,20 +21,20 @@
 
     {{-- Jika Anda menggunakan key 'status' (seperti pada update post tadi) --}}
     @if(session('status'))
-        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-2 py-2 rounded relative">
+        <div class="bg-blue-100 mt-3 text-xs text-blue-700 px-2 py-2 rounded relative">
             <strong class="font-bold">Success!</strong>    
             <span class="block sm:inline">{{ session('status') }}</span>
         </div>
     @endif
 
     @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-2 py-2 rounded relative" role="alert">
+    <div class="bg-green-100 mt-3 text-green-700 px-2 py-2 rounded relative" role="alert">
         <strong class="font-bold">Success!</strong>
         <span class="block sm:inline">{{ session('success') }}</span>
     </div>
     @endif
     @if(session('delete'))
-    <div class="bg-red-100  text-gray-700 px-2 py-2 rounded relative" role="alert">
+    <div class="bg-red-100 mt-3 text-gray-700 px-2 py-2 rounded relative" role="alert">
         <strong class="font-bold">Success!</strong>
         <span class="block sm:inline">{{ session('delete') }}</span>
     </div>
@@ -49,23 +49,23 @@
         <div class="container mx-auto max-w-lg px-2 my-2">
             <div class="bg-white dark:bg-gray-800 shadow-md mb-3 rounded-lg">
                 <div class="flex justify-between items-start">
-    <div class="flex items-center gap-3 p-4">
-        @if($post->user->profile_photo_path)
-            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full hover:opacity-80 transition">
-                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="Profile Photo" class="w-10 h-10 rounded-full">
-            </a>
-        @else
-            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm hover:opacity-80 transition">
-                {{ strtoupper(substr($post->user->name, 0, 1)) }}
-            </a>
-        @endif
-        <div>
-            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="font-semibold text-gray-900 dark:text-white hover:text-blue-600">
-                {{ $post->user->name }}
-            </a>
-            <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
-        </div>
-    </div>
+                    <div class="flex items-center gap-3 p-4">
+                        @if($post->user->profile_photo_path)
+                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full hover:opacity-80 transition">
+                                <img src="{{ asset('storage/' . $post->user->profile_photo_path) }}" alt="Profile Photo" class="w-10 h-10 rounded-full">
+                            </a>
+                        @else
+                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm hover:opacity-80 transition">
+                                {{ strtoupper(substr($post->user->name, 0, 1)) }}
+                            </a>
+                        @endif
+                        <div>
+                            <a href="{{ route('profile', $post->user->username) }}" hx-get="{{ route('profile', $post->user->username) }}" hx-target="#app-content" hx-push-url="true" class="font-semibold text-gray-900 dark:text-white hover:text-blue-600">
+                                {{ $post->user->name }}
+                            </a>
+                            <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
 
     @auth
         @if(auth()->id() === $post->user_id)
@@ -124,7 +124,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                         </svg>
-                        <span>{{ $post->comments_count ?? 0 }}</span>
+                        <span>{{ $post->comments_count ?? 0 }} </span>
                     </a>
                 </div>
             </div>

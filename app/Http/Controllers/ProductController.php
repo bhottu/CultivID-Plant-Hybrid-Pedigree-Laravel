@@ -125,15 +125,23 @@ $counts = [
         $product->user_id = auth()->id();
         $product->is_sold_out = false; 
 
-        if ($request->hasFile('image')) {
+       if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageResized = Image::make($image)->resize(800, null, function ($constraint) {
-                $constraint->aspectRatio();
-            })->encode('jpg', 75);
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $imageResized->save(public_path('storage/images/' . $filename));
+
+            $filename = time() . '.webp';
+
+            $imageResized = Image::make($image)
+                ->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 75);
+
+            $imageResized->save(public_path('storage/images/' . $filename));
+
             $product->image_path = 'images/' . $filename;
         }
+
 
         if ($request->hasFile('video')) {
             $video = $request->file('video');
@@ -144,7 +152,7 @@ $counts = [
 
         $product->save();
 
-        return redirect()->route('all.products')->with('success', 'Product added successfully.');
+        return redirect()->route('all.products')->with('success', 'Awesome! Your product is now available.');
     }
 
     public function show($slug)
@@ -264,18 +272,27 @@ public function loadMoreProfileProducts(Request $request, $username)
         $product->category_id = $request->input('category_id');
 
         if ($request->hasFile('image_path')) {
+
+            // Hapus file lama
             if ($product->image_path && Storage::exists('public/' . $product->image_path)) {
                 Storage::delete('public/' . $product->image_path);
             }
 
             $image = $request->file('image_path');
-            $imageResized = Image::make($image)->resize(800, null, function ($constraint) {
-                $constraint->aspectRatio();
-            })->encode('jpg', 75);
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $imageResized->save(public_path('storage/images/' . $filename));
+            $filename = time() . '.webp';
+
+            $imageResized = Image::make($image)
+                ->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 75);
+
+            $imageResized->save(public_path('storage/images/' . $filename));
+
             $product->image_path = 'images/' . $filename;
         }
+
 
         if ($request->hasFile('video_path')) {
             if ($product->video_path && Storage::exists('public/' . $product->video_path)) {

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto p-4 rounded max-w-lg">
     <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Hybrid</h1>
-    <form action="{{ route('plant-submissions.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form  id="hybridForm" action="{{ route('plant-submissions.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
 
         <div>
@@ -144,13 +144,60 @@
         </div>
         <div>
             <label class="block text-gray-800 font-semibold">Photos (Max 3)</label>
-            <input type="file" name="images[]" multiple 
-                class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-            
-            @error('images') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
-            @error('images.*') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
+
+            <input 
+                type="file" 
+                name="images[]" 
+                id="images"
+                multiple
+                accept="image/*"
+                class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200"
+            >
+
+            @error('images') 
+                <div class="text-red-600 text-sm">{{ $message }}</div> 
+            @enderror
+
+            @error('images.*') 
+                <div class="text-red-600 text-sm">{{ $message }}</div> 
+            @enderror
+
+            <!-- Preview -->
+            <div id="previewContainer" class="mt-3 flex gap-2 flex-wrap"></div>
         </div>
-    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+   
+        <button 
+            type="submit" 
+            id="submitBtn"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
+        >
+            <span id="submitText">Submit</span>
+
+            <!-- Spinner -->
+            <svg 
+                id="submitSpinner"
+                class="hidden animate-spin h-5 w-5 text-white" 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24"
+            >
+                <circle 
+                    class="opacity-25" 
+                    cx="12" 
+                    cy="12" 
+                    r="10" 
+                    stroke="currentColor" 
+                    stroke-width="4"
+                ></circle>
+                <path 
+                    class="opacity-75" 
+                    fill="currentColor" 
+                    d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+            </svg>
+        </button>
+
+
     </form>
 </div>
     @push('scripts')
@@ -179,6 +226,70 @@
                 width: '100%'
             });
         });
+
+    const input = document.getElementById('images');
+    const previewContainer = document.getElementById('previewContainer');
+
+    input.addEventListener('change', function () {
+
+        previewContainer.innerHTML = ''; // reset preview
+
+        const files = Array.from(this.files);
+
+        if (files.length > 3) {
+            alert('Maximum 3 images allowed');
+            this.value = '';
+            return;
+        }
+
+        files.forEach(file => {
+
+            if (!file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const wrapper = document.createElement('div');
+                wrapper.className = "relative";
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = "w-24 h-24 object-cover rounded border border-gray-300";
+
+                wrapper.appendChild(img);
+                previewContainer.appendChild(wrapper);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
+
+
+  
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const form = document.getElementById('hybridForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const submitSpinner = document.getElementById('submitSpinner');
+
+        if (!form) return;
+
+        form.addEventListener('submit', function () {
+
+            // prevent double submit
+            if (submitBtn.disabled) return;
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            submitText.textContent = 'Submitting...';
+            submitSpinner.classList.remove('hidden');
+        });
+
+    });
+
+
     </script>
     @endpush
 @endsection
