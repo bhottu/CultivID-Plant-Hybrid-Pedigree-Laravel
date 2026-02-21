@@ -35,7 +35,7 @@
                 <span class="px-4 py-2 rounded-full text-sm bg-yellow-100 text-yellow-700 font-semibold">
                     ⏳ Menunggu Pembayaran
                 </span>
-            @elseif($transaction->status === 'paid')
+            @elseif($transaction->status === 'completed')
                 <span class="px-4 py-2 rounded-full text-sm bg-green-100 text-green-700 font-semibold">
                     ✅ Pembayaran Berhasil
                 </span>
@@ -51,7 +51,8 @@
             <p class="text-gray-500 text-sm">
                 Silakan scan QR di atas menggunakan aplikasi e-wallet atau m-banking kamu.
             </p>
-        @elseif($transaction->status === 'paid')
+
+        @elseif($transaction->status === 'completed')
             <div class="mt-4">
                 <p class="text-lg font-semibold text-green-600">
                     🎉 Terima kasih!
@@ -62,9 +63,41 @@
                         {{ $transaction->receiver->name ?? 'Creator' }}
                     </span>.
                 </p>
+
+                <a href="{{ url()->previous() }}"
+                class="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-lg shadow hover:bg-green-700 transition">
+                    ⬅ Kembali
+                </a>
+            </div>
+
+        @elseif($transaction->status === 'failed')
+            <div class="mt-4">
+                <p class="text-red-600 font-semibold">
+                    Pembayaran gagal atau kadaluarsa.
+                </p>
+
+                <a href="{{ url()->previous() }}"
+                class="mt-6 inline-block bg-gray-600 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-700 transition">
+                    ⬅ Kembali
+                </a>
             </div>
         @endif
 
     </div>
 </div>
+
+@if($transaction->status === 'pending')
+<script>
+    setInterval(function () {
+        fetch("{{ route('transaction.check', $transaction->id) }}")
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'completed') {
+                    location.reload();
+                }
+            });
+    }, 5000); // cek setiap 5 detik
+</script>
+@endif
 @endsection
+

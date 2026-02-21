@@ -125,7 +125,9 @@ class UserTransactionController extends Controller
 
     \Log::info('QRIS WEBHOOK:', $payload);
 
-    if (($payload['status'] ?? null) !== 'paid') {
+    $status = strtolower($payload['status'] ?? '');
+
+    if ($status !== 'paid') {
         return response()->json(['message' => 'ignored']);
     }
 
@@ -135,81 +137,26 @@ class UserTransactionController extends Controller
         return response()->json(['message' => 'order_id not found']);
     }
 
-    $transaction = UserTransaction::where('external_id', $externalId)->first();
+    $transaction = UserTransaction::where('external_id', $externalId)
+        ->where('payment_gateway', 'qris')
+        ->first();
 
     if (!$transaction) {
         return response()->json(['message' => 'transaction not found']);
     }
 
-    if ($transaction->status === 'paid') {
+    if ($transaction->status === 'completed') {
         return response()->json(['message' => 'already processed']);
     }
 
     $transaction->update([
-        'status' => 'paid'
+        'status' => 'completed'
     ]);
 
     return response()->json(['message' => 'success']);
 }
 
-    /**
-     * Xendit Callback
-     */
-    public function callback(Request $request)
-{
-    Log::info('XENDIT CALLBACK', $request->all());
-
-    $externalId = $request->external_id;
-    $status = strtoupper($request->status ?? '');
-
-    if (!$externalId) {
-        Log::error('XENDIT CALLBACK: external_id missing');
-        return response()->json(['message' => 'No external_id'], 400);
-    }
-
-    $transaction = UserTransaction::where('external_id', $externalId)->first();
-
-    if (!$transaction) {
-        Log::error('XENDIT CALLBACK: transaction not found', [
-            'external_id' => $externalId
-        ]);
-        return response()->json(['message' => 'Transaction not found'], 404);
-    }
-
-    // 🔒 CEGAH DOUBLE CALLBACK
-    if ($transaction->status === 'completed') {
-        return response()->json(['message' => 'Already processed'], 200);
-    }
-
-    if (in_array($status, ['PAID', 'SETTLED'])) {
-
-        $transaction->update([
-            'status' => 'completed',
-        ]);
-
-        // ☕ HANYA UNTUK COFFEE / NON PLATFORM ONLY
-        if (!$transaction->is_platform_only && $transaction->user_id_receiver) {
-            $receiver = $transaction->receiver;
-            if ($receiver) {
-                $receiver->balance += $transaction->user_share;
-                $receiver->save();
-            }
-        }
-
-    } elseif (in_array($status, ['EXPIRED', 'FAILED'])) {
-
-        $transaction->update([
-            'status' => 'failed',
-        ]);
-    }
-
-    Log::info('XENDIT CALLBACK SUCCESS', [
-        'transaction_id' => $transaction->id,
-        'final_status' => $transaction->status,
-    ]);
-
-    return response()->json(['message' => 'OK']);
-}
+    
 
 
 

@@ -153,7 +153,10 @@ Route::get('/checkout/failed', function () {
 
 
 Route::post('/buy-coffee', [UserTransactionController::class, 'buy'])->name('coffee.buy');
-
+Route::get('/transaction/check/{id}', function ($id) {
+    $transaction = \App\Models\UserTransaction::findOrFail($id);
+    return response()->json(['status' => $transaction->status]);
+})->name('transaction.check');
 // Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 // pindah ke api Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
 
