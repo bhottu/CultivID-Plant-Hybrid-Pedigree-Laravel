@@ -41,6 +41,12 @@ return [
     'redirect' => env('GOOGLE_REDIRECT'),
 ],
 
+'qris' => [
+    'api_key' => env('QRIS_API_KEY'),
+    'api_secret' => env('QRIS_API_SECRET'),
+    'base_url' => env('QRIS_BASE_URL'),
+],
+
 'xendit' => [
     'secret' => env('XENDIT_SECRET_KEY'),
     'callback_token' => env('XENDIT_CALLBACK_TOKEN'),

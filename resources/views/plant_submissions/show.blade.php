@@ -129,6 +129,11 @@
 
                 <div class="p-4 rounded border border-gray-200 shadow text-sm w-full mt-2">
                     
+             
+
+
+
+
                         <table class="table-auto text-sm mb-4 text-xs w-full">
                             <tr class="border-b border-gray-50">
                                 <td class="pr-2 text-xs md:text-sm">Plant ID</td>
@@ -267,7 +272,31 @@
                             </tr>
 
                         </table>
+
+                            @if(
+                                $plantSubmission->status_review === 'rejected' &&
+                                Auth::check() &&
+                                (
+                                    Auth::user()->is_admin == 1 ||
+                                    Auth::id() === $plantSubmission->uploader_id
+                                )
+                            )
+                                <div class="mt-3 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-800">
+                                    <strong>Submission rejected</strong><br>
+                                    {{ $plantSubmission->rejection_reason }}
+                                     @if(Auth::id() === $plantSubmission->uploader_id)
+                                    <span class="mt-2 block"><a href="{{ route('plant-submissions.edit', $plantSubmission) }}"
+                                    class="bg-gray-800 text-white mr-2 px-2 py-1 rounded text-xs">
+                                        Edit and Resubmit
+                                    </a></span>
+                                @endif
+                                </div>
+
+                               
+                            @endif
+
                         </div>
+
                         <div class="mt-4 text-xs md:text-sm rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-start gap-3">
@@ -651,64 +680,89 @@
 
 
                         @if(auth()->check())
-                            <form action="{{ route('transactions.buy') }}" id="buyCoffeeForm"  method="POST">
+                            <form action="{{ route('coffee.buy') }}" 
+                                id="buyCoffeeForm"  
+                                method="POST">
                             @csrf
 
-                                    {{-- Radio buttons --}}
-                                <div class="mb-2">
-                                    <label class="mr-4">
-                                        <input type="radio" name="amount_option" value="5000"> Rp 5.000
-                                    </label>
-                                    <label class="mr-4">
-                                        <input type="radio" name="amount_option" value="10000" checked> Rp 10.000
-                                    </label>
-                                    <label class="mr-4">
-                                        <input type="radio" name="amount_option" value="25000"> Rp 25.000
-                                    </label>
-                                
-                                </div>
-                            <input type="text" class="border border-gray-300 rounded p-2 bg-gray-100" name="amount"  id="custom_amount"  placeholder="Enter amount" value="10000">
+                            <div class="mb-2">
+                                <label class="mr-4">
+                                    <input type="radio" name="amount_option" value="5000"> Rp 5.000
+                                </label>
+                                <label class="mr-4">
+                                    <input type="radio" name="amount_option" value="10000" checked> Rp 10.000
+                                </label>
+                                <label class="mr-4">
+                                    <input type="radio" name="amount_option" value="25000"> Rp 25.000
+                                </label>
+                            </div>
+
+                            <input 
+                                type="text" 
+                                class="border border-gray-300 rounded p-2 bg-gray-100 w-full"
+                                name="amount"  
+                                id="custom_amount"  
+                                placeholder="Enter amount"
+                                value="10000"
+                            >
+
                             <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
 
                             <button
                                 type="submit"
-                                 id="sendBtn"
-                                class="bg-green-600 hover:bg-green-700 text-white px-2 py-2 rounded"
+                                id="sendBtn"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-2 w-full"
                             >
-                                Send
+                                ☕ Send Coffee
                             </button>
-                        </form>
+                            </form>
 
                         
                         <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+
                             const radios = document.querySelectorAll('input[name="amount_option"]');
                             const amountInput = document.getElementById('custom_amount');
                             const form = document.getElementById('buyCoffeeForm');
                             const sendBtn = document.getElementById('sendBtn');
 
-                            
-
+                            // Set amount saat radio dipilih
                             radios.forEach(radio => {
-                                radio.addEventListener('change', () => {
-                                    if (radio.value !== 'custom' && radio.checked) {
-                                        amountInput.value = radio.value; // otomatis set value radio
+                                radio.addEventListener('change', function () {
+                                    if (this.checked) {
+                                        amountInput.value = Number(this.value).toLocaleString('id-ID');
                                     }
                                 });
                             });
 
-                            form.addEventListener('submit', (e) => {
-                                // Hapus semua titik dan koma sebelum submit
-                                amountInput.value = amountInput.value.replace(/[\.,]/g, '');
-                            });
-
-                            // Opsional: format tampilan saat mengetik agar lebih enak dibaca
-                            amountInput.addEventListener('input', () => {
-                                let numericValue = amountInput.value.replace(/[\.,]/g, '');
+                            // Format ribuan saat mengetik
+                            amountInput.addEventListener('input', function () {
+                                let numericValue = this.value.replace(/[^\d]/g, '');
                                 if (numericValue) {
-                                    // menambahkan titik ribuan sementara
-                                    amountInput.value = Number(numericValue).toLocaleString('id-ID');
+                                    this.value = Number(numericValue).toLocaleString('id-ID');
+                                } else {
+                                    this.value = '';
                                 }
                             });
+
+                            // Bersihkan format sebelum submit
+                            form.addEventListener('submit', function (e) {
+
+                                let cleanValue = amountInput.value.replace(/[^\d]/g, '');
+
+                                if (!cleanValue || cleanValue < 1000) {
+                                    alert('Minimum Rp 1.000');
+                                    e.preventDefault();   // ✅ pakai e
+                                    return;
+                                }
+
+                                amountInput.value = cleanValue;
+
+                                sendBtn.disabled = true;
+                                sendBtn.innerText = "Generating QR...";
+                            });
+
+                        });
                         </script>
                 
                 @else
@@ -749,7 +803,7 @@
 
     <!-- Modal Popout Foto -->
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
-        <div class="relative">
+        <div id="modalContent" class="relative">
             <button onclick="closeImageModal()" class="absolute -top-6 -right-6 md:top-0 md:right-0 bg-gray-800 text-white rounded-full p-2 hover:bg-red-600 shadow-lg z-50" style="right: -2rem; top: -2rem;">
                 <i class="fas fa-times"></i>
             </button>
@@ -806,6 +860,13 @@
             if(e.key === 'Escape') closeImageModal();
         });
 
+         imageModal.addEventListener('click', function (e) {
+            // Kalau klik di luar konten (background)
+            if (!modalContent.contains(e.target)) {
+                closeImageModal();
+            }
+        });
+
         function prevImage() {
             currentIndex = (currentIndex - 1 + images.length) % images.length;
             document.getElementById('mainImage').src = baseUrl + images[currentIndex];
@@ -847,13 +908,35 @@
             document.getElementById('pedigreePreviewModal').classList.add('flex');
         }
 
-         // share mobile native 
+        // share mobile native 
+        // function sharePost() {
+        //    const shareData = {
+        //        title: @json($plantSubmission->plant_id),
+        //        text: @json(\Illuminate\Support\Str::limit($plantSubmission->keterangan, 100)),
+        //        url: @json(url()->current())
+        //    };
+
+        //    if (navigator.share) {
+        //        navigator.share(shareData)
+        //            .catch(err => console.log('Share cancelled', err));
+        //    } else {
+        //        openShareFallback();
+        //    }
+        // }
+
         function sharePost() {
+            const description = @json($plantSubmission->keterangan);
+
             const shareData = {
                 title: @json($plantSubmission->plant_id),
-                text: @json(\Illuminate\Support\Str::limit($plantSubmission->keterangan, 100)),
                 url: @json(url()->current())
             };
+
+            if (description && description.trim() !== '') {
+                shareData.text = description.length > 100 
+                    ? description.substring(0, 100) + '...' 
+                    : description;
+            }
 
             if (navigator.share) {
                 navigator.share(shareData)
@@ -862,6 +945,7 @@
                 openShareFallback();
             }
         }
+
 
     </script>
 <script>

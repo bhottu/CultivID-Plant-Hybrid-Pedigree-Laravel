@@ -265,13 +265,37 @@
                 });
         }
 
-       // share mobile native 
+        // share mobile native 
+        // function sharePost() {
+        //    const shareData = {
+        //        title: @json($post->caption),
+        //        text: @json(\Illuminate\Support\Str::limit($post->caption, 100)),
+        //        url: @json(url()->current())
+        //    };
+
+        //    if (navigator.share) {
+        //        navigator.share(shareData)
+        //            .catch(err => console.log('Share cancelled', err));
+        //    } else {
+        //        openShareFallback();
+        //    }
+        // }
+
         function sharePost() {
+            const caption = @json($post->caption ?? '');
+
             const shareData = {
-                title: @json($post->caption),
-                text: @json(\Illuminate\Support\Str::limit($post->caption, 100)),
+                title: caption && caption.trim() !== '' 
+                    ? caption 
+                    : 'Check out this post on CultivID 🌱',
                 url: @json(url()->current())
             };
+
+            if (caption && caption.trim() !== '') {
+                shareData.text = caption.length > 100
+                    ? caption.substring(0, 100) + '...'
+                    : caption;
+            }
 
             if (navigator.share) {
                 navigator.share(shareData)

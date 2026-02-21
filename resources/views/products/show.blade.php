@@ -231,8 +231,8 @@
             </div>
             <h3 class="text-lg font-bold text-gray-700">Place Your Ad Here</h3>
             <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>
-            <a href="https://wa.me/6288901309732?text=Dear%20support%2C%20we%20would%20like%20to%20apply%20for%20an%20advertisement%20on%20the%20product%20page." class="mt-4 px-6 py-2 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition">
-                CONTACT US
+            <a href="{{ route('become.partner') }}" class="mt-4 px-6 py-2 bg-blue-600 text-white text-xs font-bold rounded-full hover:bg-blue-700 transition">
+                Become Partner
             </a>
         </div>
 
@@ -351,21 +351,69 @@
     var marker = L.marker([{{ $product->user->latitude }}, {{ $product->user->longitude }}]).addTo(map);
     marker.bindPopup('<b>{{ $product->user->name }}</b>').openPopup();
 
-     // share mobile native 
-        function sharePost() {
-            const shareData = {
-                title: @json($product->name),
-                text: @json(\Illuminate\Support\Str::limit($product->description, 100)),
-                url: @json(url()->current())
-            };
+    // share mobile native 
+    //    function sharePost() {
+    //        const shareData = {
+    //            title: @json($product->name),
+    //            text: @json(\Illuminate\Support\Str::limit($product->description, 100)),
+    //            url: @json(url()->current())
+    //        };
 
-            if (navigator.share) {
-                navigator.share(shareData)
-                    .catch(err => console.log('Share cancelled', err));
-            } else {
-                openShareFallback();
-            }
+    //        if (navigator.share) {
+    //            navigator.share(shareData)
+    //                .catch(err => console.log('Share cancelled', err));
+    //        } else {
+    //            openShareFallback();
+    //        }
+    //    }
+
+    function sharePost() {
+        const description = @json($product->description ?? '');
+
+        const shareData = {
+            title: @json($product->name),
+            url: @json(url()->current())
+        };
+
+        if (description && description.trim() !== '') {
+            shareData.text = description.length > 100
+                ? description.substring(0, 100) + '...'
+                : description;
         }
+
+        if (navigator.share) {
+            navigator.share(shareData)
+                .catch(err => console.log('Share cancelled', err));
+        } else {
+            openShareFallback();
+        }
+    }
+
+     const popup = document.getElementById('image-popup');
+    const popupContent = document.getElementById('popup-content');
+    const closeButton = document.getElementById('close-popup-button');
+
+    function closeImagePopup() {
+        popup.classList.add('hidden');
+    }
+
+    // Klik tombol close
+    closeButton.addEventListener('click', closeImagePopup);
+
+    // Klik background
+    popup.addEventListener('click', function(e) {
+        if (!popupContent.contains(e.target)) {
+            closeImagePopup();
+        }
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImagePopup();
+        }
+    });
+
 </script>
 
 @endsection

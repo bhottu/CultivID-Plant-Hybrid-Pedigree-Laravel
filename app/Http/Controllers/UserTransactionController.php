@@ -9,13 +9,14 @@ use Xendit\Invoice\InvoiceApi;
 use Illuminate\Support\Facades\Log;
 use App\Models\PlantSubmission;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class UserTransactionController extends Controller
 {
     /**
-     * Create invoice & redirect to Xendit
+     * Create invoice & redirect to qris
      */
-    public function buy(Request $request)
+   public function buy(Request $request)
 {
     $request->validate([
         'amount' => 'required|integer|min:1000',
@@ -32,17 +33,14 @@ class UserTransactionController extends Controller
     }
 
     if (!$receiverId) {
-        return redirect()->back()->withErrors('Tidak ada penerima saldo.');
+        return back()->withErrors('Tidak ada penerima saldo.');
     }
 
-    Configuration::setXenditKey(config('services.xendit.secret'));
-
     $amount = (int) $request->amount;
-    $userShare  = (int) ($amount * 0.8);
+    $userShare  = (int) round($amount * 0.8);
     $adminShare = $amount - $userShare;
 
-    // 🔑 external_id unik & stabil
-    $externalId = 'trx_' . Str::uuid();
+    $externalId = 'coffee_' . Str::uuid();
 
     $transaction = UserTransaction::create([
         'user_id' => $senderId,
@@ -53,21 +51,96 @@ class UserTransactionController extends Controller
         'user_share' => $userShare,
         'admin_share' => $adminShare,
         'status' => 'pending',
-        'payment_gateway' => 'xendit',
+        'payment_gateway' => 'qris',
     ]);
 
-    $apiInstance = new InvoiceApi();
+    try {
 
-    $invoice = $apiInstance->createInvoice([
-        'external_id' => $externalId,
-        'amount' => $amount,
-        'description' => 'Buy Me a Coffee',
-        'callback_url' => url('/api/xendit/callback'),
-        'success_redirect_url' => url('/'),
-        'failure_redirect_url' => url('/'),
+        $response = Http::timeout(20)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'X-API-Key' => config('services.qris.api_key'),
+                'X-API-Secret' => config('services.qris.api_secret'),
+            ])
+            ->post(config('services.qris.base_url') . '/api/create-payment.php', [
+                'amount' => $amount,
+                'customer_name' => auth()->user()->name,
+                'customer_email' => auth()->user()->email,
+                // 🔥 embed external_id supaya bisa dilacak nanti
+                'order_id' => $externalId, // ⬅️ WAJIB TAMBAH INI
+                'description' => 'BMC#' . $externalId,
+            ]);
+
+        if (!$response->successful()) {
+            $transaction->update(['status' => 'failed']);
+            return back()->withErrors('Gagal membuat QR pembayaran.');
+        }
+
+        $qrData = $response->json();
+
+        // ⚠️ Jangan asumsi struktur JSON
+        $qrUrl = $qrData['qr_url']
+            ?? $qrData['data']['qr_url']
+            ?? $qrData['qr_image']
+            ?? null;
+
+        $providerId = $qrData['id']
+            ?? $qrData['data']['id']
+            ?? null;
+
+        if (!$qrUrl) {
+            $transaction->update(['status' => 'failed']);
+            return back()->withErrors('QR tidak ditemukan dari response API.');
+        }
+
+        $transaction->update([
+            'related_id' => $providerId
+        ]);
+
+        return view('transactions.qris-pay', [
+            'qr_url' => $qrUrl,
+            'transaction' => $transaction
+        ]);
+
+    } catch (\Exception $e) {
+
+        $transaction->update(['status' => 'failed']);
+
+        return back()->withErrors('Terjadi kesalahan koneksi ke server pembayaran.');
+    }
+}
+
+    public function qrisWebhook(Request $request)
+{
+    $payload = $request->all();
+
+    \Log::info('QRIS WEBHOOK:', $payload);
+
+    if (($payload['status'] ?? null) !== 'paid') {
+        return response()->json(['message' => 'ignored']);
+    }
+
+    $externalId = $payload['order_id'] ?? null;
+
+    if (!$externalId) {
+        return response()->json(['message' => 'order_id not found']);
+    }
+
+    $transaction = UserTransaction::where('external_id', $externalId)->first();
+
+    if (!$transaction) {
+        return response()->json(['message' => 'transaction not found']);
+    }
+
+    if ($transaction->status === 'paid') {
+        return response()->json(['message' => 'already processed']);
+    }
+
+    $transaction->update([
+        'status' => 'paid'
     ]);
 
-    return redirect($invoice['invoice_url']);
+    return response()->json(['message' => 'success']);
 }
 
     /**

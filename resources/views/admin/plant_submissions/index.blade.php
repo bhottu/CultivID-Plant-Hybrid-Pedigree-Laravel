@@ -15,6 +15,16 @@
             <a href="{{ route('plant-submissions.create') }}" class="bg-gray-800 text-white px-4 py-2 text-sm rounded hover:bg-gray-900 transition">+ Tambah</a>
         </div>
 
+        <div class="mb-4">
+            <input 
+                type="text" 
+                id="search-input"
+                placeholder="Search by Plant ID or User..."
+                class="w-full md:w-1/3 border border-gray-300 rounded p-2 focus:ring focus:ring-blue-200"
+            >
+        </div>
+
+
         @if($submissions->count())
             @php
                 $showStatusHeader = false;
@@ -46,7 +56,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="submission-table">
                         @foreach($submissions as $item)
                        
                             <tr class="border-b border-gray-200 hover:bg-gray-50">
@@ -69,11 +79,11 @@
                                         <span class="text-gray-400">-</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->plant_id }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->induk_betina }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->plant_id ?? '-' }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->induk_betina ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200 text-center">&#10005;</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->induk_jantan }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->penyilang }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->induk_jantan ?? '-' }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->penyilang ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">{{ $item->uploader->name ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500 border-b border-gray-200">
                                     <span class="px-2 py-1 rounded text-xs {{ $item->status_review == 'approved' ? 'bg-green-100 text-green-900' : ($item->status_review == 'rejected' ? 'bg-red-100 text-gray-900' : ($item->status_review == 'banding' ? 'bg-yellow-900 text-yellow-100' : 'bg-gray-200 text-gray-900')) }}">{{ ucfirst($item->status_review) }}</span>
@@ -156,5 +166,110 @@
         document.addEventListener('keydown', function(e) {
             if(e.key === 'Escape') closeImageModal();
         });
+
+       
+        // Search Functionality
+       
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const searchInput = document.getElementById("search-input");
+        const tableBody = document.getElementById("submission-table");
+        const pagination = document.querySelector(".mt-4"); // pagination wrapper
+
+        let debounceTimer;
+
+        searchInput.addEventListener("input", function () {
+
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+
+                let query = this.value.trim();
+
+                fetch("{{ route('admin.plant-submissions.search') }}?q=" + encodeURIComponent(query), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    tableBody.innerHTML = "";
+
+                    // sembunyikan pagination saat search aktif
+                    if (pagination) {
+                        pagination.style.display = query.length ? "none" : "block";
+                    }
+
+                    if (data.length === 0) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="9" class="text-center py-4 text-gray-500">
+                                    No results found
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+
+                    data.forEach(item => {
+
+                        let statusColor = "bg-gray-200 text-gray-900";
+                        if (item.status_review === "approved") statusColor = "bg-green-100 text-green-900";
+                        else if (item.status_review === "rejected") statusColor = "bg-red-100 text-gray-900";
+                        else if (item.status_review === "banding") statusColor = "bg-yellow-900 text-yellow-100";
+
+                        let firstImage = `<span class="text-gray-400">-</span>`;
+
+                        if (item.image) {
+                            try {
+                                let images = JSON.parse(item.image);
+                                if (!Array.isArray(images)) images = [images];
+
+                                firstImage = `
+                                    <img src="/storage/${images[0]}" 
+                                        class="w-12 h-12 object-cover rounded cursor-pointer"
+                                        onclick="showImageModal('/storage/${images[0]}')">
+                                `;
+                            } catch (e) {}
+                        }
+
+                        tableBody.innerHTML += `
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm text-gray-500">${firstImage}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">${item.plant_id ?? "-"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">${item.induk_betina ?? "-"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500 text-center">&times;</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">${item.induk_jantan ?? "-"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">${item.penyilang ?? "-"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    ${item.uploader ? item.uploader.name : "-"}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    <span class="px-2 py-1 rounded text-xs ${statusColor}">
+                                        ${item.status_review}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    <a href="/admin/plant-submissions/${item.id}" 
+                                    class="text-gray-600 hover:text-blue-700 p-2 rounded hover:bg-gray-100">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                })
+                .catch(error => console.error("Search error:", error));
+
+            }, 400); // debounce 400ms
+
+        });
+
+    });
+
+
+
     </script>
 @endsection

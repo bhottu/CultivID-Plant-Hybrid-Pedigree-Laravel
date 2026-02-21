@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\PlantSubmissionAppeal;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Notification;
+
 
 class PlantSubmissionController extends Controller
 {
@@ -40,24 +42,6 @@ class PlantSubmissionController extends Controller
             });
         }
 
-        // =========================
-        // FILTER STATUS
-        // =========================
-        
-        //if ($status === 'revision') {
-        //    $query->where(function ($q) {
-        //        $q->whereNull('induk_jantan')
-        //          ->orWhere('induk_jantan', '')
-        //          ->orWhereNull('induk_betina')
-        //          ->orWhere('induk_betina', '');
-        //   });
-        //}
-        //elseif ($status === 'appeal') {
-        //   $query->whereIn('id', PlantSubmissionAppeal::pluck('plant_submission_id'));
-        //}
-        //elseif (in_array($status, ['approved','pending','rejected'])) {
-        //    $query->where('status_review', $status);
-        // =========================}
 
         if ($status === 'revision') {
 
@@ -410,16 +394,51 @@ foreach (['induk_jantan', 'induk_betina'] as $parentField) {
     public function review(Request $request, PlantSubmission $plantSubmission)
     {
         $this->authorize('review', $plantSubmission);
+
         $request->validate([
             'status_review' => 'required|in:approved,rejected',
         ]);
+
+        $oldStatus = $plantSubmission->status_review;
+
         $plantSubmission->update([
             'status_review' => $request->status_review,
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now(),
         ]);
-        return redirect()->route('plant-submissions.index')->with('success', 'Status updated successfully!');
+
+        // 🔔 CREATE NOTIFICATION IF STATUS CHANGED
+        if (
+            $oldStatus !== $request->status_review &&
+            $plantSubmission->uploader_id !== Auth::id()
+        ) {
+
+            $type = $request->status_review === 'approved'
+                ? 'plant_approved'
+                : 'plant_rejected';
+
+            $message = $request->status_review === 'approved'
+                ? 'Your plant submission ' . $plantSubmission->plant_id . ' has been approved 🌿'
+                : 'Your plant submission ' . $plantSubmission->plant_id . ' was rejected.';
+
+            Notification::create([
+                'user_id' => $plantSubmission->uploader_id,
+                'from_user_id' => Auth::id(),
+                'type' => $type,
+                'notifiable_id' => $plantSubmission->id,
+                'notifiable_type' => 'PlantSubmission',
+                'data' => [
+                    'submission_id' => $plantSubmission->plant_id,
+                    'message' => $message
+                ]
+            ]);
+        }
+
+        return redirect()
+            ->route('plant-submissions.index')
+            ->with('success', 'Status updated successfully!');
     }
+
 
     public function getFirstImageAttribute()
     {

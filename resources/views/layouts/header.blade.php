@@ -7,11 +7,11 @@
             <div class="flex space-x-4 items-center">
                 <ul class="flex space-x-4">
                         @guest
-                            <li><button class="dark-mode-toggle text-gray-800 text-white"><i class="fas fa-toggle-on"></i></button></li>
+                           
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('login') }}">Login</a></li>
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('register') }}">Register</a></li>
                         @else
-                            <li><button class="dark-mode-toggle text-gray-800 text-white"><i class="fas fa-toggle-on"></i></button></li>
+                            
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('profile', ['user' => Auth::user()->username]) }}">{{ Auth::user()->name }}</a></li>
                             <li><a class="hover:text-blue-500 text-gray-800 text-white" href="{{ route('products.index') }}">Home</a></li>
                             <li>

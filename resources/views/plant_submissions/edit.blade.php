@@ -2,7 +2,26 @@
 
 @section('content')
 <div class="container mx-auto p-4 rounded max-w-lg ">
-    <h1 class="text-2xl font-bold mb-4 text-gray-800">Edit Pengajuan Tanaman</h1>
+    <h1 class="text-2xl font-bold mb-4 text-gray-800">Edit My Plant Submission</h1>
+
+                            @if(
+                                $plantSubmission->status_review === 'rejected' &&
+                                Auth::check() &&
+                                (
+                                    Auth::user()->is_admin == 1 ||
+                                    Auth::id() === $plantSubmission->uploader_id
+                                )
+                            )
+                                <div class="mt-3 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-800">
+                                    <strong>Rejection Reason</strong><br>
+                                    {{ $plantSubmission->rejection_reason }}
+                                     @if(Auth::id() === $plantSubmission->uploader_id)
+                                    
+                                @endif
+                                </div>
+                            @endif
+
+
     <form id="updateHybridForm" action="{{ route('plant-submissions.update', $plantSubmission) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')

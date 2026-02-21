@@ -28,6 +28,8 @@ use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Auth\Notifications\ResetPassword;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\NotificationController;
+
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -45,7 +47,7 @@ Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordF
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
-Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed')->middleware('auth');
+Route::get('/discuss', [HomeController::class, 'index'])->name('index.sosmed');
 Route::get('/debug-images', function() { return view('debug-images'); });
 Route::get('discuss/load', [HomeController::class, 'loadMore'])->name('load.more');
 Route::get('discuss/{user}/load', [ProfileController::class, 'loadMore'])->name('load.more-profile');
@@ -145,12 +147,13 @@ Route::get('/checkout/failed', function () {
     return "Payment Failed";
 })->name('checkout.failed');
 
+ Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 
 });
 
 
+Route::post('/buy-coffee', [UserTransactionController::class, 'buy'])->name('coffee.buy');
 
-Route::post('/buy-me-a-coffee', [UserTransactionController::class, 'buy'])->name('transactions.buy');
 // Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 // pindah ke api Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
 
@@ -164,7 +167,7 @@ Route::get('plants', [PlantController::class, 'index'])->name('plants.index');
 
 
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
-Route::get('market/', [ProductController::class, 'allproducts'])->name('all.products')->middleware('auth');
+Route::get('market/', [ProductController::class, 'allproducts'])->name('all.products');
 Route::get('/market/@{username}', [ProductController::class, 'productsByUsername'])->name('products.by.username');
 Route::get('load-more-products', [ProductController::class, 'loadMoreProducts'])->name('load-more-products');
 Route::get('/market/{slug}', [ProductController::class, 'show'])->name('products.show');
@@ -208,6 +211,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::get('/admin', [ProfileController::class, 'adminDashboardStatistic'])->name('admin.home');
 
+    Route::get('/admin/plant-submissions/search', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'search'])->name('admin.plant-submissions.search');
+
     // Admin Plant Submissions index (uses admin controller)
     Route::get('/admin/plant-submissions', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'index'])->name('admin.plant-submissions.index');
     Route::get('/admin/plant-submissions/create', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'create'])->name('admin.plant-submissions.create');
@@ -216,7 +221,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/plant-submissions/{plantSubmission}/edit', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'edit'])->name('admin.plant-submissions.edit');
     Route::put('/admin/plant-submissions/{plantSubmission}', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'update'])->name('admin.plant-submissions.update');
     Route::post('/admin/plant-submissions/{plantSubmission}/review', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'review'])->name('admin.plant-submissions.review');
-    Route::delete('/admin/plant-submissions/{plantSubmission}', [PlantSubmissionController::class, 'adminDestroy'])->name('admin.plant-submissions.destroy');
+    Route::delete('/admin/plant-submissions/{plantSubmission}', [\App\Http\Controllers\Admin\PlantSubmissionController::class, 'adminDestroy'])->name('admin.plant-submissions.destroy');
+    
+
    // Route::get('categories/create', [CategoryController::class, 'create'])->name('categories.create');
     //Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
 

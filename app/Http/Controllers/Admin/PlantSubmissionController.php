@@ -100,10 +100,12 @@ class PlantSubmissionController extends Controller
             'penyilang' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
+            'status_review' => 'required|in:pending,approved,rejected',
+            'rejection_reason' => 'nullable|string|required_if:status_review,rejected',
         ]);
 
-        $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'keterangan']);
-        foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan'] as $field) {
+        $data = $request->only(['plant_id', 'induk_jantan', 'induk_betina', 'penyilang', 'status_review', 'keterangan', 'rejection_reason']);
+        foreach (['induk_jantan', 'induk_betina', 'penyilang', 'keterangan', 'status_review', 'rejection_reason'] as $field) {
             if (isset($data[$field]) && $data[$field] === '') {
                 $data[$field] = null;
             }
@@ -134,4 +136,33 @@ class PlantSubmissionController extends Controller
         ]);
         return redirect()->route('admin.plant-submissions.index')->with('success', 'Status updated successfully!');
     }
+
+public function search(Request $request)
+{
+    //$this->authorize('viewAny', PlantSubmission::class);
+
+    $query = $request->q;
+
+    $submissions = PlantSubmission::with('uploader')
+        ->when($query, function ($q) use ($query) {
+            $q->where(function ($subQuery) use ($query) {
+
+                // cari berdasarkan primary ID
+                $subQuery->where('id', $query)
+
+                    // cari berdasarkan plant_id
+                    ->orWhere('plant_id', 'like', "%{$query}%")
+
+                    // cari berdasarkan nama uploader
+                    ->orWhereHas('uploader', function ($userQuery) use ($query) {
+                        $userQuery->where('name', 'like', "%{$query}%");
+                    });
+            });
+        })
+        ->latest()
+        ->get();
+
+    return response()->json($submissions);
+}
+
 }

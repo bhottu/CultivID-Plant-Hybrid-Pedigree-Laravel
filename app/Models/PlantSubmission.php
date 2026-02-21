@@ -24,6 +24,7 @@ class PlantSubmission extends Model
         'status_review', 
         'reviewed_by', 
         'reviewed_at', 
+        'rejection_reason',
         'uploader_approval',
         'certificate_number',
         'certificate_issued_at'

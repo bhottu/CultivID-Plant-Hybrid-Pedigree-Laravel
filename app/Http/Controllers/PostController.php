@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Comment;
 use App\Models\Share;
 use App\Models\User;
+use App\Models\Notification;
 
 class PostController extends Controller
 {
@@ -91,6 +92,22 @@ class PostController extends Controller
             $comment->user_id = auth()->user()->id;
             $comment->post_id = $post->id;
             $comment->save();
+
+            if ($post->user_id != Auth::id()) {
+
+                Notification::create([
+                    'user_id' => $post->user_id,
+                    'from_user_id' => Auth::id(),
+                    'type' => 'post_commented',
+                    'notifiable_id' => $post->id,
+                    'notifiable_type' => 'Post',
+                    'data' => [
+                        'post_id' => $post->id,
+                        'comment_id' => $comment->id,
+                        'message' => Auth::user()->username . ' commented on your post'
+                    ]
+                ]);
+            }
 
             // Load user relationship
             $comment->load('user');

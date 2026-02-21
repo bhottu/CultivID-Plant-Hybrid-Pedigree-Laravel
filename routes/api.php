@@ -17,14 +17,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::delete('products/{id}', [ApiProductController::class, 'destroy']);
 });
 
-// routes/api.php
-//Route::post('/xendit/callback', [UserTransactionController::class, 'callback'])
-   // ->withoutMiddleware([
-  //      'auth:sanctum',
-  //      \App\Http\Middleware\VerifyCsrfToken::class,
-  //  ]);
-Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
 
+
+// Route::post('/xendit/callback', [UserTransactionController::class, 'callback']);
+Route::post('/qris/webhook', [UserTransactionController::class, 'qrisWebhook']);
 
 
   Route::post('login', [ApiAuthController::class, 'login'])->name('api.login');
