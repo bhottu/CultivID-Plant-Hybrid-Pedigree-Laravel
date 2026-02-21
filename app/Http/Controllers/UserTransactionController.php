@@ -16,18 +16,29 @@ class UserTransactionController extends Controller
     /**
      * Create invoice & redirect to qris
      */
-   public function buy(Request $request)
+  public function buy(Request $request)
 {
     $request->validate([
         'amount' => 'required|integer|min:1000',
     ]);
 
-    $senderId = auth()->id();
-    $receiverId = null;
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
 
+    $senderId = auth()->id();
+
+    // =============================
+    // Tentukan penerima
+    // =============================
     if ($request->plant_id) {
         $plant = PlantSubmission::find($request->plant_id);
-        $receiverId = $plant?->uploader_id;
+
+        if (!$plant) {
+            return back()->withErrors('Plant tidak ditemukan.');
+        }
+
+        $receiverId = $plant->uploader_id;
     } else {
         $receiverId = PlantSubmission::pluck('uploader_id')->first();
     }
@@ -42,6 +53,9 @@ class UserTransactionController extends Controller
 
     $externalId = 'coffee_' . Str::uuid();
 
+    // =============================
+    // Simpan transaksi awal (pending)
+    // =============================
     $transaction = UserTransaction::create([
         'user_id' => $senderId,
         'user_id_receiver' => $receiverId,
@@ -66,8 +80,7 @@ class UserTransactionController extends Controller
                 'amount' => $amount,
                 'customer_name' => auth()->user()->name,
                 'customer_email' => auth()->user()->email,
-                // 🔥 embed external_id supaya bisa dilacak nanti
-                'order_id' => $externalId, // ⬅️ WAJIB TAMBAH INI
+                'order_id' => $externalId,
                 'description' => 'BMC#' . $externalId,
             ]);
 
@@ -78,15 +91,11 @@ class UserTransactionController extends Controller
 
         $qrData = $response->json();
 
-        // ⚠️ Jangan asumsi struktur JSON
-        $qrUrl = $qrData['qr_url']
-            ?? $qrData['data']['qr_url']
-            ?? $qrData['qr_image']
-            ?? null;
-
-        $providerId = $qrData['id']
-            ?? $qrData['data']['id']
-            ?? null;
+        // =============================
+        // ✅ SESUAI RESPONSE QRIS.PW
+        // =============================
+        $qrUrl = $qrData['qris_url'] ?? null;
+        $providerId = $qrData['transaction_id'] ?? null;
 
         if (!$qrUrl) {
             $transaction->update(['status' => 'failed']);
@@ -94,7 +103,7 @@ class UserTransactionController extends Controller
         }
 
         $transaction->update([
-            'related_id' => $providerId
+            'related_id' => $providerId,
         ]);
 
         return view('transactions.qris-pay', [
