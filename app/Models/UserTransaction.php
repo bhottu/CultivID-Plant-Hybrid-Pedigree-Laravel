@@ -20,6 +20,7 @@ class UserTransaction extends Model
         'status',
         'payment_gateway',
         'is_platform_only',
+        'related_id',
     ];
 
     public function user()

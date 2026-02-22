@@ -2,5 +2,3 @@ database/migrations/2026_02_20_043148_create_notifications_table.php
 database/migrations/2026_02_20_061724_add_rejection_reason_to_plant_submissions.php
 database/migrations/2026_02_20_062324_update_status_review_enum.php
 
-gagal ni ntr cek lagi
-php artisan migrate --path=database/migrations/2026_02_20_062324_update_status_review_enum.php

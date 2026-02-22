@@ -78,7 +78,7 @@
 
                  <span class="text-gray-600 mt-4 block text-center">Scan the QR code below to complete your payment. input Rp <span id="adPrice2"></span></span>
 
-                <img src="/qris-1000036271y.png" alt="QR Code" class="w-48 h-48 mx-auto mt-4">
+                <img src="/qris-1000036271y.png" alt="QR Code" class="w-full h-auto mx-auto mt-4">
 
                 <label class="block bg-red-100 text-xl font-semibold border-b border-gray-300 w-full mb-3 mt-3">Step 3 <label class="text-xs">(Confirm your payment)</label></label> 
                     <a id="waLink" href="#" class="block w-full text-center py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg">

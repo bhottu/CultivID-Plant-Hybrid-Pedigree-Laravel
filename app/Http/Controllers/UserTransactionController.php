@@ -113,6 +113,10 @@ class UserTransactionController extends Controller
 
     } catch (\Exception $e) {
 
+        \Log::error('QRIS CREATE ERROR', [
+            'message' => $e->getMessage()
+        ]);
+
         $transaction->update(['status' => 'failed']);
 
         return back()->withErrors('Terjadi kesalahan koneksi ke server pembayaran.');
@@ -157,9 +161,6 @@ class UserTransactionController extends Controller
 }
 
     
-
-
-
     public function adminPayment()
     {
         $transactions = UserTransaction::with(['user', 'receiver'])
@@ -195,40 +196,43 @@ class UserTransactionController extends Controller
     }
 
     public function update(Request $request, UserTransaction $transaction)
-    {
-        if (!auth()->user()->is_admin) {
-            abort(403);
-        }
-
-        $request->validate([
-            'amount' => 'required|integer|min:1000',
-            'status' => 'required|in:pending,completed,failed',
-        ]);
-
-        $amount = (int) $request->amount;
-        $userShare  = (int) ($amount * 0.8);
-        $adminShare = $amount - $userShare;
-
-        // Check if the transaction is platform-only
-        if ($transaction->is_platform_only == 0) {
-            $userShare = null;
-            $adminShare = null;
-        } else {
-            $userShare  = (int) ($amount * 0.8);
-            $adminShare = $amount - $userShare;
-        }
-
-        $transaction->update([
-            'amount' => $amount,
-            'user_share' => $userShare,
-            'admin_share' => $adminShare,
-            'status' => $request->status,
-        ]);
-
-        return redirect()
-            ->route('admin.payment.index')
-            ->with('success', 'Transaksi berhasil diperbarui');
+{
+    if (!auth()->user()->is_admin) {
+        abort(403);
     }
+
+    $request->validate([
+        'amount' => 'required|integer|min:1000',
+        'status' => 'required|in:pending,completed,failed',
+    ]);
+
+    $amount = (int) $request->amount;
+
+    // ==========================
+    // HITUNG SHARE DENGAN BENAR
+    // ==========================
+
+    if ($transaction->is_platform_only == 1) {
+        // Semua ke admin/platform
+        $userShare  = 0;
+        $adminShare = $amount;
+    } else {
+        // 80% user, 20% admin
+        $userShare  = (int) round($amount * 0.8);
+        $adminShare = $amount - $userShare;
+    }
+
+    $transaction->update([
+        'amount' => $amount,
+        'user_share' => $userShare,
+        'admin_share' => $adminShare,
+        'status' => $request->status,
+    ]);
+
+    return redirect()
+        ->route('admin.payment.index')
+        ->with('success', 'Transaksi berhasil diperbarui');
+}
 
     public function buyCertificate(Request $request)
 {
@@ -236,11 +240,15 @@ class UserTransactionController extends Controller
         'plant_id' => 'required'
     ]);
 
-   // $plant = PlantSubmission::where('plant_id',$request->plant_id)->firstOrFail();
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+
     $plant = PlantSubmission::findOrFail($request->plant_id);
 
-
-    // 2️⃣ CEK: apakah user sudah pernah beli certificate ini?
+    // ============================
+    // CEK SUDAH PERNAH BELI?
+    // ============================
     $alreadyPaid = UserTransaction::where('user_id', auth()->id())
         ->where('plant_id', $plant->id)
         ->where('type', 'certificate')
@@ -252,14 +260,11 @@ class UserTransactionController extends Controller
             ->route('plant-submissions.show', $plant->plant_id)
             ->with('info', 'Certificate sudah kamu miliki');
     }
-    
 
-    Configuration::setXenditKey(config('services.xendit.secret'));
+    $amount = 75000;
+    $externalId = 'cert_' . \Str::uuid();
 
-    $amount = 75000; // 💰 HARGA CERTIFICATE
-    $externalId = 'cert_' . \Illuminate\Support\Str::uuid();
-
-    UserTransaction::create([
+    $transaction = UserTransaction::create([
         'external_id' => $externalId,
         'user_id' => auth()->id(),
         'user_id_receiver' => null,
@@ -269,24 +274,60 @@ class UserTransactionController extends Controller
         'user_share' => 0,
         'admin_share' => $amount,
         'status' => 'pending',
-        'payment_gateway' => 'xendit',
-        'is_platform_only' => true,
+        'payment_gateway' => 'qris',
+        'is_platform_only' => 1,
     ]);
 
-    $apiInstance = new \Xendit\Invoice\InvoiceApi();
+    try {
 
-    $invoice = $apiInstance->createInvoice([
-        'external_id' => $externalId,
-        'amount' => $amount,
-        'description' => 'Certificate of Pedigree',
-        'callback_url' => url('/api/xendit/callback'),
-        'success_redirect_url' => route(
-            'plant-submissions.show',
-            $plant->plant_id
-        ),
-    ]);
+        $response = Http::timeout(20)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'X-API-Key' => config('services.qris.api_key'),
+                'X-API-Secret' => config('services.qris.api_secret'),
+            ])
+            ->post(config('services.qris.base_url') . '/api/create-payment.php', [
+                'amount' => $amount,
+                'customer_name' => auth()->user()->name,
+                'customer_email' => auth()->user()->email,
+                'order_id' => $externalId,
+                'description' => 'CERT#' . $externalId,
+            ]);
 
-    return redirect($invoice['invoice_url']); // 🔥 INI KUNCI
+        if (!$response->successful()) {
+            $transaction->update(['status' => 'failed']);
+            return back()->withErrors('Gagal membuat QR pembayaran.');
+        }
+
+        $qrData = $response->json();
+
+        $qrUrl = $qrData['qris_url'] ?? null;
+        $providerId = $qrData['transaction_id'] ?? null;
+
+        if (!$qrUrl) {
+            $transaction->update(['status' => 'failed']);
+            return back()->withErrors('QR tidak ditemukan.');
+        }
+
+        $transaction->update([
+            'related_id' => $providerId,
+        ]);
+
+        return view('transactions.qris-pay', [
+            'qr_url' => $qrUrl,
+            'transaction' => $transaction
+        ]);
+
+    } catch (\Exception $e) {
+
+        \Log::error('QRIS CERT ERROR', [
+            'message' => $e->getMessage()
+        ]);
+
+        $transaction->update(['status' => 'failed']);
+
+        return back()->withErrors('Terjadi kesalahan koneksi pembayaran.');
+    }
 }
 
 
