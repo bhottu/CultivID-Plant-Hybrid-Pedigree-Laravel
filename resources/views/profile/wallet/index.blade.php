@@ -37,19 +37,45 @@
             <table class="w-full border mt-2">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="border px-2 py-1">Description</th>
+                        
                         <th class="border px-2 py-1">Amount</th>
                         <th class="border px-2 py-1">Status</th>
+                        <th class="border px-2 py-1">Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($transactions as $trx)
-                        <tr>
-                            <td class="border px-2 py-1">
-                                {{ $trx->description ?? 'No Description' }}
-                            </td>
+                        <tr> 
                             <td class="border px-2 py-1">Rp {{ number_format($trx->amount, 0, ',', '.') }}</td>
                             <td class="border px-2 py-1">{{ ucfirst($trx->status) }}</td>
+                           <td class="border px-2 py-1">
+
+                                {{-- DESCRIPTION DINAMIS --}}
+                                @if($trx->type === 'certificate')
+                                    Pembelian Certificate
+                                @elseif($trx->type === 'deposit')
+
+                                    @if(auth()->id() === $trx->user_id_receiver)
+                                        Anda dikirim kopi oleh {{ $trx->user->name ?? 'User' }}
+                                    @else
+                                        Anda mengirim kopi ke {{ $trx->receiver->name ?? 'User' }}
+                                    @endif
+
+                                @else
+                                    Transaksi
+                                @endif
+
+                                <br>
+
+                                {{-- EARNING INFO --}}
+                                Creator Earnings :
+                                {{ number_format($trx->user_share ?? 0, 0, ',', '.') }}
+
+                                |
+                                Platform Fee :
+                                {{ number_format($trx->admin_share ?? 0, 0, ',', '.') }}
+
+                            </td>
                         </tr>
                     @endforeach
                     @if($transactions->isEmpty())

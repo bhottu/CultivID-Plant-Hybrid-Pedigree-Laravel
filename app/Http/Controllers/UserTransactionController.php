@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\PlantSubmission;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UserTransactionController extends Controller
 {
@@ -153,9 +155,38 @@ class UserTransactionController extends Controller
         return response()->json(['message' => 'already processed']);
     }
 
-    $transaction->update([
-        'status' => 'completed'
-    ]);
+   DB::transaction(function () use ($transaction) {
+
+        // 1️⃣ Update status dulu
+        $transaction->update([
+            'status' => 'completed'
+        ]);
+
+        // 2️⃣ Kalau ini BUY COFFEE (deposit)
+        if ($transaction->type === 'deposit') {
+
+            // Tambah saldo penerima
+            if ($transaction->user_id_receiver && $transaction->user_share > 0) {
+                User::where('id', $transaction->user_id_receiver)
+                    ->increment('balance', $transaction->user_share);
+            }
+
+            // Tambah saldo admin (user_id = 1)
+            if ($transaction->admin_share > 0) {
+                User::where('id', 1)
+                    ->increment('balance', $transaction->admin_share);
+            }
+        }
+
+        // 3️⃣ Kalau certificate (platform only)
+        if ($transaction->type === 'certificate') {
+
+            // Semua masuk ke admin
+            User::where('id', 1)
+                ->increment('balance', $transaction->admin_share);
+        }
+
+    });
 
     return response()->json(['message' => 'success']);
 }
@@ -207,27 +238,61 @@ class UserTransactionController extends Controller
     ]);
 
     $amount = (int) $request->amount;
+    $oldStatus = $transaction->status;
+    $newStatus = $request->status;
 
-    // ==========================
-    // HITUNG SHARE DENGAN BENAR
-    // ==========================
+    DB::transaction(function () use ($transaction, $amount, $oldStatus, $newStatus) {
 
-    if ($transaction->is_platform_only == 1) {
-        // Semua ke admin/platform
-        $userShare  = 0;
-        $adminShare = $amount;
-    } else {
-        // 80% user, 20% admin
-        $userShare  = (int) round($amount * 0.8);
-        $adminShare = $amount - $userShare;
-    }
+        // ==========================
+        // HITUNG SHARE DENGAN BENAR
+        // ==========================
 
-    $transaction->update([
-        'amount' => $amount,
-        'user_share' => $userShare,
-        'admin_share' => $adminShare,
-        'status' => $request->status,
-    ]);
+        if ($transaction->is_platform_only == 1) {
+            $userShare  = 0;
+            $adminShare = $amount;
+        } else {
+            $userShare  = (int) round($amount * 0.8);
+            $adminShare = $amount - $userShare;
+        }
+
+        // Update transaksi dulu
+        $transaction->update([
+            'amount' => $amount,
+            'user_share' => $userShare,
+            'admin_share' => $adminShare,
+            'status' => $newStatus,
+        ]);
+
+        // ======================================
+        // TAMBAH SALDO HANYA JIKA BARU COMPLETED
+        // ======================================
+
+        if ($oldStatus !== 'completed' && $newStatus === 'completed') {
+
+            // Jika ini deposit (buy coffee)
+            if ($transaction->type === 'deposit') {
+
+                if ($transaction->user_id_receiver && $userShare > 0) {
+                    User::where('id', $transaction->user_id_receiver)
+                        ->increment('balance', $userShare);
+                }
+
+                if ($adminShare > 0) {
+                    User::where('id', 1)
+                        ->increment('balance', $adminShare);
+                }
+            }
+
+            // Jika certificate (platform only)
+            if ($transaction->type === 'certificate') {
+
+                if ($adminShare > 0) {
+                    User::where('id', 1)
+                        ->increment('balance', $adminShare);
+                }
+            }
+        }
+    });
 
     return redirect()
         ->route('admin.payment.index')
