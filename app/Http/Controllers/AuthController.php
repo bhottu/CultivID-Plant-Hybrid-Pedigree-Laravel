@@ -9,7 +9,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\RateLimiter;
 
 
 class AuthController extends Controller
@@ -21,12 +21,17 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $request->validate(
+        [
             'name' => 'required|string|max:255',
-           
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-        ]);
+            'terms' => 'accepted',
+        ],
+        [
+            'terms.accepted' => 'You must agree to the Terms & Conditions.',
+        ]
+        );
 
         $user = User::create([
             'name' => $request->name,
@@ -45,32 +50,62 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+   public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // 🔐 Buat key unik (email + IP)
+        $throttleKey = Str::lower($request->email).'|'.$request->ip();
+
+        // ⛔ Cek apakah sudah terlalu banyak percobaan
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            return back()->withErrors([
+                'email' => 'Too many login attempts. Please try again in '.ceil($seconds/60).' minutes.'
+                
+            ])->withInput();
+        }
+
         $credentials = $request->only('email', 'password');
+
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
+            RateLimiter::hit($throttleKey, 900); // 900 detik = 15 menit
             return back()->withErrors([
-                'email' => 'Email tidak ditemukan.',
-            ]);
+                'email' => 'No account found with this email address.',
+            ])->withInput();
         }
 
         if ($user->isBanned()) {
-            return redirect()->route('login')->with('error', 'Akun Anda telah dinonaktifkan, hubungi administrator.');
+            return redirect()
+                ->route('login')
+                ->with('error', 'Your account has been deactivated. Please contact support for more information.');
         }
 
-        if (Auth::attempt($credentials)) {
-            if (Auth::user()->is_admin) {
-                return redirect()->route('admin.home');
-            } else {
-                return redirect()->route('home');
-            }
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+
+            // Reset percobaan jika berhasil login
+            RateLimiter::clear($throttleKey);
+
+            $request->session()->regenerate();
+
+            return Auth::user()->is_admin
+                ? redirect()->route('admin.home')
+                : redirect()->route('home');
         }
+
+        // Tambah hit jika password salah
+        RateLimiter::hit($throttleKey, 900);
 
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
+            'email' => 'Invalid email or password.',
+        ])->withInput();
     }
     
 

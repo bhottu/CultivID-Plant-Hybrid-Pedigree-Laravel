@@ -266,25 +266,94 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#induk_jantan').select2({
+
+        function initParentSelect(selector) {
+            $(selector).select2({
                 tags: true,
-                placeholder: '-- Pilih / Tambah baru --',
+                placeholder: '-- Type to search / Add new --',
                 allowClear: true,
-                width: '100%'
+                width: '100%',
+
+                createTag: function (params) {
+                    const term = $.trim(params.term);
+
+                    if (term === '') {
+                        return null;
+                    }
+
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    };
+                },
+
+                templateResult: function (data) {
+                    if (data.newTag) {
+                        return $(
+                            '<span style="display:flex;align-items:center;justify-content:space-between;width:100%;">' +
+                                '<span>' + data.text + '</span>' +
+                                '<span style="display:inline-flex;align-items:center;font-size:12px;color:#000000;font-weight:600;">' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">' +
+                                        '<line x1="12" y1="5" x2="12" y2="19"></line>' +
+                                        '<line x1="5" y1="12" x2="19" y2="12"></line>' +
+                                    '</svg>' +
+                                    'Add new' +
+                                '</span>' +
+                            '</span>'
+                        );
+                    }
+                    return data.text;
+                }
             });
-            $('#induk_betina').select2({
-                tags: true,
-                placeholder: '-- Pilih / Tambah baru --',
-                allowClear: true,
-                width: '100%'
-            });
-            $('#penyilang').select2({
-                tags: true,
-                placeholder: '-- Pilih / Tambah baru --',
-                allowClear: true,
-                width: '100%'
-            });
+        }
+
+        // 🔥 Terapkan ke kedua field
+        initParentSelect('#induk_jantan');
+        initParentSelect('#induk_betina');
+
+        // ⚠️ Penyilang tetap seperti milik kamu (tidak diubah)
+        $('#penyilang').select2({
+            tags: true,
+            placeholder: '-- Type to search / Add new --',
+            allowClear: true,
+            width: '100%',
+            minimumInputLength: 1,
+
+            createTag: function (params) {
+                const term = $.trim(params.term);
+
+                if (term === '') {
+                    return null;
+                }
+
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                };
+            },
+
+            templateResult: function (data) {
+                    if (data.newTag) {
+                        return $(
+                            '<span style="display:flex;align-items:center;justify-content:space-between;width:100%;">' +
+                                '<span>' + data.text + '</span>' +
+                                '<span style="display:inline-flex;align-items:center;font-size:12px;color:#000000;font-weight:600;">' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">' +
+                                        '<line x1="12" y1="5" x2="12" y2="19"></line>' +
+                                        '<line x1="5" y1="12" x2="19" y2="12"></line>' +
+                                    '</svg>' +
+                                    'Add new' +
+                                '</span>' +
+                            '</span>'
+                        );
+                    }
+                    return data.text;
+                }
         });
+
+    });
 
         const input = document.getElementById('images');
         const previewContainer = document.getElementById('previewContainer');

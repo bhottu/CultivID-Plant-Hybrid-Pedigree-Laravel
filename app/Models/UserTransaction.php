@@ -37,4 +37,11 @@ class UserTransaction extends Model
     {
         return $this->belongsTo(Plant::class, 'plant_id');
     }
+    public function plantSubmission()
+{
+    // Parameter 1: Nama Model Tujuan
+    // Parameter 2: Nama kolom FK di tabel 'user_transactions' (plant_id)
+    // Parameter 3: Nama kolom PK di tabel 'plant_submissions' (id)
+    return $this->belongsTo(\App\Models\PlantSubmission::class, 'plant_id', 'id');
+}
 }

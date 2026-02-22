@@ -1,19 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+
+{{-- Debugging sementara --}}
+
+
 <div class="items-center flex items-center justify-center bg-gray-100 py-10 px-4">
 
     <div class="bg-white shadow-xl rounded-2xl w-full max-w-md p-8 text-center">
 
         {{-- Header --}}
+      
         <h2 class="text-2xl font-bold text-gray-800 mb-2">
-            Donate
+            @if($transaction->type === 'certificate')
+                Pembayaran Certificate
+            @else
+                Donate
+            @endif
         </h2>
 
         <p class="text-gray-500 mb-6">
-            Dukung <span class="font-semibold text-gray-700">
-                {{ $transaction->receiver->name ?? 'Creator' }}
-            </span> atas kontribusinya dengan secangkir kopi
+            @if($transaction->type === 'certificate')
+                Pembayaran sertifikat untuk tanaman 
+                <span class="font-semibold text-gray-700">
+                 {{ $transaction->plantSubmission->plant_id ?? 'Tanaman Tidak Ditemukan' }}
+                </span>
+            @else
+                Dukung <span class="font-semibold text-gray-700">
+                    {{ $transaction->receiver->name ?? 'Creator' }}
+                </span> atas kontribusinya dengan secangkir kopi
+            @endif
         </p>
 
         {{-- Nominal --}}
@@ -62,10 +78,12 @@
                 🎉 Terima kasih!
             </p>
             <p class="text-gray-600 text-sm mt-2">
-                Kopi kamu sudah berhasil dikirim ke 
-                <span class="font-semibold">
-                    {{ $transaction->receiver->name ?? 'Creator' }}
-                </span>.
+                @if($transaction->type === 'certificate')
+                    Pembayaran sertifikat **{{ $transaction->plantSubmission->plant_id ?? 'Tanaman Tidak Ditemukan' }}** telah berhasil.
+                @else
+                    Kopi kamu sudah berhasil dikirim ke 
+                    <span class="font-semibold">{{ $transaction->receiver->name ?? 'Creator' }}</span>.
+                @endif
             </p>
 
             <a href="{{ url()->previous() }}"

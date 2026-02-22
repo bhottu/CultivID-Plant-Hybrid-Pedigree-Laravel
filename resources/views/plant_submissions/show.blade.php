@@ -563,18 +563,16 @@
                                     <input type="hidden" name="plant_id" value="{{ $plantSubmission->id }}">
                                     <button type="submit"
                                             class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
-                                        💳 Buy Certificate x
+                                        💳 Buy Certificate
                                     </button>
                                 </form>
                                 
-
-                                {{-- Tombol Buy Now --}}
-                                {{--
-                                <button class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-                                onclick="window.location.href='{{ url('/pay-' . $plantSubmission->plant_id) }}'">
-                                    💳 Buy Certificate
-                                </button>
-                                --}}
+                                <a href="javascript:void(0)" 
+                                id="previewBtn"
+                                class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-gray-200 rounded hover:bg-gray-300 transition">
+                                👁 Preview
+                                </a>
+                                                                
                         @endif
 
                         @else
@@ -590,6 +588,12 @@
                                     class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-gray-300 text-gray-500 rounded">
                                     🔒 Buy Certificate
                                 </button>
+
+                                <a href="javascript:void(0)" 
+                                id="previewBtn"
+                                class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-gray-200 rounded hover:bg-gray-300 transition">
+                                👁 Preview
+                                </a>
                         @endif
 
                     </div>
@@ -607,8 +611,53 @@
 
                         
                         </div>
+
+                        <button type="button"
+                                onclick="Swal.fire({
+                                title: 'Exclusive Access',
+                                text: 'The certificate can only be purchased and accessed by the owner of this plant. If this is your plant, please appeal.',
+                                icon: 'info',
+                                confirmButtonColor: '#059669', // Warna hijau agar senada dengan tema Cultiv
+                                confirmButtonText: 'I Understand'
+                                })"
+                                class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-gray-300 text-gray-500 rounded">
+                                🔒 Buy Certificate
+                        </button>
+
+                        <a href="javascript:void(0)" id="previewBtn" class="inline-flex items-center gap-2 px-3 py-2 text-xs md:text-sm bg-gray-200 rounded hover:bg-gray-300 transition">
+                            👁 Preview
+                        </a>
+
                     </div>
                     @endguest
+
+                   <!-- Preview Modal -->
+                    <div id="previewModal" 
+                        class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+
+                        <!-- Close Button -->
+                        <button id="closePreview" 
+                            class="absolute top-4 right-1 text-white text-3xl font-bold hover:text-gray-300">
+                            &times;
+                        </button>
+
+                        <!-- Content Wrapper -->
+                        <div class="max-w-5xl w-100 px-6 text-center">
+
+                            <!-- Image -->
+                            <img 
+                                src="{{ asset('ped.jpg') }}" 
+                                alt="Preview" 
+                                class="w-full h-auto rounded-lg shadow-lg"
+                            >
+
+                            <!-- Caption -->
+                            <p class="mt-4 bg-gray-800 text-white text-sm md:text-base">
+                                Pedigree preview for this plant.
+                            </p>
+
+                        </div>
+                    </div>
 
                     <h2 class="text-md md:text-sm text-green-900 mb-2 mt-2">Contributor</h2>
                     @if($plantSubmission->uploader)
@@ -910,21 +959,7 @@
             document.getElementById('pedigreePreviewModal').classList.add('flex');
         }
 
-        // share mobile native 
-        // function sharePost() {
-        //    const shareData = {
-        //        title: @json($plantSubmission->plant_id),
-        //        text: @json(\Illuminate\Support\Str::limit($plantSubmission->keterangan, 100)),
-        //        url: @json(url()->current())
-        //    };
 
-        //    if (navigator.share) {
-        //        navigator.share(shareData)
-        //            .catch(err => console.log('Share cancelled', err));
-        //    } else {
-        //        openShareFallback();
-        //    }
-        // }
 
         function sharePost() {
             const description = @json($plantSubmission->keterangan);
@@ -970,5 +1005,30 @@
             confirmButtonColor: '#059669',
         });
     @endif
+</script>
+<script>
+const modal = document.getElementById('previewModal');
+const closeBtn = document.getElementById('closePreview');
+const previewBtn = document.getElementById('previewBtn');
+
+// open
+previewBtn.addEventListener('click', function () {
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+});
+
+// close via button
+closeBtn.addEventListener('click', function () {
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+});
+
+// close jika klik background
+modal.addEventListener('click', function(e){
+    if(e.target === modal){
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+});
 </script>
 @endsection

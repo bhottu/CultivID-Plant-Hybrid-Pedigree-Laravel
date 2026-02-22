@@ -6,7 +6,7 @@
         <div class="flex justify-center mb-4">
            
                     @if (isset($settings) && $settings->logo)
-                        <img class="h-16 mt-4 w-auto bg-[#1B202B] rounded-xl " src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                        <img class="h-16 mt-4 w-auto bg-cus-500 rounded-lg p-1" src="{{ Storage::url($settings->logo) }}" alt="Logo">
                     @else
                         <div class="text-xl font-bold mt-8 w-auto">Cultiv ID</div>
                     @endif
@@ -29,12 +29,20 @@
             </div>
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                <input type="email" name="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <input type="email" name="email" id="email" value="{{ old('email') }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                 <input type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:text-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
+
+            <div class="flex items-center mt-1">
+                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                        Remember Me
+                    </label>
+            </div>
+
             <a class="mb-4 text-gray-600 text-sm hover:text-gray-800 dark:text-gray-300" href="{{ route('password.request') }}">Forgot Your Password?</a>
             
             <button type="submit" class="w-full bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>

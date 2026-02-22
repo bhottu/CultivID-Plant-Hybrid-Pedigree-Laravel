@@ -11,7 +11,7 @@
                     @endif 
         </div>
        
-        <form action="{{ route('register') }}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+        <form action="{{ route('register') }}" id="registerForm" method="post" class="bg-white p-6 rounded-lg shadow-md">
         @csrf
          <div class="mb-4">
                 @if($errors->any())
@@ -28,12 +28,12 @@
             </div>
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-            <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+            <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ old('name') }}" required>
         </div>
        
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-            <input type="email" name="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+            <input type="email" name="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ old('email') }}" required>
         </div>
         <div class="mb-4">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
@@ -42,6 +42,32 @@
         <div class="mb-4">
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="mb-4">
+            <div class="flex items-start">
+                <input 
+                    type="checkbox" 
+                    name="terms" 
+                    id="terms"
+                    class="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    {{ old('terms') ? 'checked' : '' }}
+                >
+
+                <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-300">
+                    I agree to the 
+                    <a href="{{ route('admin.settings.terms') }}" target="_blank" class="text-blue-600 hover:underline">
+                        Terms & Conditions
+                    </a> 
+                    and 
+                    <a href="{{ route('admin.settings.privacy') }}" target="_blank" class="text-blue-600 hover:underline">
+                        Privacy Policy
+                    </a>.
+                </label>
+                
+            </div>
+            <p id="termsError" class="text-red-600 text-sm mt-2 hidden">
+                    You must agree to the Terms & Conditions.
+                </p>
         </div>
         <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
     
@@ -59,4 +85,30 @@
     </form>
     </div>
 </div>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+
+    const termsCheckbox = document.getElementById('terms');
+    const errorBox = document.getElementById('termsError');
+
+    if (!termsCheckbox.checked) {
+        e.preventDefault();
+        errorBox.classList.remove('hidden');
+        termsCheckbox.classList.add('ring-2', 'ring-red-500');
+    } else {
+        errorBox.classList.add('hidden');
+        termsCheckbox.classList.remove('ring-2', 'ring-red-500');
+    }
+
+});
+
+// hilangkan error saat user centang
+document.getElementById('terms').addEventListener('change', function() {
+    if (this.checked) {
+        document.getElementById('termsError').classList.add('hidden');
+        this.classList.remove('ring-2', 'ring-red-500');
+    }
+});
+</script>
 @endsection
