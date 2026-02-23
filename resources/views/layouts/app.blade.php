@@ -137,25 +137,26 @@
 </head>
 <body class="{{ session('dark_mode', 'light') }}" x-data="{ showModal: false }">
     <div class="min-h-screen flex flex-col">
-        <!-- Fixed Header -->
+        {{-- Fixed Header --}}
         <header class="fixed top-0 left-0 right-0  h-14 bg-cus-500 dark:border-gray-700 z-40 flex items-center px-4 ">
             <div class="flex items-center justify-between w-full mx-auto">
                 
 
                 @if(request()->route() && request()->route()->getName() !== 'home')
-                <div class="relative hidden md:block">
-                    <button 
-                        id="menuToggle"
-                        class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
-                        aria-label="Menu"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
-                </div>
+                    <div class="relative hidden md:block">
+                        <button 
+                            id="menuToggle"
+                            class="text-white w-8 h-8 flex items-center justify-center focus:outline-none"
+                            aria-label="Menu"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                    </div>
+
                     <button onclick="window.history.back()" class="text-white text-lg mr-2 md:hidden">
                         <i class="fas fa-arrow-left"></i>
                     </button>
@@ -169,29 +170,36 @@
                     </a>
 
                 @endif
-                @if(!(request()->route() && request()->route()->getName() !== 'home'))
-               
-                
-                <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
-                    @if (isset($settings) && $settings->logo)
-                        <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
-                        <div class="text-xxxs pt-2">
-                             v1.0.51
-                        </div>
 
-                    @else
-                        Cultiv ID
-                    @endif
-                </a>
+                @if(!(request()->route() && request()->route()->getName() !== 'home'))
+                    <a href="{{ route('home') }}" class="text-2xl font-bold text-white flex items-center gap-2">
+                        @if (isset($settings) && $settings->logo)
+                            <img class="h-8 w-auto rounded-md" src="{{ Storage::url($settings->logo) }}" alt="Logo"> 
+                            <div class="text-xxxs pt-2">
+                                v1.0.51
+                            </div>
+
+                        @else
+                            Cultiv ID
+                        @endif
+                    </a>
                 @endif
 
 
                 <div class="ml-auto flex items-center gap-4">
-                    <!-- Search Form (Hidden by default) -->
+
+                    <button id="installApp" class="hidden flex border border-white items-center gap-2 hover:bg-blue-400  text-white px-3 py-2 rounded-lg text-xs font-medium transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>Install App</span>
+                    </button>
+
+                    {{-- Search Form (Hidden by default) --}}
                     <div id="search-form" class="hidden bg-cus-500 ml-auto ">
             
                         <form action="{{ route('search') }}" method="GET" class="flex gap-2">
-                            <input type="text" name="query" class="w-full  px-2 py-1 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search products..." required>
+                            <input type="text" name="query" class="w-full  px-2 py-1 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search here.." required>
                             <button type="submit" class="bg-cus-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md font-medium transition duration-200 border-2 border-white">
                                 Search
                             </button>
@@ -204,6 +212,41 @@
                     <button id="search-toggle" class="hidden md:block hover:text-blue-500 text-gray-800 text-white transition">
                         <i class="fas fa-search"></i>
                     </button>
+
+                    @php
+                    $unreadCount = \App\Models\Notification::where('user_id', Auth::id())
+                        ->where('is_read', false)
+                        ->count();
+                    @endphp
+
+                    <a href="{{ route('notifications.index') }}" class="relative inline-block">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6 text-white hover:text-gray-500 transition">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                        </svg>
+
+                       @if($unreadCount > 0)
+                            <span class="absolute -top-1 -right-1
+                                min-w-[12px] h-[12px]
+                                px-1
+                                bg-red-600 text-white
+                                text-xs
+                                flex items-center justify-center
+                                rounded-full leading-none">
+                                {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                            </span>
+                        @endif
+
+                    </a>
+
+                    
 
                     {{--  CART 
                         <a href="{{ route('checkout') }}" class="relative inline-flex items-center">
@@ -248,9 +291,7 @@
                     --}}
 
 
-                    <button id="installApp" class="hidden hover:bg-blue-700  text-white px-2 py-2 rounded-lg text-xs font-medium transition">
-                        Install App
-                    </button>
+                    
                 </div>
 
                     <div id="installModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
@@ -296,8 +337,7 @@
 
 
                 <div id="mobileMenu" class="fixed inset-0 bg-white z-50 hidden flex-col">
-                    <!-- Header nav bar-->
-                    
+                    {{-- Header nav bar--}}
                     <div class="flex left-0 right-0 h-14  items-center justify-between px-4 py-4 z-40 border-b bg-cus-500">
                         <span class="text-sm font-semibold text-gray-800">
                             @if(!(request()->route() && request()->route()->getName() !== 'home'))
@@ -323,7 +363,7 @@
                         </button>
                     </div>
 
-                    <!-- Content -->
+                    {{-- Content --}}
                     <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
                         @php
                                 $profileUrl = auth()->check()
@@ -501,7 +541,6 @@
                                                             bg-red-100 hover:bg-red-50
                                                             transition-colors rounded-full">
 
-                                                            <!-- Icon -->
                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                             class="h-4 w-4 shrink-0 text-gray-700"
                                                             fill="none"
@@ -513,7 +552,6 @@
                                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h1a3 3 0 013 3v1" />
                                                             </svg>
 
-                                                            <!-- Text -->
                                                             <span class="flex-1 text-left whitespace-nowrap text-gray-700">
                                                                 Logout
                                                             </span>
@@ -577,7 +615,7 @@
             </div>
         </header>
 
-        <!-- Content Area (Scrollable) -->
+        {{-- Content Area (Scrollable) --}}
         <main id="app-content" class="min-h-screen mt-14 mb-20">
             @if(request()->header('HX-Request'))
                 @yield('content')
@@ -586,7 +624,7 @@
             @endif
         </main>
 
-        <!-- Fixed Bottom Navigation -->
+        {{-- Fixed Bottom Navigation --}}
         <nav class="fixed md:hidden bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 flex justify-around items-end pb-2 px-1 mx-auto">
             <a href="{{ route('home') }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -621,10 +659,6 @@
                 </svg>
                 <span class="text-xs">Market</span>
             </a>
-
-            
-                
-            
 
             <a href="{{ $profileUrl }}" class="flex flex-col items-center justify-center gap-1 text-gray-600 dark:text-gray-300 hover:text-green-600 transition-colors flex-1 py-2 text-center">
                 
@@ -672,7 +706,7 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 
-    <!-- Add Menu Modal -->
+    {{-- Add Menu Modal --}}
     <div id="addMenuModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-end">
         <div class="w-full bg-white dark:bg-gray-800 rounded-t-3xl p-3 animate-slide-up">
                 <div class="flex justify-center py-2">
@@ -684,7 +718,7 @@
             </div>
 
             <div class="space-y-3">
-                <!-- Add Hybrids -->
+                {{-- Add Hybrids --}}
                 <a href="{{ route('plant-submissions.create') }}" class="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl hover:shadow-lg transition-all">
                     <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center text-white text-xl">
                         <i class="fas fa-seedling"></i>
@@ -695,7 +729,7 @@
                     </div>
                 </a>
 
-                <!-- Add Product -->
+                {{-- Add Product --}}
                 <a href="{{ route('products.create') ?? '#' }}" class="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl hover:shadow-lg transition-all">
                     <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xl">
                         <i class="fas fa-shopping-bag"></i>
@@ -706,7 +740,7 @@
                     </div>
                 </a>
 
-                <!-- Add Discuss -->
+                {{-- Add Discuss --}}
                 <a href="{{ route('post.create') ?? '#' }}" class="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-xl hover:shadow-lg transition-all">
                     <div class="w-12 h-12 bg-gray-500 rounded-lg flex items-center justify-center text-white text-xl">
                         <i class="fas fa-comments"></i>
@@ -766,69 +800,94 @@
     
 
 <script>
-    const menuToggle = document.getElementById('menuToggle');
-    const menuClose  = document.getElementById('menuClose');
-    const mobileMenu = document.getElementById('mobileMenu');
+    {{-- Bagian Menu Mobile (Gunakan Event Delegation agar HTMX aman) --}}
+    document.addEventListener('click', (e) => {
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (e.target.closest('#menuToggle')) {
+            mobileMenu?.classList.remove('hidden');
+            mobileMenu?.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+        
+        if (e.target.closest('#menuClose')) {
+            mobileMenu?.classList.add('hidden');
+            mobileMenu?.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        }
 
-    menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.remove('hidden');
-        mobileMenu.classList.add('flex');
-        document.body.classList.add('overflow-hidden');
+        {{--  Close modal install jika klik tombol close di dalam modal --}}
+        if (e.target.closest('#closeModalBtn')) { 
+            closeInstallModal();
+        }
     });
 
-    menuClose.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('flex');
-        document.body.classList.remove('overflow-hidden');
-    });
-
-    
-    // installApp
+    {{-- Bagian PWA Install --}}
     let deferredPrompt;
-    const installBtn = document.getElementById('installApp');
-    const installModal = document.getElementById('installModal');
 
-    // 1. Deteksi PWA Install Prompt (Android/Chrome)
+    {{-- 1. Tangkap event secepat mungkin (Global) --}}
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Tampilkan tombol jika browser mendukung instalasi otomatis
-        installBtn.classList.remove('hidden');
+        console.log('PWA: Prompt ready');
+        refreshInstallBtn(); 
     });
 
-    // 2. Deteksi jika user pakai iOS (Safari tidak support beforeinstallprompt)
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    {{-- 2. Fungsi Utama untuk Menampilkan Tombol --}}
+    function refreshInstallBtn() {
+        const installBtn = document.getElementById('installApp');
+        if (!installBtn) return;
 
-    if (isIOS && !isStandalone) {
-        installBtn.classList.remove('hidden');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+        
+        if (deferredPrompt || (isIOS && !isStandalone)) {
+            installBtn.classList.remove('hidden');
+        }
     }
 
-    // 3. Aksi klik tombol
-    installBtn.addEventListener('click', async () => {
+    
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#installApp');
+        if (!btn) return;
+
         if (deferredPrompt) {
-            // Jika didukung browser (Android/Chrome), jalankan prompt asli
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.classList.add('hidden');
+            if (outcome === 'accepted') btn.classList.add('hidden');
             deferredPrompt = null;
         } else {
-            // Jika iOS atau manual, tampilkan Modal tata cara
             showInstallModal();
         }
     });
 
     function showInstallModal() {
+        const installModal = document.getElementById('installModal');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        if (!installModal) return;
+
         installModal.classList.remove('hidden');
         if (isIOS) {
-            document.getElementById('iosInstructions').classList.remove('hidden');
-            document.getElementById('androidInstructions').classList.add('hidden');
+            document.getElementById('iosInstructions')?.classList.remove('hidden');
+            document.getElementById('androidInstructions')?.classList.add('hidden');
+        } else {
+            
+            document.getElementById('iosInstructions')?.classList.add('hidden');
+            document.getElementById('androidInstructions')?.classList.remove('hidden');
         }
     }
 
     function closeInstallModal() {
-        installModal.classList.add('hidden');
+        document.getElementById('installModal')?.classList.add('hidden');
     }
+
+    document.addEventListener('DOMContentLoaded', refreshInstallBtn);
+
+    document.addEventListener('htmx:afterSwap', function() {
+        refreshInstallBtn();
+    });
 </script>
 
 <script>
