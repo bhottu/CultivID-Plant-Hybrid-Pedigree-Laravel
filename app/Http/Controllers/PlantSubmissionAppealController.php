@@ -47,19 +47,43 @@ class PlantSubmissionAppealController extends Controller
 
 
 
-    public function store(Request $request, PlantSubmission $plantSubmission)
+   public function store(Request $request, PlantSubmission $plantSubmission)
     {
         $submission = $plantSubmission;
+
+        // 🔥 Cek apakah sudah ada appeal pending
+        $existingAppeal = PlantSubmissionAppeal::where('plant_submission_id', $submission->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingAppeal) {
+
+            // Jika user sendiri yang sudah submit
+            if ($existingAppeal->user_id == Auth::id()) {
+                return redirect()->back()->with('error',
+                    'You have already submitted an appeal for this plant.'
+                );
+            }
+
+            // Jika user lain yang submit
+            return redirect()->back()->with('error',
+                'This plant is currently under appeal by another user. Please wait until the review process is completed.'
+            );
+        }
+
         $request->validate([
             'keterangan' => 'required|string',
-            'bukti.*' => 'image|max:512', // 500kb = 512kb (laravel rounding)
+            'bukti.*' => 'image|max:512',
         ]);
+
         $buktiPaths = [];
+
         if ($request->hasFile('bukti')) {
             foreach ($request->file('bukti') as $file) {
                 $buktiPaths[] = $file->store('appeal_bukti', 'public');
             }
         }
+
         PlantSubmissionAppeal::create([
             'plant_submission_id' => $submission->id,
             'user_id' => Auth::id(),
@@ -67,9 +91,13 @@ class PlantSubmissionAppealController extends Controller
             'bukti' => json_encode($buktiPaths),
             'status' => 'pending',
         ]);
-        // update status banding di submission jika perlu
-        $submission->update(['status_review' => 'banding']);
-        return redirect()->route('plant-submissions.index')->with('success', 'Appeal submitted! We will review it within 3 working days.');
+
+        $submission->update([
+            'status_review' => 'banding'
+        ]);
+
+        return redirect()->route('plant-submissions.index')
+            ->with('success', 'Appeal submitted successfully. We will review it within 3 working days.');
     }
 
     public function update(Request $request, PlantSubmission $plantSubmission)

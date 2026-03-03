@@ -361,9 +361,9 @@
                                             ✏️ <span>Edit</span>
                                         </a>
                                     @else
-                                        <a href="{{ route('plant-submissions.appeal.create', $item) }}"
+                                        <a href="{{ route('plant-submissions.appeal.create', $item) }}?view"
                                         class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-yellow-700 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg">
-                                            ⚖️ <span>Banding</span>
+                                            ⚖️ <span>View Appeal Detail</span>
                                         </a>
                                     @endif
 

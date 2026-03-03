@@ -13,6 +13,12 @@
     </div>
 @endif
 
+@if(session('error'))
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-3">
+        {{ session('error') }}
+    </div>
+@endif
+
     <h1 class="text-2xl font-bold mb-4 text-gray-800">
     {{ $isView ? 'Appeal details' : 'Submit an Appeal' }}
     </h1>

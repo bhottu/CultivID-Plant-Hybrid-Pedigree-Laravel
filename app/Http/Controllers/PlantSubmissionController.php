@@ -105,11 +105,11 @@ class PlantSubmissionController extends Controller
 
             'appeal' => $user->is_admin
                         ? PlantSubmissionAppeal::whereHas('submission', function ($q) {
-                        $q->where('status_review', '!=', 'approved');
+                        $q->where('status_review', '!=', 'pending');
                         })->count()
                         : PlantSubmissionAppeal::where('user_id', $user->id)
                         ->whereHas('submission', function ($q) {
-                        $q->where('status_review', '!=', 'approved');})->count(),
+                        $q->where('status_review', '!=', 'pending');})->count(),
 
         ];
 
@@ -250,9 +250,15 @@ class PlantSubmissionController extends Controller
     public function edit(PlantSubmission $plantSubmission)
         {
             $this->authorize('update', $plantSubmission);
+
+             $activeAppeal = PlantSubmissionAppeal::with('user')
+                ->where('plant_submission_id', $plantSubmission->id)
+                ->where('status', 'pending')
+                ->first();
+
             $parentSubmissions = \App\Models\PlantSubmission::select('plant_id', 'induk_jantan', 'induk_betina')->get();
             $users = \App\Models\User::select('name')->get();
-            return view('plant_submissions.edit', compact('plantSubmission', 'parentSubmissions', 'users'));
+            return view('plant_submissions.edit', compact('plantSubmission', 'parentSubmissions', 'users', 'activeAppeal'));
         }
 
     public function update(Request $request, PlantSubmission $plantSubmission)
@@ -295,56 +301,56 @@ class PlantSubmissionController extends Controller
         }
 
         // =====================================================
-// ✅ AUTO DELETE & COMPRESS GAMBAR BARU
-// =====================================================
-// =====================================================
-// ✅ AUTO DELETE & COMPRESS GAMBAR BARU (WEBP VERSION)
-// =====================================================
-if ($request->hasFile('images') || $request->hasFile('image')) {
+        // ✅ AUTO DELETE & COMPRESS GAMBAR BARU
+        // =====================================================
+        // =====================================================
+        // ✅ AUTO DELETE & COMPRESS GAMBAR BARU (WEBP VERSION)
+        // =====================================================
+        if ($request->hasFile('images') || $request->hasFile('image')) {
 
-    // 1️⃣ Hapus gambar lama
-    if ($plantSubmission->image) {
-        $oldImages = json_decode($plantSubmission->image, true);
+            // 1️⃣ Hapus gambar lama
+            if ($plantSubmission->image) {
+                $oldImages = json_decode($plantSubmission->image, true);
 
-        if (!is_array($oldImages)) {
-            $oldImages = [$plantSubmission->image];
-        }
+                if (!is_array($oldImages)) {
+                    $oldImages = [$plantSubmission->image];
+                }
 
-        foreach ($oldImages as $oldImage) {
-            if (\Storage::disk('public')->exists($oldImage)) {
-                \Storage::disk('public')->delete($oldImage);
+                foreach ($oldImages as $oldImage) {
+                    if (\Storage::disk('public')->exists($oldImage)) {
+                        \Storage::disk('public')->delete($oldImage);
+                    }
+                }
             }
+
+            // 2️⃣ Simpan gambar baru (WebP Optimized)
+            $imagePaths = [];
+            $files = $request->file('images') ?? [$request->file('image')];
+
+            $destinationPath = public_path('storage/plant_images');
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            foreach ($files as $file) {
+
+                $filename = uniqid() . '_' . time() . '.webp';
+
+                $imageResized = \Image::make($file)
+                    ->resize(800, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    })
+                    ->encode('webp', 75);
+
+                $imageResized->save($destinationPath . '/' . $filename);
+
+                $imagePaths[] = 'plant_images/' . $filename;
+            }
+
+            $data['image'] = json_encode($imagePaths);
         }
-    }
-
-    // 2️⃣ Simpan gambar baru (WebP Optimized)
-    $imagePaths = [];
-    $files = $request->file('images') ?? [$request->file('image')];
-
-    $destinationPath = public_path('storage/plant_images');
-
-    if (!file_exists($destinationPath)) {
-        mkdir($destinationPath, 0755, true);
-    }
-
-    foreach ($files as $file) {
-
-        $filename = uniqid() . '_' . time() . '.webp';
-
-        $imageResized = \Image::make($file)
-            ->resize(800, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->encode('webp', 75);
-
-        $imageResized->save($destinationPath . '/' . $filename);
-
-        $imagePaths[] = 'plant_images/' . $filename;
-    }
-
-    $data['image'] = json_encode($imagePaths);
-}
 
 
         // Jika updater bukan uploader
@@ -359,29 +365,30 @@ if ($request->hasFile('images') || $request->hasFile('image')) {
         }
 
         // =========================
-// AUTO CREATE PARENT (UPDATE)
-// =========================
-foreach (['induk_jantan', 'induk_betina'] as $parentField) {
-    if (
-        !empty($data[$parentField]) &&
-        !PlantSubmission::where('plant_id', $data[$parentField])->exists()
-    ) {
-        PlantSubmission::create([
-            'plant_id' => $data[$parentField],
-            'plant_id_var' => 1,
-            'induk_jantan' => null,
-            'induk_jantan_var' => 1,
-            'induk_betina' => null,
-            'induk_betina_var' => 1,
-            'penyilang' => null,
-            'uploader_id' => Auth::id(),
-            'keterangan' => null,
-            'image' => null,
-            'status_review' => 'approved',
-        ]);
-    }
-}
+        // AUTO CREATE PARENT (UPDATE)
+        // =========================
+        foreach (['induk_jantan', 'induk_betina'] as $parentField) {
+            if (
+                !empty($data[$parentField]) &&
+                !PlantSubmission::where('plant_id', $data[$parentField])->exists()
+            ) {
+                PlantSubmission::create([
+                    'plant_id' => $data[$parentField],
+                    'plant_id_var' => 1,
+                    'induk_jantan' => null,
+                    'induk_jantan_var' => 1,
+                    'induk_betina' => null,
+                    'induk_betina_var' => 1,
+                    'penyilang' => null,
+                    'uploader_id' => Auth::id(),
+                    'keterangan' => null,
+                    'image' => null,
+                    'status_review' => 'approved',
+                ]);
+            }
+        }
 
+      
 
         $plantSubmission->update($data);
 

@@ -22,6 +22,43 @@
                             @endif
 
 
+@if($activeAppeal)
+<div x-data="{ open: false }" class="mb-4">
+
+    <!-- Header Notif -->
+    <div 
+        @click="open = !open"
+        class="cursor-pointer p-4 rounded-lg bg-yellow-100 border border-yellow-300 text-yellow-900 hover:bg-yellow-200 transition flex justify-between items-center"
+    >
+        <div>
+            @if($activeAppeal->user_id == auth()->id())
+                <strong>You have submitted an appeal</strong> for this plant.
+            @else
+                <strong>{{ $activeAppeal->user->name }}</strong> has submitted an appeal for this plant.
+            @endif
+            <span class="ml-2 text-sm">(Click to view details)</span>
+        </div>
+
+        <span x-text="open ? '▲' : '▼'" class="text-sm"></span>
+    </div>
+
+    <!-- Expand Content -->
+    <div 
+        x-show="open"
+        x-transition
+        class="p-4 bg-white border border-yellow-200 border-t-0 rounded-b-lg text-sm text-gray-700"
+    >
+        <p class="font-semibold mb-2">Appeal Description:</p>
+        <p class="whitespace-pre-line">
+            <div class="text-gray-700 leading-relaxed">
+    {!! nl2br(e($activeAppeal->keterangan)) !!}
+</div>
+        </p>
+    </div>
+
+</div>
+@endif
+
     <form id="updateHybridForm" action="{{ route('plant-submissions.update', $plantSubmission) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
