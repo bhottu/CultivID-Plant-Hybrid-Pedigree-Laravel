@@ -637,7 +637,7 @@
 
                         <!-- Close Button -->
                         <button id="closePreview" 
-                            class="absolute top-4 right-1 text-white text-3xl font-bold hover:text-gray-300">
+                            class="absolute top-4 right-1 text-white text-3xl font-bold hover:text-gray-300" hidden>
                             &times;
                         </button>
 
