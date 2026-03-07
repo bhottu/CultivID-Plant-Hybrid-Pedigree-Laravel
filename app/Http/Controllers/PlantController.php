@@ -130,4 +130,18 @@ class PlantController extends Controller
 
         return redirect()->route('plants.index')->with('success', 'Plant deleted successfully.');
     }
+
+    public function loadMore(Request $request)
+    {
+        $page = $request->input('page', 1);
+
+        $plants = Plant::latest()->paginate(9, ['*'], 'page', $page);
+
+        $html = view('plants.partials.rows', compact('plants'))->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMorePages' => $plants->hasMorePages()
+        ]);
+    }
 }

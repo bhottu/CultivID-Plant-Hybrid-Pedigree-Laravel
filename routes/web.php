@@ -179,12 +179,12 @@ Route::get('/discounted-products/load-more', [ProductController::class, 'loadMor
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/categories/{slug}/load-more-products', [CategoryController::class, 'loadMoreProducts'])->name('categories.loadMoreProducts');
 Route::post('/products/{product}/soldout', [ProductController::class, 'toggleSoldOut'])->name('products.toggle-soldout');
-
+Route::get('plants/load-more', [PlantController::class, 'loadMore'])
+    ->name('plants.load-more')
+    ->middleware('auth');
 
 Route::get('/allcategories', [CategoryController::class, 'showAll'])->name('categories.all');
 
-//Route::get('profile/{userId}/products', [ProductController::class, 'loadProducts'])->name('profile.products');
-// routes/web.php
 Route::get('profile/{username}/products/load', [ProductController::class, 'loadMoreProfileProducts'])
     ->name('profile.products.load');
 Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('auth');
