@@ -1,7 +1,8 @@
 @foreach($approvedPlants as $item)
 @if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
+
 <tr class="border-b hover:bg-gray-100 text-xs cursor-pointer"
-    onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
+onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
 
 <td class="p-2">
 
@@ -16,7 +17,7 @@ $first = count($images) ? $images[0] : null;
 
 @if($first)
 <img src="{{ asset('storage/'.$first) }}"
-     class="w-12 h-12 object-cover rounded border border-gray-300">
+class="w-12 h-12 object-cover rounded border border-gray-300">
 @else
 <div class="w-12 h-12 flex items-center justify-center rounded border border-gray-300 bg-gray-100 text-xxxs text-gray-500">
 No Image
@@ -50,5 +51,6 @@ Breeder: {{ $item->penyilang ?? 'Unknown' }}
 </td>
 
 </tr>
+
 @endif
 @endforeach
