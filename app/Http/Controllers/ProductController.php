@@ -33,7 +33,7 @@ class ProductController extends Controller
             ->latest()->paginate(10);
 
         if (request()->header('HX-Request')) {
-            return view('partials.home-content', compact('products'));
+             return view('partials.plants-rows', compact('approvedPlants'))->render();
         }
 
         // =========================

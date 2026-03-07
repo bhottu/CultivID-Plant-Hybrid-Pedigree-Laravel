@@ -275,71 +275,69 @@
     </script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentPage = 1;
+            let isLoading = false;
+            let hasMorePages = true;
 
-    let currentPage = 1;
-    let isLoading = false;
-    let hasMorePages = true;
+            const loadMoreElement = document.getElementById('load-more');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const noMoreElement = document.getElementById('no-more');
 
-    const loadMoreElement = document.getElementById('load-more');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const noMoreElement = document.getElementById('no-more');
+            // Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && hasMorePages && !isLoading) {
+                        loadNextPage();
+                    }
+                });
+            }, {
+                rootMargin: '100px'
+            });
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && hasMorePages && !isLoading) {
-                loadNextPage();
+            observer.observe(loadMoreElement);
+
+            function loadNextPage() {
+                if (isLoading || !hasMorePages) return;
+
+                isLoading = true;
+                loadingSpinner.classList.remove('hidden');
+                noMoreElement.classList.add('hidden');
+
+                const nextPage = currentPage + 1;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(`{{ route('products.index') }}?page=${nextPage}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const newTbody = doc.querySelector('#plants-tbody');
+                    if (newTbody && newTbody.innerHTML.trim() !== '') {
+                        document.querySelector('#plants-tbody').insertAdjacentHTML('beforeend', newTbody.innerHTML);
+                        currentPage = nextPage;
+                    } else {
+                        hasMorePages = false;
+                        noMoreElement.classList.remove('hidden');
+                    }
+
+                    loadingSpinner.classList.add('hidden');
+                    isLoading = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loadingSpinner.classList.add('hidden');
+                    isLoading = false;
+                });
             }
         });
-    }, {
-        rootMargin: '100px'
-    });
-
-    observer.observe(loadMoreElement);
-
-    function loadNextPage() {
-
-        if (isLoading || !hasMorePages) return;
-
-        isLoading = true;
-        loadingSpinner.classList.remove('hidden');
-
-        const nextPage = currentPage + 1;
-
-        fetch(`{{ route('plants.load-more') }}?page=${nextPage}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-
-            if (data.html.trim() !== '') {
-
-                document.querySelector('#plants-tbody')
-                    .insertAdjacentHTML('beforeend', data.html);
-
-                currentPage = nextPage;
-                hasMorePages = data.hasMorePages;
-
-            }
-
-            if (!data.hasMorePages) {
-                noMoreElement.classList.remove('hidden');
-            }
-
-            loadingSpinner.classList.add('hidden');
-            isLoading = false;
-        })
-        .catch(error => {
-            console.error(error);
-            loadingSpinner.classList.add('hidden');
-            isLoading = false;
-        });
-    }
-
-});
-</script>
+    </script>
 
            
 
