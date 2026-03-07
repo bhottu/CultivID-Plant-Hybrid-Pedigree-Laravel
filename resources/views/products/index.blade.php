@@ -278,18 +278,15 @@
 
                 fetch(`{{ route('products.index') }}?page=${nextPage}`, {
                     headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': csrfToken
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => response.text())
+                .then(res => res.text())
                 .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
 
-                    const newTbody = doc.querySelector('#plants-tbody');
-                    if (newTbody && newTbody.innerHTML.trim() !== '') {
-                        document.querySelector('#plants-tbody').insertAdjacentHTML('beforeend', newTbody.innerHTML);
+                    if(html.trim() !== ''){
+                        document.querySelector('#plants-tbody')
+                            .insertAdjacentHTML('beforeend', html);
                         currentPage = nextPage;
                     } else {
                         hasMorePages = false;
@@ -298,6 +295,7 @@
 
                     loadingSpinner.classList.add('hidden');
                     isLoading = false;
+
                 })
                 .catch(error => {
                     console.error('Error:', error);
