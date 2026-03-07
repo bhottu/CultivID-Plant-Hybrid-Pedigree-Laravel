@@ -158,10 +158,10 @@
 
 <section class="w-full mx-auto">
     <div class="container mx-auto px-4 mt-8">
-        <div class="flex flex-col md:flex-row gap-6 border-b border-gray-200">
+        <div class="flex flex-col md:flex-row gap-6 ">
             
             {{-- KOLOM KIRI (75% / md:col-span-9) --}}
-            <div class="w-full md:w-3/4 bg-white p-4 border-t">
+            <div class="w-full md:w-3/4 bg-white mt-2 ">
                 <div class="flex items-center justify-between mb-2">
                     <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
                         <span class="block text-sm md:text-lg text-gray-800 font-bold">Latest Plants & Hybrids</span>
@@ -186,7 +186,7 @@
                             </tr>
                         </thead>
                         <tbody id="plants-tbody">
-                            @include('partials.rows', ['approvedPlants' => $approvedPlants])
+                            @include('partials.rows', ['approvedPlants' => $approvedPlants]) 
                         </tbody>
                     </table>
                 </div>
@@ -196,7 +196,8 @@
                     <div id="loading-spinner" class="hidden">
                         <i class="fas fa-spinner fa-spin text-gray-500"></i> Loading...
                     </div>
-                    <div id="no-more" class="hidden text-gray-500 text-xs">No more plants</div>
+                    <div id="no-more" class="hidden text-gray-500 text-xs">End of results. Use search to find specific plants</div>
+                    
                 </div>
 
             </div> 

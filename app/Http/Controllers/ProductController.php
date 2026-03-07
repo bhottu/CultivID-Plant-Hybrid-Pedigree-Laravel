@@ -28,12 +28,17 @@ class ProductController extends Controller
         $posts = Post::orderBy('created_at', 'desc')->paginate(5);
        
         // Ambil tanaman hias yang sudah di-approve admin atau sedang banding
-        $approvedPlants = \App\Models\PlantSubmission::with('uploader')
+        $approvedPlants = PlantSubmission::with('uploader')
             ->whereIn('status_review', ['approved', 'banding'])
-            ->latest()->paginate(10);
+            ->whereNotNull('induk_betina')
+            ->whereNotNull('induk_jantan')
+            ->where('induk_betina','!=','')
+            ->where('induk_jantan','!=','')
+            ->orderBy('id','desc')
+            ->paginate(10);
 
-        if (request()->header('HX-Request')) {
-             return view('partials.rows', compact('approvedPlants'))->render();
+        if (request()->ajax()) {
+             return view('partials.rows', compact('approvedPlants'));
         }
 
         // =========================

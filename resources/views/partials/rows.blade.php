@@ -1,5 +1,5 @@
 @foreach($approvedPlants as $item)
-@if(($item->induk_betina && $item->induk_jantan) && $item->induk_betina !== '' && $item->induk_jantan !== '')
+
 
 <tr class="border-b hover:bg-gray-100 text-xs cursor-pointer"
 onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
@@ -52,5 +52,5 @@ Breeder: {{ $item->penyilang ?? 'Unknown' }}
 
 </tr>
 
-@endif
+
 @endforeach
