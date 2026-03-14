@@ -29,6 +29,13 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\NotificationController;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
+use App\Models\PlantSubmission;
+use App\Models\Product;
+use App\Models\Post;
+use Spatie\Sitemap\SitemapIndex;
+use Spatie\Sitemap\Tags\Sitemap as SitemapTag;
 
 
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
@@ -67,6 +74,8 @@ Route::get('/mail-preview', function () {
 
     return (new ResetPassword('token-dummy'))->toMail($user);
 });
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('settings/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -299,4 +308,116 @@ Route::get('/privacy-policy', [SettingController::class, 'showPrivacyPolicy'])->
 Route::get('/pay-{plantSubmission}', [UserTransactionController::class, 'showPaymentPage'])->name('pay.show');
 
 Route::get('/become-partner', [SettingController::class, 'showBecomePartner'])->name('become.partner');
+
+// SITEMAP ROUTES
+Route::get('/sitemap.xml', function () {
+
+    return SitemapIndex::create()
+        ->add(SitemapTag::create('/sitemap-plants.xml'))
+        ->add(SitemapTag::create('/sitemap-discuss.xml'))
+        ->add(SitemapTag::create('/sitemap-market.xml'))
+        ->add(SitemapTag::create('/sitemap-pages.xml'));
+        
+});
+
+Route::get('/sitemap-plants.xml', function () {
+
+    $sitemap = \Spatie\Sitemap\Sitemap::create();
+
+    \App\Models\PlantSubmission::where('status_review','approved')
+        ->select('plant_id','updated_at')
+        ->chunk(500, function ($plants) use ($sitemap) {
+
+            foreach ($plants as $plant) {
+
+                $sitemap->add(
+                    \Spatie\Sitemap\Tags\Url::create(
+                        '/plant-submissions/'.rawurlencode($plant->plant_id)
+                    )->setLastModificationDate($plant->updated_at)
+                );
+
+            }
+
+        });
+
+    return $sitemap->toResponse(request());
+
+});
+
+Route::get('/sitemap-discuss.xml', function () {
+
+    $sitemap = Sitemap::create();
+
+    // halaman utama discuss
+    $sitemap->add(
+        Url::create('/discuss')
+            ->setPriority(0.9)
+    );
+
+    Post::select('id','updated_at')
+        ->chunk(500, function ($posts) use ($sitemap) {
+
+            foreach ($posts as $post) {
+
+                $sitemap->add(
+                    Url::create('/discuss/'.$post->id)
+                        ->setLastModificationDate($post->updated_at)
+                        ->setPriority(0.7)
+                );
+
+            }
+
+        });
+
+    return $sitemap->toResponse(request());
+
+});
+
+Route::get('/sitemap-market.xml', function () {
+
+    $sitemap = Sitemap::create();
+
+    // halaman utama market
+    $sitemap->add(
+        Url::create('/market')
+            ->setPriority(0.9)
+    );
+
+    // semua produk
+    Product::select('slug','updated_at')
+        ->whereNotNull('slug')
+        ->chunk(500, function ($products) use ($sitemap) {
+
+            foreach ($products as $product) {
+
+                $sitemap->add(
+                    Url::create('/product/'.$product->slug)
+                        ->setLastModificationDate($product->updated_at)
+                        ->setPriority(0.8)
+                );
+
+            }
+
+        });
+
+    return $sitemap->toResponse(request());
+
+});
+
+Route::get('/sitemap-pages.xml', function () {
+
+    return Sitemap::create()
+
+        ->add(Url::create('/')->setPriority(1.0))
+
+        ->add(Url::create('/market')->setPriority(0.9))
+        ->add(Url::create('/discuss')->setPriority(0.9))
+
+        ->add(Url::create('/login')->setPriority(0.3))
+        ->add(Url::create('/register')->setPriority(0.3))
+        ->add(Url::create('/become-partner')->setPriority(0.3))
+
+        ->toResponse(request());
+
+});
 

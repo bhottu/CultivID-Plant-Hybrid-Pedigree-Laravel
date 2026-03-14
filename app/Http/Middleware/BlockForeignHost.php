@@ -13,8 +13,8 @@ class BlockForeignHost
             'cultiv.id',
             'www.cultiv.id',
             'localhost',
-            '127.0.0.1',
-            '::1'
+            '127.0.0.1'
+            
         ];
 
         if (!in_array($request->getHost(), $allowed)) {
