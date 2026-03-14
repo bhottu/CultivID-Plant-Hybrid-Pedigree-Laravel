@@ -140,7 +140,7 @@
              @auth
                 @if(($counts['appeal'] ?? 0) > 0)
                 <span class="min-w-[16px] h-4 px-1
-                    flex items-center justify-center rounded-full bg-indigo-500 text-white
+                    flex items-center justify-center rounded-full bg-gray-800 text-white
                     text-[10px] font-semibold leading-none">
                     {{ $counts['appeal'] ?? 0 }}
                 </span>

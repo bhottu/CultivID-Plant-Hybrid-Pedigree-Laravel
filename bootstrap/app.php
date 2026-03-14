@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web([
             \App\Http\Middleware\HandleSPARequests::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\BlockForeignHost::class,
         ]);
 
         $middleware->alias([
