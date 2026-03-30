@@ -1,7 +1,7 @@
 @foreach($approvedPlants as $item)
 
 
-<tr class="border-b hover:bg-gray-900 text-xs cursor-pointer"
+<tr class="border-b hover:bg-gray-200 text-xs cursor-pointer"
 onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
 
 <td class="p-2">
