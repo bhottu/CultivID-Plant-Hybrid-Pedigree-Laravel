@@ -18,7 +18,7 @@
     {{-- Search Bar --}}
     <div class="search-bar mb-2 shadow-lg mx-auto max-w-3xl rounded-lg">
         <form action="{{ route('search') }}" method="GET" class="flex items-center justify-center gap-2">
-            <input type="text" name="query" class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search here.." required>
+            <input type="text" name="query" class="w-full px-4 py-2 dark:text-gray-400 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search here.." required>
             <button type="submit" class="bg-gray-800 border hover:bg-gray-700 text-white px-6 py-2 rounded-r-md font-medium transition duration-200">
                 Search
             </button>
@@ -164,7 +164,7 @@
             <div class="w-full md:w-3/4 bg-white mt-2 ">
                 <div class="flex items-center justify-between mb-2">
                     <h1 class="border-l-4 border-double border-sky-500 pl-4 italic leading-tight">
-                        <span class="block text-sm md:text-lg text-gray-800 font-bold">Latest Plants & Hybrids</span>
+                        <span class="block text-sm md:text-lg dark:text-gray-300 font-bold">Latest Plants & Hybrids</span>
                         <span class="block text-xs md:text-sm text-gray-400 italic">cultivar registration & history</span>
                     </h1>
                 </div>
@@ -178,7 +178,7 @@
                             <col style="width:25%">
                         </colgroup>
                         <thead>
-                            <tr class="bg-gray-50 text-gray-600 text-xs border-b border-t border-gray-300 md:text-sm">
+                            <tr class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-white text-xs border-b border-t border-gray-300 md:text-sm">
                                 <th class="p-2 border-l">Photo</th>
                                 <th class="p-2 border-l-4 border-double">Plant ID</th>
                                 <th class="p-2 border-l-4 border-double">S. Parent <i class='fas fa-venus text-red-600'></i></th>

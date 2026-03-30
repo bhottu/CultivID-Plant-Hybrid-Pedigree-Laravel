@@ -20,14 +20,14 @@
         </a>
         <div class="p-4">
             <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">
-                <h2 class="text-sm">{{ $product->name }}</h2>
+                <h2 class="text-sm dark:text-gray-400">{{ $product->name }}</h2>
             </a>
                     
                         @if($product->discount)
-                            <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
-                            <span class="text-red-600 text-xxxs line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 dark:text-gray-400 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
+                            <span class="text-red-600 dark:text-gray-400 text-xxxs px-1 bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-1.5 py-[2px] rounded line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @else
-                            <span class="text-gray-600 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 dark:text-gray-400 text-xs">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @endif
                    
             <div class="flex items-center">

@@ -2,15 +2,29 @@
 
     <div class="container mx-auto max-w-lg px-4 my-4">
         @if(isset($user))
-            <h1 class="text-2xl font-bold text-gray-800">
+            <h1 class="flex items-center gap-2 text-xl font-bold dark:text-gray-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <circle cx="9" cy="7" r="3"/>
+                    <circle cx="17" cy="7" r="3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2
+                      M13 15h4a4 4 0 014 4v2"></path>
+                </svg>
                 {{ $user->name }}'s Posts
             </h1>
             <p class="text-sm text-gray-500">
                 All posts uploaded by {{ '@' . $user->username }}
             </p>
         @else
-            <h1 class="text-2xl font-bold text-gray-800">
-                Communitys
+            <h1 class="flex items-center gap-2 text-xl font-bold dark:text-gray-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <circle cx="9" cy="7" r="3"/>
+                    <circle cx="17" cy="7" r="3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2
+                      M13 15h4a4 4 0 014 4v2"></path>
+                </svg>
+                  Communitys
             </h1>
             <p class="text-sm text-gray-500">
                 Share, Discuss & Grow together. 
@@ -82,7 +96,7 @@
                  x-transition:enter-end="transform opacity-100 scale-100"
                  class="absolute right-4 mt-2 w-36 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-md shadow-lg z-50">
                 <div class="py-1">
-                    <a href="{{ route('post.edit', $post->id) }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <a href="{{ route('post.edit', $post->id) }}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                         Edit
                     </a>

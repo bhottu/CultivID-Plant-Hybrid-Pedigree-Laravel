@@ -342,7 +342,7 @@
                                 
                                 {{-- Teks rata kiri agar lebih hemat ruang --}}
                                 <div class="text-left">
-                                    <p class="text-xs font-bold text-yellow-600">Premium Ads</p> <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+                                    <p class="text-xs font-bold text-yellow-600">Premium Ads</p> <h3 class="text-sm font-bold dark:text-gray-400  text-gray-700">Place Your Ad Here</h3>
                                     <p class="text-xs text-gray-500 mt-0.5">Reach thousands of plant enthusiasts.</p>
                                 </div>
                             </div>
@@ -826,7 +826,7 @@
                 <i class="fas fa-ad text-2xl text-gray-800"></i> 
                 <p class="text-xs font-bold text-yellow-600">Premium</p>
             </div>
-            <h3 class="text-sm font-bold text-gray-700">Place Your Ad Here</h3>
+            <h3 class="text-sm font-bold dark:text-gray-400 text-gray-700">Place Your Ad Here</h3>
                 <p class="text-sm text-gray-500 max-w-xs mt-1">Reach thousands of plant enthusiasts in the Cultiv community.</p>
                 <a href="{{ route('become.partner') }}" class="px-4 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-200 hover:text-gray-800 transition mt-2">
                      Become Partner

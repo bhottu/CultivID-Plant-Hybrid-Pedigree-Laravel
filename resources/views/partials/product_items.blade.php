@@ -8,15 +8,15 @@
 
         <div class="p-4">
             <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-gray-500">
-                <h2 class="text-xl font-semibold">{{ $product->name }}</h2>
+                <h2 class="text-xl font-semibold dark:text-gray-400">{{ $product->name }}</h2>
             </a>
             <p class="text-gray-600 mb-2">
                     
                         @if($product->discount)
-                            <span class="text-red-600 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-red-600 dark:text-gray-400 line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                             <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }}</span>
                         @else
-                            <span class="text-gray-600">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 dark:text-gray-400">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @endif
                     
             </p>

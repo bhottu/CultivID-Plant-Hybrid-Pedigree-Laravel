@@ -1,13 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+/* DARK MODE ONLY */
+.my-select2 + .select2-container .select2-selection {
+    background-color: #c4c4c4;
+    border-radius: 6px;
+}
+.dark .select2-container--default .select2-selection--multiple {
+    background-color: #313131 !important;
+}
+
+/* teks input */
+.dark .select2-container--default .select2-search__field {
+    color: #9ca3af !important; /* gray-400 */
+}
+
+/* teks tag */
+.dark .select2-container--default .select2-selection__choice {
+    color: #9ca3af !important;
+    background-color: #374151 !important; /* gray-700 */
+    border: none !important;
+}
+
+/* dropdown text */
+.dark .select2-container--default .select2-results__option {
+    color: #9ca3af !important;
+    background-color: #313131 !important;
+}
+
+/* selected item */
+.dark .select2-container--default .select2-results__option--highlighted {
+    background-color: #1f2937 !important;
+    color: #ffffff !important;
+}
+
+</style>
+
 <div class="container mx-auto p-4 rounded max-w-lg">
-    <h1 class="text-2xl font-bold mb-4 text-gray-800">Add New Hybrid</h1>
+    <h1 class="flex items-center gap-2 text-xl font-bold dark:text-gray-400 text-gray-500">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                        </svg>
+                                                        Add New Hybrid</h1>
     <form  id="hybridForm" action="{{ route('plant-submissions.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
 
         <div>
-    <label class="block text-gray-800 font-semibold">
+    <label class="block dark:text-gray-400 text-gray-500  font-semibold">
         Plant ID <span class="text-red-600">*</span>
     </label>
 
@@ -25,7 +66,7 @@
         <!-- DEFAULT VALUE (tidak dicentang) -->
         <input type="hidden" name="plant_id_var" value="1">
 
-        <label class="flex items-center gap-1 text-xs text-gray-600">
+        <label class="flex items-center gap-1 text-xs dark:text-gray-400 text-gray-500 ">
             <input
                 type="checkbox"
                 name="plant_id_var"
@@ -34,7 +75,7 @@
             >
             Variegated?
         </label>
-         <p id="helper-checkbox-text" class="text-xs font-normal text-body">Check this box if the plant is variegated.</p>
+         <p id="helper-checkbox-text" class="text-xs font-normal text-body dark:text-gray-400 text-gray-500 ">Check this box if the plant is variegated.</p>
     </div>
 
     @error('plant_id')
@@ -45,7 +86,7 @@
 
         
         <div>
-            <label class="block text-gray-800 font-semibold">
+            <label class="block dark:text-gray-400 text-gray-500 font-semibold">
                 Seed parent <i class='fas fa-venus text-red-600'></i>
                 <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span>
             </label>
@@ -54,9 +95,9 @@
                 <select
                     name="induk_betina"
                     id="induk_betina"
-                    class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    class="my-select2"
                 >
-                    <option value="">-- Pilih / Tambah baru --</option>
+                    <option value="" class="dark:text-gray-400 text-gray-500 ">-- Pilih / Tambah baru --</option>
                     @foreach($parentSubmissions as $parent)
                         <option value="{{ $parent->plant_id }}">
                             {{ $parent->plant_id }}
@@ -66,7 +107,7 @@
                     @endforeach
                 </select>
 
-                <label class="flex items-center gap-1 text-xs text-gray-600">
+                <label class="flex items-center gap-1 text-xs dark:text-gray-400 text-gray-500 ">
                     <input
                         type="checkbox"
                         name="induk_betina_var"
@@ -75,7 +116,7 @@
                     >
                     Variegated?
                 </label>
-                 <p id="helper-checkbox-text" class="text-xs font-normal text-body">Check this box if the seed parent is variegated.</p>
+                 <p id="helper-checkbox-text" class="text-xs font-normal text-body dark:text-gray-400 text-gray-500 ">Check this box if the seed parent is variegated.</p>
             </div>
 
             @error('induk_betina')
@@ -85,7 +126,7 @@
 
         
         <div>
-            <label class="block text-gray-800 font-semibold">
+            <label class="block dark:text-gray-400 text-gray-500 font-semibold">
                 Pollen parent <i class='fas fa-mars text-blue-600'></i>
                 <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span>
             </label>
@@ -94,9 +135,9 @@
                 <select
                     name="induk_jantan"
                     id="induk_jantan"
-                    class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    class="my-select2"
                 >
-                    <option value="">-- Pilih / Tambah baru --</option>
+                    <option value="" class="dark:text-gray-400 text-gray-500 ">-- Pilih / Tambah baru --</option>
                     @foreach($parentSubmissions as $parent)
                         <option value="{{ $parent->plant_id }}">
                             {{ $parent->plant_id }}
@@ -106,7 +147,7 @@
                     @endforeach
                 </select>
 
-                <label class="flex items-center gap-1 text-xs text-gray-600">
+                <label class="flex items-center gap-1 text-xs dark:text-gray-400 text-gray-500 ">
                     <input
                         type="checkbox"
                         name="induk_jantan_var"
@@ -115,7 +156,7 @@
                     >
                     Variegated? 
                 </label>
-                 <p id="helper-checkbox-text" class="text-xs font-normal text-body">Check this box if the pollen parent is variegated.</p>
+                 <p id="helper-checkbox-text" class="text-xs font-normal text-body dark:text-gray-400 text-gray-500 ">Check this box if the pollen parent is variegated.</p>
             </div>
 
             @error('induk_jantan')
@@ -124,9 +165,9 @@
         </div>
 
         <div>
-            <label class="block text-gray-800 font-semibold">Breeder <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
-            <select name="penyilang" id="penyilang" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">
-                <option value="">-- Pilih / Tambah baru --</option>
+            <label class="block dark:text-gray-400 text-gray-500 font-semibold">Breeder <span class="text-gray-500 text-xs font-normal italic">(Opsional)</span></label>
+            <select name="penyilang" id="penyilang" class="my-select2">
+                <option value="" class="dark:text-gray-400 text-gray-500 ">-- Pilih / Tambah baru --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->name }}" {{ old('penyilang') == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
                 @endforeach
@@ -134,16 +175,16 @@
             @error('penyilang') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Uploader</label>
+            <label class="block dark:text-gray-400 text-gray-500  font-semibold">Uploader</label>
             <input type="text" class="w-full border border-gray-300 rounded p-2 bg-gray-100" value="{{ Auth::user()->name }}" readonly>
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Description</label>
+            <label class="block dark:text-gray-400 text-gray-500 font-semibold">Description</label>
             <textarea name="keterangan" class="w-full border border-gray-300 rounded p-2 bg-white focus:border-blue-500 focus:ring focus:ring-blue-200">{{ old('keterangan') }}</textarea>
             @error('keterangan') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
         </div>
         <div>
-            <label class="block text-gray-800 font-semibold">Photos (Max 3)</label>
+            <label class="block dark:text-gray-400 text-gray-500 font-semibold">Photos (Max 3)</label>
 
             <input 
                 type="file" 
@@ -169,7 +210,7 @@
         <button 
             type="submit" 
             id="submitBtn"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
+            class="w-full dark:bg-gray-700 bg-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
         >
             <span id="submitText">Submit</span>
 

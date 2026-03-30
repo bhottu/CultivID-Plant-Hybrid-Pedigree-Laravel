@@ -26,7 +26,7 @@
         {{-- 2. Detail Produk (Tambahkan text-left lagi untuk keamanan) --}}
         <div class="p-3 flex flex-col flex-grow text-left">
             <a href="{{ route('products.show', $product) }}" class="block mb-1 text-left">
-                <h3 class="text-sm text-gray-800 leading-tight truncate text-left">
+                <h3 class="text-sm text-gray-800 leading-tight truncate text-left dark:text-gray-400">
                     {{ $product->name }}
                 </h3>
             </a>

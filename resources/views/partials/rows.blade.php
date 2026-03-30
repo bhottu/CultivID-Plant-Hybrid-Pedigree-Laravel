@@ -1,7 +1,7 @@
 @foreach($approvedPlants as $item)
 
 
-<tr class="border-b hover:bg-gray-100 text-xs cursor-pointer"
+<tr class="border-b hover:bg-gray-900 text-xs cursor-pointer"
 onclick="window.location='{{ route('plant-submissions.show', $item) }}'">
 
 <td class="p-2">
@@ -26,8 +26,8 @@ No Image
 
 </td>
 
-<td class="p-2 align-top">
-<span class="text-gray-800 italic font-medium md:text-sm">
+<td class="p-2 align-top ">
+<span class="dark:text-gray-200 italic font-medium md:text-sm">
 {{ \Illuminate\Support\Str::words($item->plant_id, 3, '..') }}
 </span>
 
@@ -42,11 +42,11 @@ Breeder: {{ $item->penyilang ?? 'Unknown' }}
 </div>
 </td>
 
-<td class="p-2 italic text-gray-700 text-xs md:text-sm">
+<td class="p-2 italic text-gray-700 dark:text-gray-400 text-xs md:text-sm">
 {{ $item->induk_betina }}
 </td>
 
-<td class="p-2 italic text-gray-700 text-xs md:text-sm">
+<td class="p-2 italic text-gray-700 dark:text-gray-400 text-xs md:text-sm">
 {{ $item->induk_jantan }}
 </td>
 

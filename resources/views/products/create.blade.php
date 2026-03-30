@@ -23,7 +23,7 @@
         <h1 class="text-sm mb-4 font-semibold bg-red-100 text-gray-800">Add Product</h1>
         @csrf
         <div class="mb-4">
-            <label for="image" class="block text-gray-800 font-semibold">Image</label>
+            <label for="image" class="block dark:text-gray-400 text-gray-500 font-semibold">Image</label>
             <input 
                 type="file" 
                 name="image" 
@@ -39,7 +39,7 @@
         </div>
 
         <div class="mb-4">
-            <label for="video" class="block text-gray-800 font-semibold">Video</label>
+            <label for="video" class="block dark:text-gray-400 text-gray-500 font-semibold">Video</label>
             <input 
                 type="file" 
                 name="video" 
@@ -58,23 +58,23 @@
             </div>
         </div>
         <div class="mb-4">
-            <label for="name" class="block text-gray-800 font-semibold">Product Name</label>
+            <label for="name" class="block dark:text-gray-400 text-gray-500 font-semibold">Product Name</label>
             <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ old('name') }}">
         </div>
         <div class="mb-4">
-            <label for="description" class="block text-gray-800 font-semibold">Description</label>
+            <label for="description" class="block dark:text-gray-400 text-gray-500 font-semibold">Description</label>
             <textarea name="description" id="description" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
         </div>
         <div class="mb-4">
-            <label for="price" class="block text-gray-800 font-semibold">Price</label>
+            <label for="price" class="block dark:text-gray-400 text-gray-500 font-semibold">Price</label>
             <input type="number" name="price" id="price" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ old('price') }}">
         </div>
         <div class="mb-4">
-            <label for="discount" class="block text-gray-800 font-semibold">Discount (%)</label>
+            <label for="discount" class="block dark:text-gray-400 text-gray-500 font-semibold">Discount (%)</label>
             <input type="number" name="discount" id="discount" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="{{ old('discount') }}">
         </div>
         <div class="mb-4">
-            <label for="category_id" class="block text-gray-800 font-semibold">Category</label>
+            <label for="category_id" class="block dark:text-gray-400 text-gray-500 font-semibold">Category</label>
             <select name="category_id" id="category_id" class="mt-1 text-gray-900  block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -85,7 +85,7 @@
         <button 
             type="submit" 
             id="addProductBtn"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
+            class="w-full dark:bg-gray-700 bg-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
         >
             <span id="addProductText">Add Product</span>
 

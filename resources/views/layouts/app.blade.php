@@ -739,7 +739,7 @@
                         <i class="fas fa-seedling"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800 dark:text-white">Add Plant or Hybrid</h3>
+                        <h3 class="font-semibold dark:text-gray-300">Add Plant or Hybrid</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Start building your pedigree</p>
                     </div>
                 </a>
@@ -750,7 +750,7 @@
                         <i class="fas fa-shopping-bag"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800 dark:text-white">Add Product</h3>
+                        <h3 class="font-semibold dark:text-gray-300">Add Product</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Sell your products</p>
                     </div>
                 </a>
@@ -761,7 +761,7 @@
                         <i class="fas fa-comments"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-800 dark:text-white">Add Discussion</h3>
+                        <h3 class="font-semibold dark:text-gray-300">Add Discussion</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400">Share your thoughts</p>
                     </div>
                 </a>

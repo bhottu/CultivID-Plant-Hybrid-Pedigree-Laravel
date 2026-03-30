@@ -4,15 +4,21 @@
 
 <div class="container mx-auto max-w-lg px-4 my-4 text-sm">
     @if(isset($user))
-        <h1 class="text-xl font-bold text-gray-800">
-            {{ $user->name }}'s Products
+        <h1 class="flex items-center gap-2 text-xl font-bold dark:text-gray-400">
+            <svg class="w-5 h-5 shrink-0 relative top-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+           {{ $user->name }}'s Products
         </h1>
         <p class="text-sm text-gray-500">
             All products uploaded by {{ '@' . $user->username }}
         </p>
     @else
-        <h1 class="text-xl font-bold text-gray-800">
-            Market
+        <h1 class="flex items-center gap-2 text-xl font-bold dark:text-gray-400">
+            <svg class="w-5 h-5 shrink-0 relative top-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+        Market
         </h1>
         <p class="text-sm text-gray-500">
             No fee & free to submit.
@@ -54,23 +60,23 @@
                     @endif
 
                 <div class="p-4">
-                    <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:text-gray-500">
-                        <h2 class="text-sm truncate">{{ $product->name }}</h2>
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-blue-500 hover:text-gray-500 ">
+                        <h2 class="text-sm truncate dark:text-gray-400 line">{{ $product->name }}</h2>
                     </a>
                     <div class="flex items-center mb-2">
                  
                         @if($product->discount)
-                            <span class="text-gray-600 mr-2 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span><br>
-                            <span class="text-red-600 text-xxxs line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 dark:text-gray-400 mr-2 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->discounted_price, 0, ',', '.') }} </span><br>
+                            <span class="text-red-600 dark:text-gray-400 text-xxxs px-1 bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-1.5 py-[2px] rounded line-through mr-2">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                             
                         @else
-                            <span class="text-gray-600 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <span class="text-gray-600 dark:text-gray-400 text-xs ">{{ $product->user->currency ?? 'Rp' }} {{ number_format($product->price, 0, ',', '.') }}</span>
                         @endif
                   
                      </div>
 
                     <div class="flex items-center">
-                        <a href="{{ url('profile/' . $product->user->id) }}">
+                        <a href="{{ url('profile/' . $product->user->username) }}">
                         @if($product->user->profile_photo_path)
                             <img src="{{ asset('storage/' . $product->user->profile_photo_path) }}" alt="Profile Photo" class="h-8 w-8 rounded-full">
                         @else

@@ -18,19 +18,19 @@
         @csrf
         
         <div class="mb-4">
-            <label for="caption" class="block text-sm font-medium text-gray-700">Caption</label>
+            <label for="caption" class="block text-sm font-medium dark:text-gray-400 text-gray-500">Caption</label>
             <textarea 
             name="caption" 
             id="caption" 
             maxlength="180" 
             rows="1" 
             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-            class="w-full border-b border-gray-300 focus:outline-none focus:border-indigo-500 pb-1 resize-none overflow-hidden"></textarea>
+            class="w-full dark:text-gray-400 border-b border-gray-300 focus:outline-none focus:border-indigo-500 pb-1 resize-none overflow-hidden"></textarea>
             <small class="text-gray-500">Maximum 180 characters.</small>
         </div>
        
         <div class="mb-4">
-            <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+            <label for="image" class="block text-sm font-medium dark:text-gray-400 text-gray-500">Image</label>
             
             <input 
                 type="file" 
@@ -51,7 +51,7 @@
         <button 
             type="submit" 
             id="createPostBtn"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
+            class="w-full dark:bg-gray-700 bg-gray-500 hover:bg-gray-700 dark:hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center gap-2"
         >
             <span id="createPostText">Post</span>
 
