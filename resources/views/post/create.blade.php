@@ -25,7 +25,7 @@
             maxlength="180" 
             rows="1" 
             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-            class="w-full dark:text-gray-400 border-b border-gray-300 focus:outline-none focus:border-indigo-500 pb-1 resize-none overflow-hidden"></textarea>
+            class="w-full dark:text-gray-400 border-b border-gray-300 focus:outline-none focus:border-indigo-500 pb-1 resize-none overflow-hidden">{{ old('caption') }}</textarea>
             <small class="text-gray-500">Maximum 180 characters.</small>
         </div>
        

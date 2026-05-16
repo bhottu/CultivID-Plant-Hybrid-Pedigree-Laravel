@@ -37,6 +37,16 @@
             </div>
         @endif
 
+        @if ($errors->any())
+        <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
+            <ul class="list-disc list-inside text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         @csrf
         <div class="mb-4">

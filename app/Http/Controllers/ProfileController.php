@@ -12,6 +12,7 @@ use App\Models\PlantSubmission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ProfileController extends Controller
 {
@@ -134,8 +135,18 @@ class ProfileController extends Controller
 
         if ($request->hasFile('profile_photo')) {
             $currentPhoto = $user->profile_photo_path;
+            $image = $request->file('profile_photo');
+            $filename = time() . '_' . uniqid() . '.webp';
+            $profilePhotoPath = 'profile-photos/' . $filename;
 
-            $profilePhotoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            $imageResized = Image::make($image)
+                ->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 75);
+
+            Storage::disk('public')->put($profilePhotoPath, $imageResized);
             $user->profile_photo_path = $profilePhotoPath;
 
             if ($currentPhoto) {
